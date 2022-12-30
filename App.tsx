@@ -17,95 +17,66 @@ import {
   Text,
   useColorScheme,
   View,
+  Dimensions,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-const Section: React.FC<
-  PropsWithChildren<{
-    title: string;
-  }>
-> = ({children, title}) => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
+const window = Dimensions.get('window');
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+    <SafeAreaView style={styles.container}>
+      <View style={styles.sectionsBar}>
+        <View style={styles.sectionsBarMinimal}>
+          <Text style={styles.textHeaders}>Quick Question</Text>
         </View>
-      </ScrollView>
+        <View style={styles.sectionsBarMinimal}>
+          <Text style={styles.textHeaders}>Nostradamus</Text>
+        </View>
+      </View>
+      <View style={styles.sectionsBar}>
+        <View style={styles.sectionsBarMinimal}>
+          <Text style={styles.textHeaders}>Chat</Text>
+        </View>
+        <View style={styles.sectionsBarMinimal}>
+          <Text style={styles.textHeaders}>Image to Text Question</Text>
+        </View>
+      </View>
+      <View style={styles.questionBelow}>
+        <Text style={styles.textHeaders}>Recent Questions</Text>
+        <Icon name="home" size={80} />
+      </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
+  sectionsBar: {
+    marginTop: 20,
     paddingHorizontal: 24,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
   },
-  sectionTitle: {
+  sectionsBarMinimal: {
+    justifyContent: 'center',
+    marginTop: 0,
+    paddingHorizontal: 24,
+    backgroundColor: '#E0ECFF',
+    height: 48,
+    width: window.width / 2.4,
+    borderRadius: 6,
+  },
+  container: {
+    marginTop: 50,
     fontSize: 24,
     fontWeight: '600',
+  },
+  questionBelow: {
+    marginTop: 50,
+  },
+  textHeaders: {
+    fontSize: 14,
+    color: '#000A1A',
   },
   sectionDescription: {
     marginTop: 8,
