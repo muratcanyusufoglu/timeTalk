@@ -35,7 +35,15 @@ const App = () => {
       </View>
       <View style={styles.questionBelow}>
         <Text style={styles.textHeaders}>Recent Questions</Text>
-        <Icon name="home" size={80} />
+        <Icon name="search" size={50} />
+      </View>
+      <View style={styles.questionMarks}>
+        <View style={styles.questionSection} />
+        <View style={styles.questionSection} />
+      </View>
+      <View style={styles.questionMarks}>
+        <View style={styles.questionSection} />
+        <View style={styles.questionSection} />
       </View>
     </SafeAreaView>
   );
@@ -65,18 +73,26 @@ const styles = StyleSheet.create({
   questionBelow: {
     marginLeft: (window.width - window.width / 1.2) / 3,
     marginTop: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   textHeaders: {
     fontSize: 14,
     color: '#000A1A',
   },
-  sectionDescription: {
-    marginTop: 8,
+  questionSection: {
+    backgroundColor: '#EAECF0',
     fontSize: 18,
     fontWeight: '400',
+    height: window.height / 4.2,
+    width: window.width / 2.4,
+    borderRadius: 12,
   },
-  highlight: {
-    fontWeight: '700',
+  questionMarks: {
+    marginTop: 10,
+    paddingHorizontal: 24,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
   },
 });
 
