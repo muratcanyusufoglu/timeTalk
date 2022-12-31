@@ -8,17 +8,8 @@
  * @format
  */
 
-import React, {type PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-  Dimensions,
-} from 'react-native';
+import React from 'react';
+import {SafeAreaView, StyleSheet, Text, View, Dimensions} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const window = Dimensions.get('window');
@@ -72,6 +63,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   questionBelow: {
+    marginLeft: (window.width - window.width / 1.2) / 3,
     marginTop: 50,
   },
   textHeaders: {
