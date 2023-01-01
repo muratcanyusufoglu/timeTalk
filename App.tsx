@@ -9,7 +9,14 @@
  */
 
 import React from 'react';
-import {SafeAreaView, StyleSheet, Text, View, Dimensions} from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  TextInput,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const window = Dimensions.get('window');
@@ -17,25 +24,36 @@ const window = Dimensions.get('window');
 const App = () => {
   return (
     <SafeAreaView style={styles.container}>
+      <TextInput
+        style={styles.searchBar}
+        placeholder="Search"
+        placeholderTextColor={'#D6DAE2'}>
+        <Icon name="search" size={18} style={{color: '#D6DAE2'}} />
+        <Text style={{color: '#D6DAE2'}}>Search</Text>
+      </TextInput>
       <View style={styles.sectionsBar}>
         <View style={styles.sectionsBarMinimal}>
+          <Icon name="bolt" size={18} style={{color: '#75839D'}} />
           <Text style={styles.textHeaders}>Quick Question</Text>
         </View>
         <View style={styles.sectionsBarMinimal}>
+          <Icon name="crystal-ball" size={18} style={{color: '#75839D'}} />
           <Text style={styles.textHeaders}>Nostradamus</Text>
         </View>
       </View>
       <View style={styles.sectionsBar}>
         <View style={styles.sectionsBarMinimal}>
+          <Icon name="wechat" size={18} style={{color: '#75839D'}} />
           <Text style={styles.textHeaders}>Chat</Text>
         </View>
         <View style={styles.sectionsBarMinimal}>
+          <Icon name="file-image-o" size={18} style={{color: '#75839D'}} />
           <Text style={styles.textHeaders}>Image to Text Question</Text>
         </View>
       </View>
       <View style={styles.questionBelow}>
         <Text style={styles.textHeaders}>Recent Questions</Text>
-        <Icon name="search" size={50} />
+        <Icon name="search" size={15} />
       </View>
       <View style={styles.questionMarks}>
         <View style={styles.questionSection} />
@@ -57,18 +75,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   sectionsBarMinimal: {
-    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
     marginTop: 0,
     paddingHorizontal: 24,
     backgroundColor: '#E0ECFF',
     height: 48,
     width: window.width / 2.4,
     borderRadius: 6,
+    marginLeft: 15,
   },
   container: {
-    marginTop: 50,
+    flex: 1,
+    backgroundColor: '#D6DAE2',
     fontSize: 24,
     fontWeight: '600',
+  },
+  searchBar: {
+    backgroundColor: '#FFFFFF',
+    marginHorizontal: (window.width - window.width / 1.2) / 3,
+    borderRadius: 6,
+    marginTop: 50,
+    padding: 10,
   },
   questionBelow: {
     marginLeft: (window.width - window.width / 1.2) / 3,
@@ -79,6 +107,7 @@ const styles = StyleSheet.create({
   textHeaders: {
     fontSize: 14,
     color: '#000A1A',
+    margin: 5,
   },
   questionSection: {
     backgroundColor: '#EAECF0',
