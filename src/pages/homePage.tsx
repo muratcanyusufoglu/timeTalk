@@ -16,12 +16,17 @@ import {
   View,
   Dimensions,
   TextInput,
+  TouchableOpacity,
+  Touchable,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {useNavigation} from '@react-navigation/native';
 
 const window = Dimensions.get('window');
 
 const App = () => {
+  const navigation = useNavigation();
+
   return (
     <SafeAreaView style={styles.container}>
       <TextInput
@@ -32,24 +37,26 @@ const App = () => {
         <Text style={{color: '#D6DAE2'}}>Search</Text>
       </TextInput>
       <View style={styles.sectionsBar}>
-        <View style={styles.sectionsBarMinimal}>
+        <TouchableOpacity style={styles.sectionsBarMinimal} on>
           <Icon name="bolt" size={18} style={{color: '#75839D'}} />
           <Text style={styles.textHeaders}>Quick Question</Text>
-        </View>
-        <View style={styles.sectionsBarMinimal}>
-          <Icon name="crystal-ball" size={18} style={{color: '#75839D'}} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.sectionsBarMinimal}>
+          <Icon name="bolt" size={18} style={{color: '#75839D'}} />
           <Text style={styles.textHeaders}>Nostradamus</Text>
-        </View>
+        </TouchableOpacity>
       </View>
       <View style={styles.sectionsBar}>
-        <View style={styles.sectionsBarMinimal}>
+        <TouchableOpacity
+          style={styles.sectionsBarMinimal}
+          onPress={() => navigation.navigate('Chat')}>
           <Icon name="wechat" size={18} style={{color: '#75839D'}} />
           <Text style={styles.textHeaders}>Chat</Text>
-        </View>
-        <View style={styles.sectionsBarMinimal}>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.sectionsBarMinimal}>
           <Icon name="file-image-o" size={18} style={{color: '#75839D'}} />
           <Text style={styles.textHeaders}>Image to Text Question</Text>
-        </View>
+        </TouchableOpacity>
       </View>
       <View style={styles.questionBelow}>
         <Text style={styles.textHeaders}>Recent Questions</Text>
