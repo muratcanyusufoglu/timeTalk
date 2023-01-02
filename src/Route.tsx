@@ -17,7 +17,11 @@ function App() {
           component={HomePage}
           options={{headerShown: false}}
         />
-        <Stack.Screen name="Chat" component={ChatPage} />
+        <Stack.Screen
+          name="Chat"
+          component={ChatPage}
+          options={{title: 'Jojo'}}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
