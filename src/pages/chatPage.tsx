@@ -13,16 +13,24 @@ export default function ChatPage() {
 
   useEffect(() => {
     axios
-      .get('http://localhost:3000/socket/API')
+      .get('http://localhost:3000/coffees')
       .then(item => {
         console.log('data', item);
-        setData(item);
+        setData(item.data);
       })
       .catch(error => console.log('error', error));
     console.log('dataaa', data);
-  });
+  }, []);
 
-  const addArray = () => {};
+  const addArray = async () => {
+    await axios
+      .get('http://localhost:3000/coffees')
+      .then(item => {
+        console.log('data', item);
+        setData(item.data);
+      })
+      .catch(error => console.log('error', error));
+  };
 
   return (
     <View>

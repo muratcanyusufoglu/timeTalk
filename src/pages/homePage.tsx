@@ -29,15 +29,15 @@ const App = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TextInput
-        style={styles.searchBar}
-        placeholder="Search"
-        placeholderTextColor={'#D6DAE2'}>
-        <Icon name="search" size={18} style={{color: '#D6DAE2'}} />
-        <Text style={{color: '#D6DAE2'}}>Search</Text>
-      </TextInput>
+      <View style={styles.coinHeader}>
+        <View style={{alignItems: 'center', flexDirection: 'row'}}>
+          <Text style={{color: '#000A1A'}}>Token</Text>
+          <Icon name="money" size={18} style={{color: '#75839D'}} />
+        </View>
+      </View>
+
       <View style={styles.sectionsBar}>
-        <TouchableOpacity style={styles.sectionsBarMinimal} on>
+        <TouchableOpacity style={styles.sectionsBarMinimal}>
           <Icon name="bolt" size={18} style={{color: '#75839D'}} />
           <Text style={styles.textHeaders}>Quick Question</Text>
         </TouchableOpacity>
@@ -62,6 +62,15 @@ const App = () => {
         <Text style={styles.textHeaders}>Recent Questions</Text>
         <Icon name="search" size={15} />
       </View>
+
+      <TextInput
+        style={styles.searchBar}
+        placeholder="Search"
+        placeholderTextColor={'#D6DAE2'}>
+        <Icon name="search" size={18} style={{color: '#75839D'}} />
+        <Text style={{color: '#75839D'}}>Search</Text>
+      </TextInput>
+
       <View style={styles.questionMarks}>
         <View style={styles.questionSection} />
         <View style={styles.questionSection} />
@@ -75,6 +84,11 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
+  coinHeader: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    margin: (window.width - window.width / 1.2) / 3,
+  },
   sectionsBar: {
     marginTop: 20,
     justifyContent: 'space-evenly',
@@ -98,10 +112,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   searchBar: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#EAECF0',
     marginHorizontal: (window.width - window.width / 1.2) / 3,
     borderRadius: 6,
-    marginTop: 50,
+    marginTop: 20,
     padding: 10,
   },
   questionBelow: {
@@ -124,7 +138,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   questionMarks: {
-    marginTop: 10,
+    marginTop: 30,
     paddingHorizontal: 24,
     justifyContent: 'space-between',
     flexDirection: 'row',
