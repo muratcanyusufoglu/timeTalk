@@ -6,24 +6,18 @@ import {
   TextInput,
   StyleSheet,
   Dimensions,
-  useWindowDimensions,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {FlashList} from '@shopify/flash-list';
 import Config from 'react-native-config';
+import Lottie from 'lottie-react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-interface Data {
-  id: number;
-  name: string;
-  brand: string;
-  flavors: any;
-}
 const window = Dimensions.get('window');
 
 export default function ChatPage() {
   const [data, setData] = useState([]);
-  const [input, setInput] = useState();
+  const [input, setInput] = useState<string>();
   const [bool, setBool] = useState<boolean>();
 
   const messageData: {message: string; user: string; date: string}[] = [];
@@ -35,7 +29,7 @@ export default function ChatPage() {
       .then(item => {
         console.log(item);
         item.data.map(mes => messageData.push(mes));
-        setData(messageData);
+        setData(messageData.reverse());
       })
       .catch(error => console.log('error', error));
   }, [bool]);
@@ -78,16 +72,6 @@ export default function ChatPage() {
 
   return (
     <View style={styles.container}>
-      <Text>chatPage</Text>
-      <TextInput
-        style={styles.input}
-        onChangeText={setInput}
-        value={input}
-        placeholder="useless placeholder"
-      />
-      <TouchableOpacity onPress={() => addArray()}>
-        <Text>Ekle</Text>
-      </TouchableOpacity>
       <FlatList
         inverted
         extraData={data}
@@ -102,6 +86,30 @@ export default function ChatPage() {
           </>
         )}
       />
+      <View style={{alignItems: 'center'}}>
+        {bool ? (
+          <Lottie
+            source={require('../assets/animations/messageLoad.json')}
+            style={styles.animation}
+            autoPlay
+            loop
+          />
+        ) : null}
+      </View>
+      <View style={styles.sendMessageSection}>
+        <TextInput
+          style={styles.input}
+          onChangeText={(text: string) => setInput(text)}
+          value={input}
+          placeholder="Message..."
+          multiline
+        />
+        <TouchableOpacity
+          style={styles.sendMessageButton}
+          onPress={() => addArray()}>
+          <Icon name="send-o" size={20} />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -109,12 +117,6 @@ export default function ChatPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
   },
   messageSection: {
     margin: 5,
@@ -135,4 +137,34 @@ const styles = StyleSheet.create({
     marginVertical: 2,
     borderRadius: 10,
   },
+  animation: {
+    width: window.width / 20,
+    height: window.height / 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  sendMessageSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  input: {
+    height: 48,
+    width: window.width / 1.25,
+    marginHorizontal: 12,
+    borderWidth: 1,
+    padding: 10,
+    borderColor: '#D6DAE2',
+    borderRadius: 4,
+  },
+  sendMessageButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: window.width / 8,
+    height: 48,
+    borderWidth: 1,
+    borderColor: '#D6DAE2',
+    borderRadius: 4,
+  },
+  sendIcon: {},
 });
