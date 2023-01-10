@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   TextInput,
   StyleSheet,
+  Dimensions,
+  useWindowDimensions,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
@@ -17,6 +19,8 @@ interface Data {
   brand: string;
   flavors: any;
 }
+const window = Dimensions.get('window');
+
 export default function ChatPage() {
   const [data, setData] = useState([]);
   const [input, setInput] = useState();
@@ -85,28 +89,19 @@ export default function ChatPage() {
         <Text>Ekle</Text>
       </TouchableOpacity>
       <FlatList
+        inverted
         extraData={data}
         data={data}
         refreshing={bool}
         renderItem={({item}) => (
           <>
             <View style={styles.messageSection}>
-              <Text>{item.message}</Text>
-              <Text>{item.date}</Text>
+              <Text style={styles.sendedSection}>{item.message}</Text>
+              <Text style={styles.responsSection}>{item.date}</Text>
             </View>
           </>
         )}
       />
-      {/* {data.map((key, index) => (
-        <>
-          <Text numberOfLines={2} style={{color: 'black'}}>
-            {key.message}
-          </Text>
-          <Text numberOfLines={2} style={{color: 'black'}}>
-            {key.date}
-          </Text>
-        </>
-      ))} */}
     </View>
   );
 }
@@ -122,8 +117,22 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   messageSection: {
-    backgroundColor: 'gray',
-    margin: 25,
-    flex: 1,
+    margin: 5,
+  },
+  sendedSection: {
+    backgroundColor: '#E0ECFF',
+    marginLeft: window.width / 3,
+    marginRight: window.width / 20,
+    padding: 15,
+    marginVertical: 2,
+    borderRadius: 10,
+  },
+  responsSection: {
+    backgroundColor: '#E9EEF8',
+    marginRight: window.width / 3,
+    marginLeft: window.width / 20,
+    padding: 15,
+    marginVertical: 2,
+    borderRadius: 10,
   },
 });
