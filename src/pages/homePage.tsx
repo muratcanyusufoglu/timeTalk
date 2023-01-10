@@ -17,7 +17,7 @@ import {
   Dimensions,
   TextInput,
   TouchableOpacity,
-  Touchable,
+  ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
@@ -30,6 +30,9 @@ const App = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.coinHeader}>
+        <View>
+          <Text>Logo</Text>
+        </View>
         <View style={{alignItems: 'center', flexDirection: 'row'}}>
           <Text style={{color: '#000A1A'}}>Token</Text>
           <Icon name="money" size={18} style={{color: '#75839D'}} />
@@ -71,14 +74,16 @@ const App = () => {
         <Text style={{color: '#75839D'}}>Search</Text>
       </TextInput>
 
-      <View style={styles.questionMarks}>
-        <View style={styles.questionSection} />
-        <View style={styles.questionSection} />
-      </View>
-      <View style={styles.questionMarks}>
-        <View style={styles.questionSection} />
-        <View style={styles.questionSection} />
-      </View>
+      <ScrollView>
+        <View style={styles.questionMarks}>
+          <View style={styles.questionSection} />
+          <View style={styles.questionSection} />
+        </View>
+        <View style={styles.questionMarks}>
+          <View style={styles.questionSection} />
+          <View style={styles.questionSection} />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

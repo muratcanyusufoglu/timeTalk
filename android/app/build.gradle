@@ -1,6 +1,18 @@
 apply plugin: "com.android.application"
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
+
+project.ext.envConfigFiles = [
+  productiondebug: ".env",
+  productionrelease: ".env",
+  developmentrelease: ".env.development",
+  developmentdebug: ".env.development",
+  stagingrelease: ".env.staging",
+  stagingdebug: ".env.staging"
+]
+
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+
 import com.android.build.OutputFile
 import org.apache.tools.ant.taskdefs.condition.Os
 
@@ -255,6 +267,8 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation project(':react-native-vector-icons')
+
+    implementation project(':react-native-config')
     
     implementation platform('com.google.firebase:firebase-bom:31.1.1')
     implementation 'com.google.firebase:firebase-analytics'
