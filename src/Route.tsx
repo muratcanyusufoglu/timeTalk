@@ -5,6 +5,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomePage from './pages/homePage';
 import ChatPage from './pages/chatPage';
+import ImagePage from './pages/imageGeneratePage';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +21,11 @@ function App() {
         <Stack.Screen
           name="Chat"
           component={ChatPage}
+          options={{title: 'Jojo'}}
+        />
+        <Stack.Screen
+          name="Dalle"
+          component={ImagePage}
           options={{title: 'Jojo'}}
         />
       </Stack.Navigator>

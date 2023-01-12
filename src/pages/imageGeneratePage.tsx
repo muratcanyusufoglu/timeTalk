@@ -1,26 +1,34 @@
 import {
   View,
   Text,
-  FlatList,
-  TouchableOpacity,
-  TextInput,
   StyleSheet,
+  FlatList,
+  TextInput,
+  TouchableOpacity,
   Dimensions,
+  Image,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import Config from 'react-native-config';
 import Lottie from 'lottie-react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {MasonryFlashList} from '@shopify/flash-list';
 
 const window = Dimensions.get('window');
 
-export default function ChatPage() {
+export default function ImagePage() {
   const [data, setData] = useState([]);
   const [input, setInput] = useState<string>();
   const [bool, setBool] = useState<boolean>();
 
-  const messageData: {message: string; user: string; date: string}[] = [];
+  const messageData: {
+    message: string;
+    user: string;
+    response: string;
+    _id: string;
+  }[] = [];
+
   const ADRESS = Config.ADRESS;
 
   useEffect(() => {
@@ -29,11 +37,12 @@ export default function ChatPage() {
     const fetch = async () => {
       console.log('asdb');
       await axios
-        .get(`${ADRESS}/messages`)
+        .get(`${ADRESS}/dalle`)
         .then(item => {
-          console.log('item', item, `${ADRESS}/messages`);
+          console.log('item', item, item.data[0]._id);
           item.data.map(mes => messageData.push(mes));
           setData(messageData.reverse());
+          console.log('itemm', data[0]._id);
         })
         .catch(error => console.log('error', error));
     };
@@ -44,28 +53,27 @@ export default function ChatPage() {
     setBool(true);
     var items;
     await axios
-      .get(`${ADRESS}/messages/${input}`)
+      .get(`${ADRESS}/dalle/${input}`)
       .then(item => {
         items = item.data;
-        console.log('data', `${ADRESS}/messages/${input}`);
       })
       .catch(error => console.log('error', error));
 
     await axios
-      .post(`${ADRESS}/messages`, {
-        message: `${input}`,
+      .post(`${ADRESS}/dalle`, {
+        prompt: `${input}`,
         user: 'crazy_61',
-        date: `${items}`,
+        response: `${items}`,
       })
       .then(resp => {
-        console.log('resp', resp);
+        console.log('resp', resp, input);
       })
       .catch(error => {
         console.log('error', error);
       });
 
     await axios
-      .get(`${ADRESS}/messages`)
+      .get(`${ADRESS}/dalle`)
       .then(item => {
         const messages = item.data;
         messageData.push(messages);
@@ -77,16 +85,46 @@ export default function ChatPage() {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        inverted
+      <MasonryFlashList
         extraData={data}
         data={data}
         refreshing={bool}
+        numColumns={2}
+        style={{flex: 1}}
+        estimatedItemSize={200}
         renderItem={({item}) => (
           <>
             <View style={styles.messageSection}>
-              <Text style={styles.sendedSection}>{item.message}</Text>
-              <Text style={styles.responsSection}>{item.date}</Text>
+              <View style={styles.photoSection}>
+                <Image
+                  source={{
+                    uri: item.response,
+                  }}
+                  style={{
+                    width: window.width / 2.2,
+                    height:
+                      item._id.slice(-1) == '1' ||
+                      item._id.slice(-1) == '2' ||
+                      item._id.slice(-1) == '3' ||
+                      item._id.slice(-1) == '4' ||
+                      item._id.slice(-1) == '5' ||
+                      item._id.slice(-1) == '6' ||
+                      item._id.slice(-1) == '7' ||
+                      item._id.slice(-1) == '8' ||
+                      item._id.slice(-1) == '9'
+                        ? window.height / 5
+                        : window.height / 3,
+                    borderWidth: 1,
+                    borderColor: 'transparent',
+                    borderTopLeftRadius: 12,
+                    borderTopRightRadius: 12,
+                  }}
+                  resizeMode="cover"
+                />
+                <View style={styles.photoPrompt}>
+                  <Text style={styles.sendedSection}>{item.prompt}</Text>
+                </View>
+              </View>
             </View>
           </>
         )}
@@ -106,7 +144,7 @@ export default function ChatPage() {
           style={styles.input}
           onChangeText={(text: string) => setInput(text)}
           value={input}
-          placeholder="Message..."
+          placeholder="Image Text..."
           multiline
         />
         <TouchableOpacity
@@ -118,21 +156,16 @@ export default function ChatPage() {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   messageSection: {
     margin: 5,
+    alignItems: 'center',
   },
   sendedSection: {
-    backgroundColor: '#E0ECFF',
-    marginLeft: window.width / 3,
-    marginRight: window.width / 20,
-    padding: 15,
-    marginVertical: 2,
-    borderRadius: 10,
+    padding: 5,
   },
   responsSection: {
     backgroundColor: '#E9EEF8',
@@ -172,4 +205,22 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   sendIcon: {},
+  photoPrompt: {
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: 'transparent',
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
+    marginBottom: 20,
+    width: window.width / 2.2,
+    color: 'black',
+  },
+  photoSection: {
+    padding: 0,
+    borderWidth: 1,
+    borderColor: 'transparent',
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
+    alignItems: 'center',
+  },
 });

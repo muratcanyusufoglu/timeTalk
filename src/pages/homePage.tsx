@@ -52,13 +52,15 @@ const App = () => {
       <View style={styles.sectionsBar}>
         <TouchableOpacity
           style={styles.sectionsBarMinimal}
-          onPress={() => navigation.navigate('Chat')}>
+          onPress={() => navigation.navigate('Chat' as never)}>
           <Icon name="wechat" size={18} style={{color: '#75839D'}} />
           <Text style={styles.textHeaders}>Chat</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.sectionsBarMinimal}>
+        <TouchableOpacity
+          style={styles.sectionsBarMinimal}
+          onPress={() => navigation.navigate('Dalle' as never)}>
           <Icon name="file-image-o" size={18} style={{color: '#75839D'}} />
-          <Text style={styles.textHeaders}>Image to Text Question</Text>
+          <Text style={styles.textHeaders}>Text to Image</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.questionBelow}>
