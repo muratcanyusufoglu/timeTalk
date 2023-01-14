@@ -21,10 +21,13 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
+import {SegmentedButtons} from 'react-native-paper';
 
 const window = Dimensions.get('window');
 
 const App = () => {
+  const [value, setValue] = React.useState('');
+
   const navigation = useNavigation();
 
   return (
@@ -63,20 +66,41 @@ const App = () => {
           <Text style={styles.textHeaders}>Text to Image</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.questionBelow}>
+      {/* <View style={styles.questionBelow}>
         <Text style={styles.textHeaders}>Recent Questions</Text>
         <Icon name="search" size={15} />
-      </View>
+      </View> */}
 
-      <TextInput
+      {/* <TextInput
         style={styles.searchBar}
         placeholder="Search"
         placeholderTextColor={'#D6DAE2'}>
         <Icon name="search" size={18} style={{color: '#75839D'}} />
         <Text style={{color: '#75839D'}}>Search</Text>
-      </TextInput>
-
-      <ScrollView>
+      </TextInput> */}
+      <SegmentedButtons
+        value={value}
+        onValueChange={setValue}
+        style={styles.segmentedButtons}
+        buttons={[
+          {
+            value: 'discover',
+            label: 'Discover',
+            onPress: () => navigation.navigate('Chat' as never),
+            style: {
+              borderRadius: 6,
+            },
+          },
+          {
+            value: 'likes',
+            label: 'Likes',
+            style: {
+              borderRadius: 6,
+            },
+          },
+        ]}
+      />
+      {/* <ScrollView>
         <View style={styles.questionMarks}>
           <View style={styles.questionSection} />
           <View style={styles.questionSection} />
@@ -85,7 +109,7 @@ const App = () => {
           <View style={styles.questionSection} />
           <View style={styles.questionSection} />
         </View>
-      </ScrollView>
+      </ScrollView> */}
     </SafeAreaView>
   );
 };
@@ -140,7 +164,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#EAECF0',
     fontSize: 18,
     fontWeight: '400',
-    height: window.height / 4.2,
+    height: window.height / 12,
     width: window.width / 2.4,
     borderRadius: 12,
   },
@@ -149,6 +173,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     justifyContent: 'space-between',
     flexDirection: 'row',
+  },
+  segmentedButtons: {
+    marginTop: 30,
+    marginHorizontal: (window.width - window.width / 1.2) / 3,
+    borderRadius: 6,
   },
 });
 

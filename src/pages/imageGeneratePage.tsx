@@ -107,11 +107,7 @@ export default function ImagePage() {
                       item._id.slice(-1) == '2' ||
                       item._id.slice(-1) == '3' ||
                       item._id.slice(-1) == '4' ||
-                      item._id.slice(-1) == '5' ||
-                      item._id.slice(-1) == '6' ||
-                      item._id.slice(-1) == '7' ||
-                      item._id.slice(-1) == '8' ||
-                      item._id.slice(-1) == '9'
+                      item._id.slice(-1) == '5'
                         ? window.height / 5
                         : window.height / 3,
                     borderWidth: 1,
