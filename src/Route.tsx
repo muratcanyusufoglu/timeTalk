@@ -5,17 +5,31 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomePage from './pages/homePage';
 import ChatPage from './pages/chatPage';
-import ImagePage from './pages/imageGeneratePage';
+import DallePage from './pages/imageGeneratePage';
 import {BottomNavigation, Text} from 'react-native-paper';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
+import DiscoverPage from './pages/discoverPage';
 
 const Stack = createNativeStackNavigator();
+const HomeStack = createNativeStackNavigator();
 
-const Homepage = () => <HomePage />;
+const Homepage = () => {
+  return (
+    <HomeStack.Navigator>
+      <HomeStack.Screen
+        name="Home"
+        component={HomePage}
+        options={{headerShown: false}}
+      />
+      <HomeStack.Screen name="Chat" component={ChatPage} />
+      <HomeStack.Screen name="Dalle" component={DallePage} />
+    </HomeStack.Navigator>
+  );
+};
 
 const Chatpage = () => <ChatPage />;
 
-const RecentsRoute = () => <ChatPage />;
+const RecentsRoute = () => <DiscoverPage />;
 
 const NotificationsRoute = () => <ChatPage />;
 
@@ -30,7 +44,11 @@ function App() {
       unfocusedIcon: 'heart-outline',
     },
     {key: 'chat', title: 'Chat', focusedIcon: 'album'},
-    {key: 'likes', title: 'Likes', focusedIcon: 'history'},
+    {
+      key: 'likes',
+      title: 'Likes',
+      focusedIcon: 'history',
+    },
     {
       key: 'discover',
       title: 'Discover',

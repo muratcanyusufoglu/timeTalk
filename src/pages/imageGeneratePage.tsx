@@ -108,7 +108,7 @@ export default function ImagePage() {
                       item._id.slice(-1) == '3' ||
                       item._id.slice(-1) == '4' ||
                       item._id.slice(-1) == '5'
-                        ? window.height / 5
+                        ? window.height / 4
                         : window.height / 3,
                     borderWidth: 1,
                     borderColor: 'transparent',
