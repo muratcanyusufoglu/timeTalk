@@ -22,16 +22,20 @@ const Homepage = () => {
         options={{headerShown: false}}
       />
       <HomeStack.Screen name="Chat" component={ChatPage} />
-      <HomeStack.Screen name="Dalle" component={DallePage} />
+      <HomeStack.Screen
+        name="Dalle"
+        component={DallePage}
+        options={{headerShown: false}}
+      />
     </HomeStack.Navigator>
   );
 };
 
 const Chatpage = () => <ChatPage />;
 
-const RecentsRoute = () => <DiscoverPage />;
+const RecentsRoute = () => <ChatPage />;
 
-const NotificationsRoute = () => <ChatPage />;
+const DiscoverRoute = () => <DiscoverPage />;
 
 function App() {
   const [index, setIndex] = React.useState(0);
@@ -43,25 +47,25 @@ function App() {
       focusedIcon: 'heart',
       unfocusedIcon: 'heart-outline',
     },
-    {key: 'chat', title: 'Chat', focusedIcon: 'album'},
-    {
-      key: 'likes',
-      title: 'Likes',
-      focusedIcon: 'history',
-    },
     {
       key: 'discover',
       title: 'Discover',
       focusedIcon: 'bell',
       unfocusedIcon: 'bell-outline',
     },
+    {
+      key: 'likes',
+      title: 'Likes',
+      focusedIcon: 'history',
+    },
+    {key: 'chat', title: 'Chat', focusedIcon: 'album'},
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
     home: Homepage,
-    chat: Chatpage,
+    discover: DiscoverRoute,
     likes: RecentsRoute,
-    discover: NotificationsRoute,
+    chat: Chatpage,
   });
 
   return (
@@ -71,6 +75,9 @@ function App() {
           navigationState={{index, routes}}
           onIndexChange={setIndex}
           renderScene={renderScene}
+          barStyle={{backgroundColor: '#E0ECFF', height: 70}}
+          activeColor={'#75839D'}
+          sceneAnimationEnabled={true}
         />
       </NavigationContainer>
     </SafeAreaProvider>

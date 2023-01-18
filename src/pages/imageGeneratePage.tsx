@@ -2,11 +2,13 @@ import {
   View,
   Text,
   StyleSheet,
-  FlatList,
   TextInput,
   TouchableOpacity,
   Dimensions,
   Image,
+  Platform,
+  PermissionsAndroid,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
@@ -14,6 +16,8 @@ import Config from 'react-native-config';
 import Lottie from 'lottie-react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {MasonryFlashList} from '@shopify/flash-list';
+import {Modal} from 'react-native-paper';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const window = Dimensions.get('window');
 
@@ -21,6 +25,8 @@ export default function ImagePage() {
   const [data, setData] = useState([]);
   const [input, setInput] = useState<string>();
   const [bool, setBool] = useState<boolean>();
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [imageUri, setImageUri] = useState<string>('');
 
   const messageData: {
     message: string;
@@ -39,10 +45,9 @@ export default function ImagePage() {
       await axios
         .get(`${ADRESS}/dalle`)
         .then(item => {
-          console.log('item', item, item.data[0]._id);
           item.data.map(mes => messageData.push(mes));
           setData(messageData.reverse());
-          console.log('itemm', data[0]._id);
+          console.log('itemss', messageData);
         })
         .catch(error => console.log('error', error));
     };
@@ -83,6 +88,85 @@ export default function ImagePage() {
     setBool(false);
   };
 
+  const modalFunc = (uri: string) => {
+    setModalOpen(true);
+    setImageUri(uri);
+  };
+
+  const checkPermission = async () => {
+    // Function to check the platform
+    // If iOS then start downloading
+    // If Android then ask for permission
+
+    if (Platform.OS === 'ios') {
+      downloadImage();
+    } else {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          {
+            title: 'Storage Permission Required',
+            message: 'App needs access to your storage to download Photos',
+          },
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          // Once user grant the permission start downloading
+          console.log('Storage Permission Granted.');
+          downloadImage();
+        } else {
+          // If permission denied then show alert
+          Alert.alert('Storage Permission Not Granted');
+        }
+      } catch (err) {
+        // To handle permission related exception
+        console.warn(err);
+      }
+    }
+  };
+
+  const downloadImage = () => {
+    // Main function to download the image
+
+    // To add the time suffix in filename
+    let date = new Date();
+    // Image URL which we want to download
+    let image_URL = imageUri;
+    // Getting the extention of the file
+    let ext = getExtention(image_URL);
+    ext = '.' + ext[0];
+    // Get config and fs from RNFetchBlob
+    // config: To pass the downloading related options
+    // fs: Directory path where we want our image to download
+    const {config, fs} = RNFetchBlob;
+    let PictureDir = fs.dirs.PictureDir;
+    let options = {
+      fileCache: true,
+      addAndroidDownloads: {
+        // Related to the Android only
+        useDownloadManager: true,
+        notification: true,
+        path:
+          PictureDir +
+          '/image_' +
+          Math.floor(date.getTime() + date.getSeconds() / 2) +
+          ext,
+        description: 'Image',
+      },
+    };
+    config(options)
+      .fetch('GET', image_URL)
+      .then(res => {
+        // Showing alert after successful downloading
+        console.log('res -> ', JSON.stringify(res));
+        Alert.alert('Image Downloaded Successfully.');
+      });
+  };
+
+  const getExtention = filename => {
+    // To get the file extension
+    return /[.]/.exec(filename) ? /[^.]+$/.exec(filename) : undefined;
+  };
+
   return (
     <View style={styles.container}>
       <MasonryFlashList
@@ -94,37 +178,64 @@ export default function ImagePage() {
         estimatedItemSize={200}
         renderItem={({item}) => (
           <>
-            <View style={styles.messageSection}>
-              <View style={styles.photoSection}>
-                <Image
-                  source={{
-                    uri: item.response,
-                  }}
-                  style={{
-                    width: window.width / 2.2,
-                    height:
-                      item._id.slice(-1) == '1' ||
-                      item._id.slice(-1) == '2' ||
-                      item._id.slice(-1) == '3' ||
-                      item._id.slice(-1) == '4' ||
-                      item._id.slice(-1) == '5'
-                        ? window.height / 4
-                        : window.height / 3,
-                    borderWidth: 1,
-                    borderColor: 'transparent',
-                    borderTopLeftRadius: 12,
-                    borderTopRightRadius: 12,
-                  }}
-                  resizeMode="cover"
-                />
-                <View style={styles.photoPrompt}>
-                  <Text style={styles.sendedSection}>{item.prompt}</Text>
+            <TouchableOpacity onPress={() => modalFunc(item.response)}>
+              <View style={styles.messageSection}>
+                <View style={styles.photoSection}>
+                  <Image
+                    source={{
+                      uri: item.response,
+                    }}
+                    style={{
+                      width: window.width / 2.2,
+                      height:
+                        item._id.slice(-1) == '1' ||
+                        item._id.slice(-1) == '2' ||
+                        item._id.slice(-1) == '3' ||
+                        item._id.slice(-1) == '4' ||
+                        item._id.slice(-1) == '5'
+                          ? window.height / 4
+                          : window.height / 3,
+                      borderWidth: 1,
+                      borderColor: 'transparent',
+                      borderTopLeftRadius: 12,
+                      borderTopRightRadius: 12,
+                    }}
+                    resizeMode="cover"
+                  />
+                  <View style={styles.photoPrompt}>
+                    <Text style={styles.sendedSection}>{item.prompt}</Text>
+                  </View>
                 </View>
               </View>
-            </View>
+            </TouchableOpacity>
           </>
         )}
       />
+      <Modal
+        theme={{colors: {backdrop: 'rgba(255, 255, 255, 0.8)'}}}
+        visible={modalOpen}
+        onDismiss={() => setModalOpen(false)}
+        contentContainerStyle={styles.containerModalStyle}>
+        <Image
+          source={{
+            uri: imageUri,
+          }}
+          style={{
+            height: window.height / 1.6,
+            width: window.width / 1,
+          }}
+          resizeMode="cover"
+        />
+        <TouchableOpacity
+          style={{
+            alignItems: 'center',
+            backgroundColor: 'red',
+          }}
+          onPress={checkPermission}>
+          <Text>Download</Text>
+          <Icon name="download" size={40} />
+        </TouchableOpacity>
+      </Modal>
       <View style={{alignItems: 'center'}}>
         {bool ? (
           <Lottie
@@ -135,20 +246,22 @@ export default function ImagePage() {
           />
         ) : null}
       </View>
-      <View style={styles.sendMessageSection}>
-        <TextInput
-          style={styles.input}
-          onChangeText={(text: string) => setInput(text)}
-          value={input}
-          placeholder="Image Text..."
-          multiline
-        />
-        <TouchableOpacity
-          style={styles.sendMessageButton}
-          onPress={() => addArray()}>
-          <Icon name="send-o" size={20} />
-        </TouchableOpacity>
-      </View>
+      {modalOpen ? null : (
+        <View style={styles.sendMessageSection}>
+          <TextInput
+            style={styles.input}
+            onChangeText={(text: string) => setInput(text)}
+            value={input}
+            placeholder="Image Text..."
+            multiline
+          />
+          <TouchableOpacity
+            style={styles.sendMessageButton}
+            onPress={() => addArray()}>
+            <Icon name="send-o" size={20} />
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 }
@@ -218,5 +331,10 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 12,
     borderBottomRightRadius: 12,
     alignItems: 'center',
+  },
+  containerModalStyle: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backdrop: 'transparent',
   },
 });
