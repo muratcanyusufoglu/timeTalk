@@ -6,9 +6,10 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomePage from './pages/homePage';
 import ChatPage from './pages/chatPage';
 import DallePage from './pages/imageGeneratePage';
+import DiscoverPage from './pages/discoverPage';
+import LoginPage from './pages/loginPage';
 import {BottomNavigation, Text} from 'react-native-paper';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
-import DiscoverPage from './pages/discoverPage';
 
 const Stack = createNativeStackNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -16,6 +17,11 @@ const HomeStack = createNativeStackNavigator();
 const Homepage = () => {
   return (
     <HomeStack.Navigator>
+      <HomeStack.Screen
+        name="Login"
+        component={LoginPage}
+        options={{headerShown: false}}
+      />
       <HomeStack.Screen
         name="Home"
         component={HomePage}

@@ -124,41 +124,31 @@ export default function ImagePage() {
     }
   };
 
-  const downloadImage = () => {
-    // Main function to download the image
+  const downloadImage = async () => {
+    const pathToWrite = `${RNFetchBlob.fs.dirs.DownloadDir}/'downnn.png'`;
 
-    // To add the time suffix in filename
-    let date = new Date();
-    // Image URL which we want to download
-    let image_URL = imageUri;
-    // Getting the extention of the file
-    let ext = getExtention(image_URL);
-    ext = '.' + ext[0];
-    // Get config and fs from RNFetchBlob
-    // config: To pass the downloading related options
-    // fs: Directory path where we want our image to download
-    const {config, fs} = RNFetchBlob;
-    let PictureDir = fs.dirs.PictureDir;
-    let options = {
+    await RNFetchBlob.config({
+      // add this option that makes response data to be stored as a file,
+      // this is much more performant.
       fileCache: true,
+      path: pathToWrite,
+
       addAndroidDownloads: {
-        // Related to the Android only
-        useDownloadManager: true,
+        title: 'download.jpg',
+        description: 'Download.jpg',
+        useDownloadManager: false,
         notification: true,
-        path:
-          PictureDir +
-          '/image_' +
-          Math.floor(date.getTime() + date.getSeconds() / 2) +
-          ext,
-        description: 'Image',
       },
-    };
-    config(options)
-      .fetch('GET', image_URL)
+    })
+      .fetch('GET', imageUri, {
+        Authorization: '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',
+        //some headers ..
+      })
       .then(res => {
-        // Showing alert after successful downloading
-        console.log('res -> ', JSON.stringify(res));
-        Alert.alert('Image Downloaded Successfully.');
+        // the temp file path
+        RNFetchBlob.ios.openDocument(res.path());
+        Alert.alert('Fotograf indirildi.', res.toString());
+        console.log('res', res);
       });
   };
 
@@ -185,21 +175,7 @@ export default function ImagePage() {
                     source={{
                       uri: item.response,
                     }}
-                    style={{
-                      width: window.width / 2.2,
-                      height:
-                        item._id.slice(-1) == '1' ||
-                        item._id.slice(-1) == '2' ||
-                        item._id.slice(-1) == '3' ||
-                        item._id.slice(-1) == '4' ||
-                        item._id.slice(-1) == '5'
-                          ? window.height / 4
-                          : window.height / 3,
-                      borderWidth: 1,
-                      borderColor: 'transparent',
-                      borderTopLeftRadius: 12,
-                      borderTopRightRadius: 12,
-                    }}
+                    style={styles.flatlistImages}
                     resizeMode="cover"
                   />
                   <View style={styles.photoPrompt}>
@@ -272,9 +248,12 @@ const styles = StyleSheet.create({
   messageSection: {
     margin: 5,
     alignItems: 'center',
+    marginTop: 20,
   },
   sendedSection: {
     padding: 5,
+    fontWeight: '900',
+    fontSize: 15,
   },
   responsSection: {
     backgroundColor: '#E9EEF8',
@@ -315,7 +294,7 @@ const styles = StyleSheet.create({
   },
   sendIcon: {},
   photoPrompt: {
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
     borderWidth: 1,
     borderColor: 'transparent',
     borderBottomLeftRadius: 12,
@@ -330,11 +309,23 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
     borderBottomLeftRadius: 12,
     borderBottomRightRadius: 12,
+    borderTopRightRadius: 12,
+    borderTopLeftRadius: 12,
     alignItems: 'center',
   },
   containerModalStyle: {
     alignItems: 'center',
     justifyContent: 'center',
     backdrop: 'transparent',
+  },
+  flatlistImages: {
+    width: window.width / 2.2,
+    height: window.height / 3,
+    borderWidth: 1,
+    borderColor: 'transparent',
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
   },
 });
