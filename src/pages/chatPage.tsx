@@ -20,7 +20,17 @@ export default function ChatPage() {
   const [input, setInput] = useState<string>();
   const [bool, setBool] = useState<boolean>();
 
-  const messageData: {message: string; user: string; date: string}[] = [];
+  const messageData: {
+    message: string;
+    user: string;
+    date: string;
+    messageData: {
+      message: string;
+      user: string;
+      date: string;
+      response: string;
+    };
+  }[] = [];
   const ADRESS = Config.ADRESS;
 
   useEffect(() => {
@@ -47,21 +57,25 @@ export default function ChatPage() {
       .get(`${ADRESS}/messages/${input}`)
       .then(item => {
         items = item.data;
-        console.log('data', `${ADRESS}/messages/${input}`);
+        console.log('dataresponse', item.data);
       })
       .catch(error => console.log('error', error));
 
     await axios
       .post(`${ADRESS}/messages`, {
-        message: `${input}`,
         user: 'crazy_61',
-        date: `${items}`,
+        messageInfo: {
+          message: `${input}`,
+          user: 'crazy_61',
+          response: `${items}`,
+          date: '05.05.2010',
+        },
       })
       .then(resp => {
-        console.log('resp', resp);
+        console.log('resp post', resp);
       })
       .catch(error => {
-        console.log('error', error);
+        console.log('error post', error);
       });
 
     await axios
@@ -85,8 +99,12 @@ export default function ChatPage() {
         renderItem={({item}) => (
           <>
             <View style={styles.messageSection}>
-              <Text style={styles.sendedSection}>{item.message}</Text>
-              <Text style={styles.responsSection}>{item.date}</Text>
+              <Text style={styles.sendedSection}>
+                {item.messageInfo.message}
+              </Text>
+              <Text style={styles.responsSection}>
+                {item.messageInfo.response}
+              </Text>
             </View>
           </>
         )}

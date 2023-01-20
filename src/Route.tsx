@@ -8,6 +8,7 @@ import ChatPage from './pages/chatPage';
 import DallePage from './pages/imageGeneratePage';
 import DiscoverPage from './pages/discoverPage';
 import LoginPage from './pages/loginPage';
+import Profile from './pages/profile';
 import {BottomNavigation, Text} from 'react-native-paper';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 
@@ -18,13 +19,13 @@ const Homepage = () => {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
-        name="Login"
-        component={LoginPage}
+        name="Home"
+        component={HomePage}
         options={{headerShown: false}}
       />
       <HomeStack.Screen
-        name="Home"
-        component={HomePage}
+        name="Login"
+        component={LoginPage}
         options={{headerShown: false}}
       />
       <HomeStack.Screen name="Chat" component={ChatPage} />
@@ -65,6 +66,7 @@ function App() {
       focusedIcon: 'history',
     },
     {key: 'chat', title: 'Chat', focusedIcon: 'album'},
+    {key: 'profile', title: 'Profile', focusedIcon: 'album'},
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
@@ -72,6 +74,7 @@ function App() {
     discover: DiscoverRoute,
     likes: RecentsRoute,
     chat: Chatpage,
+    profile: Profile,
   });
 
   return (
