@@ -51,28 +51,28 @@ function App() {
     {
       key: 'home',
       title: 'Home',
-      focusedIcon: 'heart',
-      unfocusedIcon: 'heart-outline',
+      focusedIcon: 'home',
+      unfocusedIcon: 'home',
+    },
+    {key: 'chat', title: 'Chat', focusedIcon: 'forum'},
+    {
+      key: 'dalle',
+      title: 'Dalle',
+      focusedIcon: 'message-image',
     },
     {
       key: 'discover',
       title: 'Discover',
       focusedIcon: 'bell',
-      unfocusedIcon: 'bell-outline',
+      unfocusedIcon: 'sunglasses',
     },
-    {
-      key: 'likes',
-      title: 'Likes',
-      focusedIcon: 'history',
-    },
-    {key: 'chat', title: 'Chat', focusedIcon: 'album'},
-    {key: 'profile', title: 'Profile', focusedIcon: 'album'},
+    {key: 'profile', title: 'Profile', focusedIcon: 'account'},
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
     home: Homepage,
     discover: DiscoverRoute,
-    likes: RecentsRoute,
+    dalle: DallePage,
     chat: Chatpage,
     profile: Profile,
   });

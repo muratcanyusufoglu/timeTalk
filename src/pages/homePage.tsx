@@ -41,59 +41,31 @@ const App = () => {
           <Icon name="money" size={18} style={{color: '#75839D'}} />
         </View>
       </View>
-
-      <View style={styles.sectionsBar}>
-        <TouchableOpacity style={styles.sectionsBarMinimal}>
-          <Icon name="bolt" size={18} style={{color: '#75839D'}} />
-          <Text style={styles.textHeaders}>Quick Question</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.sectionsBarMinimal}>
-          <Icon name="bolt" size={18} style={{color: '#75839D'}} />
-          <Text style={styles.textHeaders}>Nostradamus</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.sectionsBar}>
-        <TouchableOpacity
-          style={styles.sectionsBarMinimal}
-          onPress={() => navigation.navigate('Chat' as never)}>
-          <Icon name="wechat" size={18} style={{color: '#75839D'}} />
-          <Text style={styles.textHeaders}>Chat</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.sectionsBarMinimal}
-          onPress={() => navigation.navigate('Dalle' as never)}>
-          <Icon name="file-image-o" size={18} style={{color: '#75839D'}} />
-          <Text style={styles.textHeaders}>Text to Image</Text>
-        </TouchableOpacity>
-      </View>
-      {/* <View style={styles.questionBelow}>
-        <Text style={styles.textHeaders}>Recent Questions</Text>
-        <Icon name="search" size={15} />
-      </View> */}
-
-      {/* <TextInput
-        style={styles.searchBar}
-        placeholder="Search"
-        placeholderTextColor={'#D6DAE2'}>
-        <Icon name="search" size={18} style={{color: '#75839D'}} />
-        <Text style={{color: '#75839D'}}>Search</Text>
-      </TextInput> */}
       <SegmentedButtons
         value={value}
         onValueChange={setValue}
         style={styles.segmentedButtons}
         buttons={[
           {
-            value: 'discover',
-            label: 'Discover',
+            value: 'chats',
+            label: 'Chats',
             onPress: () => navigation.navigate('Chat' as never),
             style: {
               borderRadius: 6,
             },
           },
           {
-            value: 'likes',
-            label: 'Likes',
+            value: 'dalle',
+            label: 'Dalle',
+            onPress: () => navigation.navigate('Chat' as never),
+            style: {
+              borderRadius: 6,
+            },
+          },
+          {
+            value: 'all',
+            label: 'All',
+            onPress: () => navigation.navigate('Dalle' as never),
             style: {
               borderRadius: 6,
             },
@@ -175,7 +147,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   segmentedButtons: {
-    marginTop: 30,
+    marginTop: 10,
     marginHorizontal: (window.width - window.width / 1.2) / 3,
     borderRadius: 6,
   },
