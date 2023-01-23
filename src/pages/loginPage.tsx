@@ -10,11 +10,12 @@ import {
   Alert,
   Image,
 } from 'react-native';
+
 import {
   GoogleSignin,
-  GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
+
 import auth from '@react-native-firebase/auth';
 
 const window = Dimensions.get('window');
@@ -24,17 +25,16 @@ const App = () => {
 
   useEffect(() => {
     GoogleSignin.configure({
-      scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
       webClientId:
         '101181523513-2halvkj3k0a6j8fqpvbf92002b5dequk.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-      offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
     });
   }, []);
 
   const signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
-      const {accessToken, idToken} = await GoogleSignin.signIn();
+      const {accessToken, idToken, user} = await GoogleSignin.signIn();
+      console.log('auth', user.id, user.name);
       setloggedIn(true);
       const credential = auth.GoogleAuthProvider.credential(
         idToken,
@@ -42,6 +42,8 @@ const App = () => {
       );
       await auth().signInWithCredential(credential);
     } catch (error) {
+      console.log('hard', error);
+
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
         Alert.alert('Cancel');
@@ -82,15 +84,13 @@ const App = () => {
             />
             <Text style={styles.googleButtonText}>Sign in with Google</Text>
           </TouchableOpacity>
-          {/* <TouchableOpacity style={styles.googleButton} onPress={signOut}>
+          <TouchableOpacity style={styles.googleButton} onPress={signOut}>
             <Image
               style={styles.googleIcon}
-              source={{
-                uri: 'https://i.ibb.co/j82DCcR/search.png',
-              }}
+              source={require('../assets/photos/google.png')}
             />
-            <Text style={styles.googleButtonText}>Sign in with Google</Text>
-          </TouchableOpacity> */}
+            <Text style={styles.googleButtonText}>Sign Out</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>

@@ -7,41 +7,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:101181523513:android:deceed3847a0ae4f2dafe8",
-        "android_client_info": {
-          "package_name": "com.brownbear"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "101181523513-2halvkj3k0a6j8fqpvbf92002b5dequk.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBMnEvQkipuN6pmcOt4lBzMaFC7-GwLgxM"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "101181523513-2halvkj3k0a6j8fqpvbf92002b5dequk.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:101181523513:android:6680ced9711910882dafe8",
         "android_client_info": {
           "package_name": "com.questionanswerbot"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "101181523513-n6d7u04qiu1e8hv68iq9cf0icidtdpfo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.questionanswerbot",
+            "certificate_hash": "5e41a18da079c159d56473ad7f3827883caf9fba"
+          }
+        },
         {
           "client_id": "101181523513-2halvkj3k0a6j8fqpvbf92002b5dequk.apps.googleusercontent.com",
           "client_type": 3

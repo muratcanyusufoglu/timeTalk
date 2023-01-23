@@ -19,13 +19,13 @@ const Homepage = () => {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
-        name="Home"
-        component={HomePage}
+        name="Login"
+        component={LoginPage}
         options={{headerShown: false}}
       />
       <HomeStack.Screen
-        name="Login"
-        component={LoginPage}
+        name="Home"
+        component={HomePage}
         options={{headerShown: false}}
       />
       <HomeStack.Screen name="Chat" component={ChatPage} />
