@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     marginLeft: window.width / 3,
     marginRight: window.width / 20,
     padding: 15,
-    marginVertical: 2,
+    marginVertical: 5,
     borderRadius: 10,
   },
   responsSection: {
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     marginRight: window.width / 3,
     marginLeft: window.width / 20,
     padding: 15,
-    marginVertical: 2,
+    marginVertical: 5,
     borderRadius: 10,
   },
   animation: {

@@ -50,7 +50,7 @@ const App = () => {
           <Icon name="file-image-o" size={18} style={{color: '#75839D'}} />
           <Text style={styles.textHeaders}>Image to Text Question</Text>
         </View>
-      </View>
+      </View> 
       <View style={styles.questionBelow}>
         <Text style={styles.textHeaders}>Recent Questions</Text>
         <Icon name="search" size={15} />

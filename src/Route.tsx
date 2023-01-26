@@ -1,7 +1,11 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import {
+  NavigationContainer,
+  createNavigationContainerRef,
+  getCurrentRoute,
+} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomePage from './pages/homePage';
 import ChatPage from './pages/chatPage';
@@ -12,10 +16,12 @@ import Profile from './pages/profile';
 import {BottomNavigation, Text} from 'react-native-paper';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 
-const Stack = createNativeStackNavigator();
+const ref = createNavigationContainerRef();
 const HomeStack = createNativeStackNavigator();
 
 const Homepage = () => {
+  const hide = ref.current?.getCurrentRoute()?.name;
+  console.log('hide', hide);
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
@@ -51,22 +57,33 @@ function App() {
     {
       key: 'home',
       title: 'Home',
-      focusedIcon: 'home',
+      focusedIcon: 'home-outline',
       unfocusedIcon: 'home',
     },
-    {key: 'chat', title: 'Chat', focusedIcon: 'forum'},
+    {
+      key: 'chat',
+      title: 'Chat',
+      focusedIcon: 'forum-outline',
+      unfocusedIcon: 'forum',
+    },
     {
       key: 'dalle',
       title: 'Dalle',
-      focusedIcon: 'message-image',
+      focusedIcon: 'message-image-outline',
+      unfocusedIcon: 'message-image',
     },
     {
       key: 'discover',
       title: 'Discover',
-      focusedIcon: 'bell',
-      unfocusedIcon: 'sunglasses',
+      focusedIcon: 'image-search-outline',
+      unfocusedIcon: 'image-search',
     },
-    {key: 'profile', title: 'Profile', focusedIcon: 'account'},
+    {
+      key: 'profile',
+      title: 'Profile',
+      focusedIcon: 'account-outline',
+      unfocusedIcon: 'account',
+    },
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
@@ -81,16 +98,21 @@ function App() {
     <SafeAreaProvider>
       <NavigationContainer>
         <BottomNavigation
+          shifting={true}
           navigationState={{index, routes}}
           onIndexChange={setIndex}
           renderScene={renderScene}
-          barStyle={{backgroundColor: '#E0ECFF', height: 70}}
+          barStyle={
+            index == 0
+              ? {backgroundColor: '#E0ECFF', height: 70}
+              : {backgroundColor: '#E0ECFF', height: 70}
+          }
           activeColor={'#75839D'}
+          theme={{colors: {secondaryContainer: 'transparent'}}}
           sceneAnimationEnabled={true}
         />
       </NavigationContainer>
     </SafeAreaProvider>
   );
 }
-
 export default App;

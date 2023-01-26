@@ -15,13 +15,16 @@ import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-
+import {useNavigation} from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 import auth from '@react-native-firebase/auth';
 
 const window = Dimensions.get('window');
 const App = () => {
   const [loggedIn, setloggedIn] = useState(false);
   const [userInfo, setuserInfo] = useState([]);
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -34,19 +37,37 @@ const App = () => {
     try {
       await GoogleSignin.hasPlayServices();
       const {accessToken, idToken, user} = await GoogleSignin.signIn();
-      console.log('auth', user.id, user.name);
+      console.log('auth', user.id, user.name, await GoogleSignin.signIn());
       setloggedIn(true);
       const credential = auth.GoogleAuthProvider.credential(
         idToken,
         accessToken,
       );
       await auth().signInWithCredential(credential);
+      Toast.show({
+        type: 'success',
+        text1: 'Hello',
+        text2: 'Your login process succesfull 👋',
+      });
+      if (idToken) {
+        function navigateHome() {
+          navigation.navigate('Home' as never);
+          Toast.show({
+            type: 'success',
+            text1: 'Hello',
+            text2: 'Your login process succesfull 👋',
+          });
+        }
+        navigateHome();
+      }
     } catch (error) {
-      console.log('hard', error);
-
+      Toast.show({
+        type: 'error',
+        text1: 'Opss',
+        text2: 'Your login process unseccesfull 👋',
+      });
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
-        Alert.alert('Cancel');
       } else if (error.code === statusCodes.IN_PROGRESS) {
         Alert.alert('Signin in progress');
         // operation (f.e. sign in) is in progress already
@@ -54,7 +75,7 @@ const App = () => {
         Alert.alert('PLAY_SERVICES_NOT_AVAILABLE');
         // play services not available or outdated
       } else {
-        // some other error happened
+        Alert.alert('An error accurated');
       }
     }
   };
@@ -71,6 +92,7 @@ const App = () => {
   };
   return (
     <SafeAreaView style={styles.safeArea}>
+      <Toast position="bottom" bottomOffset={0} type="success" />
       <StatusBar barStyle="light-content" />
       <View style={styles.container}>
         <View style={styles.topContent}>

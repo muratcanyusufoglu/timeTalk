@@ -22,6 +22,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
 import {SegmentedButtons} from 'react-native-paper';
+import Toast from 'react-native-toast-message';
 
 const window = Dimensions.get('window');
 
@@ -32,6 +33,7 @@ const App = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Toast position="bottom" bottomOffset={0} type="success" />
       <View style={styles.coinHeader}>
         <View>
           <Text>Logo</Text>
