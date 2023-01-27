@@ -10,7 +10,6 @@ import {
   Alert,
   Image,
 } from 'react-native';
-
 import {
   GoogleSignin,
   statusCodes,
@@ -18,6 +17,19 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import auth from '@react-native-firebase/auth';
+import {AsyncStorage} from 'react-native';
+
+// const TaskSchema = {
+//   name: 'Task',
+//   login: true,
+//   properties: {
+//     _id: 'int',
+//     name: 'string',
+//     status: 'string?',
+//     owner_id: 'string?',
+//   },
+//   primaryKey: '_id',
+// };
 
 const window = Dimensions.get('window');
 const App = () => {
@@ -33,6 +45,13 @@ const App = () => {
     });
   }, []);
 
+  // const realm = Realm.open({
+  //   path: 'realm-files/myrealm',
+  //   schema: [TaskSchema],
+  // });
+
+  // let task1, task2;
+
   const signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
@@ -44,11 +63,6 @@ const App = () => {
         accessToken,
       );
       await auth().signInWithCredential(credential);
-      Toast.show({
-        type: 'success',
-        text1: 'Hello',
-        text2: 'Your login process succesfull 👋',
-      });
       if (idToken) {
         function navigateHome() {
           navigation.navigate('Home' as never);
@@ -78,6 +92,20 @@ const App = () => {
         Alert.alert('An error accurated');
       }
     }
+
+    // realm.write(() => {
+    //   task1 = realm.create('Task', {
+    //     _id: 1,
+    //     name: 'go grocery shopping',
+    //     status: 'Open',
+    //   });
+    //   task2 = realm.create('Task', {
+    //     _id: 2,
+    //     name: 'go exercise',
+    //     status: 'Open',
+    //   });
+    //   console.log(`created two tasks: ${task1.name} & ${task2.name}`);
+    // });
   };
 
   const signOut = async () => {
@@ -90,13 +118,15 @@ const App = () => {
       console.error(error);
     }
   };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <Toast position="bottom" bottomOffset={0} type="success" />
       <StatusBar barStyle="light-content" />
       <View style={styles.container}>
         <View style={styles.topContent}>
-          <Text style={styles.mainText}>Social Auth</Text>
+          <Text style={styles.mainText}>Login</Text>
+          <Text style={styles.altText}>Login or sign up</Text>
         </View>
         <View style={styles.bottomContent}>
           <TouchableOpacity style={styles.googleButton} onPress={signIn}>
@@ -120,11 +150,11 @@ const App = () => {
 };
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: '#262b2f',
+    backgroundColor: '#f2f2f2',
   },
   container: {
     height: Dimensions.get('window').height,
-    backgroundColor: '#262b2f',
+    backgroundColor: '#ffffff',
   },
   topContent: {
     flex: 1,
@@ -138,16 +168,23 @@ const styles = StyleSheet.create({
   },
   mainText: {
     fontSize: 54,
-    color: 'white',
+    color: 'black',
+  },
+  altText: {
+    fontSize: 20,
+    color: 'black',
   },
   googleButton: {
+    marginTop: 10,
     backgroundColor: 'white',
     borderRadius: 4,
-    width: window.width / 1.5,
-    height: window.height / 12,
+    width: window.width / 1.4,
+    height: window.height / 15,
+    justifyContent: 'space-around',
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
     alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#E5E5E5',
   },
   googleButtonText: {
     marginLeft: 0,
@@ -157,6 +194,7 @@ const styles = StyleSheet.create({
   googleIcon: {
     height: 24,
     width: 24,
+    marginRight: 0,
   },
 });
 export default App;

@@ -18,6 +18,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {MasonryFlashList} from '@shopify/flash-list';
 import {Modal} from 'react-native-paper';
 import RNFetchBlob from 'rn-fetch-blob';
+import {AsyncStorage} from 'react-native';
 
 const window = Dimensions.get('window');
 
@@ -41,6 +42,11 @@ export default function ImagePage() {
     console.log('asd');
 
     const fetch = async () => {
+      try {
+        await AsyncStorage.setItem('isLogin', 'false');
+      } catch (error) {
+        // Error saving data
+      }
       console.log('asdb');
       await axios
         .get(`${ADRESS}/dalle`)

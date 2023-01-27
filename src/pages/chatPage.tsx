@@ -12,6 +12,7 @@ import axios from 'axios';
 import Config from 'react-native-config';
 import Lottie from 'lottie-react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {AsyncStorage} from 'react-native';
 
 const window = Dimensions.get('window');
 
@@ -37,7 +38,12 @@ export default function ChatPage() {
     console.log('asd');
 
     const fetch = async () => {
-      console.log('asdb');
+      try {
+        await AsyncStorage.setItem('isLogin', 'false');
+      } catch (error) {
+        // Error saving data
+      }
+
       await axios
         .get(`${ADRESS}/messages`)
         .then(item => {
@@ -47,6 +53,7 @@ export default function ChatPage() {
         })
         .catch(error => console.log('error', error));
     };
+
     fetch();
   }, [bool]);
 

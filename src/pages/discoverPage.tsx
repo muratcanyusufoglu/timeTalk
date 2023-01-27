@@ -14,6 +14,7 @@ import axios from 'axios';
 import Config from 'react-native-config';
 import LottieView from 'lottie-react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {AsyncStorage} from 'react-native';
 
 const window = Dimensions.get('window');
 

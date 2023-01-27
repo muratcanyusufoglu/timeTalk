@@ -1,6 +1,5 @@
 // In App.js in a new project
-
-import * as React from 'react';
+import React, {useEffect} from 'react';
 import {
   NavigationContainer,
   createNavigationContainerRef,
@@ -15,13 +14,12 @@ import LoginPage from './pages/loginPage';
 import Profile from './pages/profile';
 import {BottomNavigation, Text} from 'react-native-paper';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
+import {AsyncStorage} from 'react-native';
 
-const ref = createNavigationContainerRef();
+let value: any;
 const HomeStack = createNativeStackNavigator();
 
 const Homepage = () => {
-  const hide = ref.current?.getCurrentRoute()?.name;
-  console.log('hide', hide);
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
@@ -29,7 +27,7 @@ const Homepage = () => {
         component={LoginPage}
         options={{headerShown: false}}
       />
-      <HomeStack.Screen
+      {/* <HomeStack.Screen
         name="Home"
         component={HomePage}
         options={{headerShown: false}}
@@ -39,14 +37,12 @@ const Homepage = () => {
         name="Dalle"
         component={DallePage}
         options={{headerShown: false}}
-      />
+      /> */}
     </HomeStack.Navigator>
   );
 };
 
 const Chatpage = () => <ChatPage />;
-
-const RecentsRoute = () => <ChatPage />;
 
 const DiscoverRoute = () => <DiscoverPage />;
 
@@ -103,8 +99,8 @@ function App() {
           onIndexChange={setIndex}
           renderScene={renderScene}
           barStyle={
-            index == 0
-              ? {backgroundColor: '#E0ECFF', height: 70}
+            value == 'true'
+              ? {backgroundColor: 'red', height: 70}
               : {backgroundColor: '#E0ECFF', height: 70}
           }
           activeColor={'#75839D'}
