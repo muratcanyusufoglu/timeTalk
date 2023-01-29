@@ -14,7 +14,6 @@ import LoginPage from './pages/loginPage';
 import Profile from './pages/profile';
 import {BottomNavigation, Text} from 'react-native-paper';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
-import {AsyncStorage} from 'react-native';
 
 let value: any;
 const HomeStack = createNativeStackNavigator();
@@ -27,7 +26,7 @@ const Homepage = () => {
         component={LoginPage}
         options={{headerShown: false}}
       />
-      {/* <HomeStack.Screen
+      <HomeStack.Screen
         name="Home"
         component={HomePage}
         options={{headerShown: false}}
@@ -37,7 +36,7 @@ const Homepage = () => {
         name="Dalle"
         component={DallePage}
         options={{headerShown: false}}
-      /> */}
+      />
     </HomeStack.Navigator>
   );
 };
@@ -49,7 +48,13 @@ const DiscoverRoute = () => <DiscoverPage />;
 function App() {
   const [index, setIndex] = React.useState(0);
 
-  const [routes] = React.useState([
+  const [routes, setRoutes] = React.useState([
+    {
+      key: 'login',
+      title: 'Login',
+      focusedIcon: 'home-outline',
+      unfocusedIcon: 'home',
+    },
     {
       key: 'home',
       title: 'Home',
@@ -82,13 +87,101 @@ function App() {
     },
   ]);
 
-  const renderScene = BottomNavigation.SceneMap({
-    home: Homepage,
-    discover: DiscoverRoute,
-    dalle: DallePage,
-    chat: Chatpage,
-    profile: Profile,
-  });
+  const renderScene = BottomNavigation.SceneMap(
+    index === 0
+      ? {
+          login: LoginPage,
+          home: Homepage,
+          discover: DiscoverRoute,
+          dalle: DallePage,
+          chat: Chatpage,
+          profile: Profile,
+        }
+      : {
+          home: Homepage,
+          discover: DiscoverRoute,
+          dalle: DallePage,
+          chat: Chatpage,
+          profile: Profile,
+        },
+  );
+
+  // useEffect(() => {
+  //   console.log('index', index);
+  //   if (index === 0) {
+  //     setRoutes([
+  //       {
+  //         key: 'login',
+  //         title: 'Login',
+  //         focusedIcon: 'home-outline',
+  //         unfocusedIcon: 'home',
+  //       },
+  //       {
+  //         key: 'home',
+  //         title: 'Home',
+  //         focusedIcon: 'home-outline',
+  //         unfocusedIcon: 'home',
+  //       },
+  //       {
+  //         key: 'chat',
+  //         title: 'Chat',
+  //         focusedIcon: 'forum-outline',
+  //         unfocusedIcon: 'forum',
+  //       },
+  //       {
+  //         key: 'dalle',
+  //         title: 'Dalle',
+  //         focusedIcon: 'message-image-outline',
+  //         unfocusedIcon: 'message-image',
+  //       },
+  //       {
+  //         key: 'discover',
+  //         title: 'Discover',
+  //         focusedIcon: 'image-search-outline',
+  //         unfocusedIcon: 'image-search',
+  //       },
+  //       {
+  //         key: 'profile',
+  //         title: 'Profile',
+  //         focusedIcon: 'account-outline',
+  //         unfocusedIcon: 'account',
+  //       },
+  //     ]);
+  //   } else {
+  //     setRoutes([
+  //       {
+  //         key: 'home',
+  //         title: 'Home',
+  //         focusedIcon: 'home-outline',
+  //         unfocusedIcon: 'home',
+  //       },
+  //       {
+  //         key: 'chat',
+  //         title: 'Chat',
+  //         focusedIcon: 'forum-outline',
+  //         unfocusedIcon: 'forum',
+  //       },
+  //       {
+  //         key: 'dalle',
+  //         title: 'Dalle',
+  //         focusedIcon: 'message-image-outline',
+  //         unfocusedIcon: 'message-image',
+  //       },
+  //       {
+  //         key: 'discover',
+  //         title: 'Discover',
+  //         focusedIcon: 'image-search-outline',
+  //         unfocusedIcon: 'image-search',
+  //       },
+  //       {
+  //         key: 'profile',
+  //         title: 'Profile',
+  //         focusedIcon: 'account-outline',
+  //         unfocusedIcon: 'account',
+  //       },
+  //     ]);
+  //   }
+  // }, [index]);
 
   return (
     <SafeAreaProvider>
@@ -99,7 +192,7 @@ function App() {
           onIndexChange={setIndex}
           renderScene={renderScene}
           barStyle={
-            value == 'true'
+            index == 0
               ? {backgroundColor: 'red', height: 70}
               : {backgroundColor: '#E0ECFF', height: 70}
           }
