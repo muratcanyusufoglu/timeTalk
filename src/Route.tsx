@@ -12,10 +12,9 @@ import DallePage from './pages/imageGeneratePage';
 import DiscoverPage from './pages/discoverPage';
 import LoginPage from './pages/loginPage';
 import Profile from './pages/profile';
-import {BottomNavigation, Text} from 'react-native-paper';
-import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
+import {BottomNavigation} from 'react-native-paper';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
-let value: any;
 const HomeStack = createNativeStackNavigator();
 
 const Homepage = () => {
@@ -48,7 +47,7 @@ const DiscoverRoute = () => <DiscoverPage />;
 function App() {
   const [index, setIndex] = React.useState(0);
   const [isLogin, setIsLogin] = React.useState(false);
-  const [routesSignIn, setRoutesSignIn] = React.useState([
+  const [routesSignIn] = React.useState([
     {
       key: 'login',
       title: 'Login',
@@ -87,7 +86,7 @@ function App() {
     },
   ]);
 
-  const [routes, setRoutes] = React.useState([
+  const [routes] = React.useState([
     {
       key: 'home',
       title: 'Home',

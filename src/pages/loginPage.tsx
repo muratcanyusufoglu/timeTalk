@@ -17,8 +17,7 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import auth from '@react-native-firebase/auth';
-import {AsyncStorage} from 'react-native';
-
+//import storage from '../storage/storege';
 // const TaskSchema = {
 //   name: 'Task',
 //   login: true,
@@ -50,8 +49,6 @@ const App = () => {
   //   schema: [TaskSchema],
   // });
 
-  // let task1, task2;
-
   const signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
@@ -64,6 +61,14 @@ const App = () => {
       );
       await auth().signInWithCredential(credential);
       if (idToken) {
+        // storage.save({
+        //   key: 'userId',
+        //   data: {
+        //     id: idToken,
+        //     user: user.id,
+        //     userName: user.name,
+        //   },
+        // });
         function navigateHome() {
           navigation.navigate('Home' as never);
           Toast.show({

@@ -9,16 +9,7 @@
  */
 
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  TextInput,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, View, Dimensions} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
 import {SegmentedButtons} from 'react-native-paper';
