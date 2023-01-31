@@ -12,8 +12,10 @@ import DallePage from './pages/imageGeneratePage';
 import DiscoverPage from './pages/discoverPage';
 import LoginPage from './pages/loginPage';
 import Profile from './pages/profile';
-import {BottomNavigation, Text} from 'react-native-paper';
-import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
+import {BottomNavigation} from 'react-native-paper';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {Provider} from 'react-redux';
+import store from '../src/redux/store';
 
 let value: any;
 const HomeStack = createNativeStackNavigator();
@@ -47,8 +49,8 @@ const DiscoverRoute = () => <DiscoverPage />;
 
 function App() {
   const [index, setIndex] = React.useState(0);
-
-  const [routes, setRoutes] = React.useState([
+  const [isLogin, setIsLogin] = React.useState(false);
+  const [routesSignIn, setRoutesSignIn] = React.useState([
     {
       key: 'login',
       title: 'Login',
@@ -87,121 +89,73 @@ function App() {
     },
   ]);
 
-  const renderScene = BottomNavigation.SceneMap(
-    index === 0
-      ? {
-          login: LoginPage,
-          home: Homepage,
-          discover: DiscoverRoute,
-          dalle: DallePage,
-          chat: Chatpage,
-          profile: Profile,
-        }
-      : {
-          home: Homepage,
-          discover: DiscoverRoute,
-          dalle: DallePage,
-          chat: Chatpage,
-          profile: Profile,
-        },
-  );
+  const [routes, setRoutes] = React.useState([
+    {
+      key: 'home',
+      title: 'Home',
+      focusedIcon: 'home-outline',
+      unfocusedIcon: 'home',
+    },
+    {
+      key: 'chat',
+      title: 'Chat',
+      focusedIcon: 'forum-outline',
+      unfocusedIcon: 'forum',
+    },
+    {
+      key: 'dalle',
+      title: 'Dalle',
+      focusedIcon: 'message-image-outline',
+      unfocusedIcon: 'message-image',
+    },
+    {
+      key: 'discover',
+      title: 'Discover',
+      focusedIcon: 'image-search-outline',
+      unfocusedIcon: 'image-search',
+    },
+    {
+      key: 'profile',
+      title: 'Profile',
+      focusedIcon: 'account-outline',
+      unfocusedIcon: 'account',
+    },
+  ]);
 
-  // useEffect(() => {
-  //   console.log('index', index);
-  //   if (index === 0) {
-  //     setRoutes([
-  //       {
-  //         key: 'login',
-  //         title: 'Login',
-  //         focusedIcon: 'home-outline',
-  //         unfocusedIcon: 'home',
-  //       },
-  //       {
-  //         key: 'home',
-  //         title: 'Home',
-  //         focusedIcon: 'home-outline',
-  //         unfocusedIcon: 'home',
-  //       },
-  //       {
-  //         key: 'chat',
-  //         title: 'Chat',
-  //         focusedIcon: 'forum-outline',
-  //         unfocusedIcon: 'forum',
-  //       },
-  //       {
-  //         key: 'dalle',
-  //         title: 'Dalle',
-  //         focusedIcon: 'message-image-outline',
-  //         unfocusedIcon: 'message-image',
-  //       },
-  //       {
-  //         key: 'discover',
-  //         title: 'Discover',
-  //         focusedIcon: 'image-search-outline',
-  //         unfocusedIcon: 'image-search',
-  //       },
-  //       {
-  //         key: 'profile',
-  //         title: 'Profile',
-  //         focusedIcon: 'account-outline',
-  //         unfocusedIcon: 'account',
-  //       },
-  //     ]);
-  //   } else {
-  //     setRoutes([
-  //       {
-  //         key: 'home',
-  //         title: 'Home',
-  //         focusedIcon: 'home-outline',
-  //         unfocusedIcon: 'home',
-  //       },
-  //       {
-  //         key: 'chat',
-  //         title: 'Chat',
-  //         focusedIcon: 'forum-outline',
-  //         unfocusedIcon: 'forum',
-  //       },
-  //       {
-  //         key: 'dalle',
-  //         title: 'Dalle',
-  //         focusedIcon: 'message-image-outline',
-  //         unfocusedIcon: 'message-image',
-  //       },
-  //       {
-  //         key: 'discover',
-  //         title: 'Discover',
-  //         focusedIcon: 'image-search-outline',
-  //         unfocusedIcon: 'image-search',
-  //       },
-  //       {
-  //         key: 'profile',
-  //         title: 'Profile',
-  //         focusedIcon: 'account-outline',
-  //         unfocusedIcon: 'account',
-  //       },
-  //     ]);
-  //   }
-  // }, [index]);
+  const renderScene = BottomNavigation.SceneMap({
+    home: Homepage,
+    discover: DiscoverRoute,
+    dalle: DallePage,
+    chat: Chatpage,
+    profile: Profile,
+    login: LoginPage,
+  });
+
+  useEffect(() => {
+    setIsLogin(true);
+  }, []);
 
   return (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <BottomNavigation
-          shifting={true}
-          navigationState={{index, routes}}
-          onIndexChange={setIndex}
-          renderScene={renderScene}
-          barStyle={
-            index == 0
-              ? {backgroundColor: 'red', height: 70}
-              : {backgroundColor: '#E0ECFF', height: 70}
-          }
-          activeColor={'#75839D'}
-          theme={{colors: {secondaryContainer: 'transparent'}}}
-          sceneAnimationEnabled={true}
-        />
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <Provider store={store}>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <BottomNavigation
+            shifting={true}
+            navigationState={{index, routes: isLogin ? routes : routesSignIn}}
+            onIndexChange={setIndex}
+            renderScene={renderScene}
+            barStyle={
+              isLogin == true
+                ? {backgroundColor: '#E0ECFF', height: 70}
+                : {height: 0}
+            }
+            activeColor={'#75839D'}
+            theme={{colors: {secondaryContainer: 'transparent'}}}
+            sceneAnimationEnabled={true}
+          />
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </Provider>
   );
 }
 export default App;

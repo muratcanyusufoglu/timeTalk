@@ -23,11 +23,13 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
 import {SegmentedButtons} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
+import {useDispatch, useSelector} from 'react-redux';
 
 const window = Dimensions.get('window');
 
 const App = () => {
   const [value, setValue] = React.useState('');
+  const userInfo = useSelector((store: any) => store.userReducer.userInfo);
 
   const navigation = useNavigation();
 
@@ -74,16 +76,7 @@ const App = () => {
           },
         ]}
       />
-      {/* <ScrollView>
-        <View style={styles.questionMarks}>
-          <View style={styles.questionSection} />
-          <View style={styles.questionSection} />
-        </View>
-        <View style={styles.questionMarks}>
-          <View style={styles.questionSection} />
-          <View style={styles.questionSection} />
-        </View>
-      </ScrollView> */}
+      <Text style={{color: '#000A1A'}}>{userInfo.user.email}</Text>
     </SafeAreaView>
   );
 };
