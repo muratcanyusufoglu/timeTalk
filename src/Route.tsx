@@ -3,7 +3,6 @@ import React, {useEffect} from 'react';
 import {
   NavigationContainer,
   createNavigationContainerRef,
-  getCurrentRoute,
 } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomePage from './pages/homePage';
@@ -14,6 +13,8 @@ import LoginPage from './pages/loginPage';
 import Profile from './pages/profile';
 import {BottomNavigation} from 'react-native-paper';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {Provider} from 'react-redux';
+import store from '../src/redux/store';
 
 const HomeStack = createNativeStackNavigator();
 
@@ -47,7 +48,7 @@ const DiscoverRoute = () => <DiscoverPage />;
 function App() {
   const [index, setIndex] = React.useState(0);
   const [isLogin, setIsLogin] = React.useState(false);
-  const [routesSignIn] = React.useState([
+  const [routesSignIn, setRoutesSignIn] = React.useState([
     {
       key: 'login',
       title: 'Login',
@@ -86,7 +87,7 @@ function App() {
     },
   ]);
 
-  const [routes] = React.useState([
+  const [routes, setRoutes] = React.useState([
     {
       key: 'home',
       title: 'Home',
@@ -133,24 +134,26 @@ function App() {
   }, []);
 
   return (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <BottomNavigation
-          shifting={true}
-          navigationState={{index, routes: isLogin ? routes : routesSignIn}}
-          onIndexChange={setIndex}
-          renderScene={renderScene}
-          barStyle={
-            isLogin == true
-              ? {backgroundColor: '#E0ECFF', height: 70}
-              : {height: 0}
-          }
-          activeColor={'#75839D'}
-          theme={{colors: {secondaryContainer: 'transparent'}}}
-          sceneAnimationEnabled={true}
-        />
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <Provider store={store}>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <BottomNavigation
+            shifting={true}
+            navigationState={{index, routes: isLogin ? routes : routesSignIn}}
+            onIndexChange={setIndex}
+            renderScene={renderScene}
+            barStyle={
+              isLogin == true
+                ? {backgroundColor: '#E0ECFF', height: 70}
+                : {height: 0}
+            }
+            activeColor={'#75839D'}
+            theme={{colors: {secondaryContainer: 'transparent'}}}
+            sceneAnimationEnabled={true}
+          />
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </Provider>
   );
 }
 export default App;

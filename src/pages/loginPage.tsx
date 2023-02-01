@@ -17,7 +17,9 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import auth from '@react-native-firebase/auth';
-//import storage from '../storage/storege';
+import {useDispatch, useSelector} from 'react-redux';
+import {onUpdateLogin} from '../redux/action/index';
+
 // const TaskSchema = {
 //   name: 'Task',
 //   login: true,
@@ -32,6 +34,9 @@ import auth from '@react-native-firebase/auth';
 
 const window = Dimensions.get('window');
 const App = () => {
+  const dispatch = useDispatch();
+  const user = useSelector((store: any) => store.userReducer.userInfo);
+  console.log('user', user);
   const [loggedIn, setloggedIn] = useState(false);
   const [userInfo, setuserInfo] = useState([]);
 
@@ -61,15 +66,14 @@ const App = () => {
       );
       await auth().signInWithCredential(credential);
       if (idToken) {
-        // storage.save({
-        //   key: 'userId',
-        //   data: {
-        //     id: idToken,
-        //     user: user.id,
-        //     userName: user.name,
-        //   },
-        // });
-        function navigateHome() {
+        async function navigateHome() {
+          await dispatch(
+            onUpdateLogin({
+              accessToken: accessToken,
+              idToken: idToken,
+              user: user,
+            }),
+          );
           navigation.navigate('Home' as never);
           Toast.show({
             type: 'success',
