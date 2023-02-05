@@ -67,7 +67,7 @@ const App = () => {
           },
         ]}
       />
-      <Text style={{color: '#000A1A'}}>{userInfo.user.email}</Text>
+      {/* <Text style={{color: '#000A1A'}}>{userInfo.user.email}</Text> */}
     </SafeAreaView>
   );
 };

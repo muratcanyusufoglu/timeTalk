@@ -1,9 +1,6 @@
 // In App.js in a new project
 import React, {useEffect} from 'react';
-import {
-  NavigationContainer,
-  createNavigationContainerRef,
-} from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomePage from './pages/homePage';
 import ChatPage from './pages/chatPage';
@@ -15,9 +12,10 @@ import {BottomNavigation} from 'react-native-paper';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider} from 'react-redux';
 import store from '../src/redux/store';
+import storage from './storage/storage';
 
 const HomeStack = createNativeStackNavigator();
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Homepage = () => {
   return (
     <HomeStack.Navigator>
@@ -46,8 +44,18 @@ const Chatpage = () => <ChatPage />;
 const DiscoverRoute = () => <DiscoverPage />;
 
 function App() {
+  const [isLogin, setIsLogin] = React.useState();
+  useEffect(() => {
+    storage
+      .load({
+        key: 'isLogin',
+      })
+      .then(async resp => {
+        setIsLogin(resp.token);
+        console.log('respsss', resp.token.id);
+      });
+  }, []);
   const [index, setIndex] = React.useState(0);
-  const [isLogin, setIsLogin] = React.useState(false);
   const [routesSignIn, setRoutesSignIn] = React.useState([
     {
       key: 'login',
@@ -126,12 +134,8 @@ function App() {
     dalle: DallePage,
     chat: Chatpage,
     profile: Profile,
-    login: LoginPage,
+    login: Homepage,
   });
-
-  useEffect(() => {
-    setIsLogin(true);
-  }, []);
 
   return (
     <Provider store={store}>
@@ -139,13 +143,14 @@ function App() {
         <NavigationContainer>
           <BottomNavigation
             shifting={true}
-            navigationState={{index, routes: isLogin ? routes : routesSignIn}}
+            navigationState={{
+              index,
+              routes: isLogin ? routes : routesSignIn,
+            }}
             onIndexChange={setIndex}
             renderScene={renderScene}
             barStyle={
-              isLogin == true
-                ? {backgroundColor: '#E0ECFF', height: 70}
-                : {height: 0}
+              isLogin ? {backgroundColor: '#E0ECFF', height: 70} : {height: 0}
             }
             activeColor={'#75839D'}
             theme={{colors: {secondaryContainer: 'transparent'}}}

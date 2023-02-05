@@ -19,7 +19,8 @@ import Toast from 'react-native-toast-message';
 import auth from '@react-native-firebase/auth';
 import {useDispatch, useSelector} from 'react-redux';
 import {onUpdateLogin} from '../redux/action/index';
-
+import RNRestart from 'react-native-restart';
+import storage from '../storage/storage';
 // const TaskSchema = {
 //   name: 'Task',
 //   login: true,
@@ -35,10 +36,11 @@ import {onUpdateLogin} from '../redux/action/index';
 const window = Dimensions.get('window');
 const App = () => {
   const dispatch = useDispatch();
-  const user = useSelector((store: any) => store.userReducer.userInfo);
-  console.log('user', user);
+  const [userInfo, setuserInfo] = useState();
+  const user: any = useSelector((store: any) => store.userReducer.userInfo);
+  console.log('User', user);
+
   const [loggedIn, setloggedIn] = useState(false);
-  const [userInfo, setuserInfo] = useState([]);
 
   const navigation = useNavigation();
 
@@ -66,15 +68,25 @@ const App = () => {
       );
       await auth().signInWithCredential(credential);
       if (idToken) {
-        async function navigateHome() {
-          await dispatch(
+        function navigateHome() {
+          dispatch(
             onUpdateLogin({
               accessToken: accessToken,
               idToken: idToken,
               user: user,
             }),
           );
-          navigation.navigate('Home' as never);
+          storage.save({
+            key: 'isLogin',
+            data: {
+              //token: Platform.OS === 'ios' ? apnToken : fcmToken,
+              token: user,
+            },
+            expires: null,
+          });
+          RNRestart.Restart();
+
+          //navigation.navigate('Home' as never);
           Toast.show({
             type: 'success',
             text1: 'Hello',
