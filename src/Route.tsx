@@ -20,11 +20,6 @@ const Homepage = () => {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
-        name="Login"
-        component={LoginPage}
-        options={{headerShown: false}}
-      />
-      <HomeStack.Screen
         name="Home"
         component={HomePage}
         options={{headerShown: false}}
@@ -35,6 +30,11 @@ const Homepage = () => {
         component={DallePage}
         options={{headerShown: false}}
       />
+      <HomeStack.Screen
+        name="Login"
+        component={LoginPage}
+        options={{headerShown: false}}
+      />
     </HomeStack.Navigator>
   );
 };
@@ -43,7 +43,7 @@ const Chatpage = () => <ChatPage />;
 
 const DiscoverRoute = () => <DiscoverPage />;
 
-function App() {
+function App() {  
   const [isLogin, setIsLogin] = React.useState();
   useEffect(() => {
     storage
@@ -52,7 +52,10 @@ function App() {
       })
       .then(async resp => {
         setIsLogin(resp.token);
-        console.log('respsss', resp.token.id);
+        console.log('respa', resp.token, isLogin);
+        if (!resp.token) {
+          setIsLogin(false);
+        }
       });
   }, []);
   const [index, setIndex] = React.useState(0);
@@ -134,7 +137,7 @@ function App() {
     dalle: DallePage,
     chat: Chatpage,
     profile: Profile,
-    login: Homepage,
+    login: LoginPage,
   });
 
   return (
@@ -145,12 +148,14 @@ function App() {
             shifting={true}
             navigationState={{
               index,
-              routes: isLogin ? routes : routesSignIn,
+              routes: isLogin == undefined ? routesSignIn : routes,
             }}
             onIndexChange={setIndex}
             renderScene={renderScene}
             barStyle={
-              isLogin ? {backgroundColor: '#E0ECFF', height: 70} : {height: 0}
+              isLogin == undefined
+                ? {height: 0}
+                : {backgroundColor: '#E0ECFF', height: 70}
             }
             activeColor={'#75839D'}
             theme={{colors: {secondaryContainer: 'transparent'}}}

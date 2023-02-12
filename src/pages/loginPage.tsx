@@ -35,6 +35,7 @@ import storage from '../storage/storage';
 
 const window = Dimensions.get('window');
 const App = () => {
+  console.log('ad');
   const dispatch = useDispatch();
   const [userInfo, setuserInfo] = useState();
   const user: any = useSelector((store: any) => store.userReducer.userInfo);
@@ -67,6 +68,7 @@ const App = () => {
         accessToken,
       );
       await auth().signInWithCredential(credential);
+      console.log('id', idToken);
       if (idToken) {
         function navigateHome() {
           dispatch(
@@ -84,14 +86,15 @@ const App = () => {
             },
             expires: null,
           });
-          RNRestart.Restart();
-
-          //navigation.navigate('Home' as never);
+          console.log('asd');
           Toast.show({
             type: 'success',
             text1: 'Hello',
             text2: 'Your login process succesfull 👋',
           });
+          RNRestart.Restart();
+
+          //navigation.navigate('Home' as never);
         }
         navigateHome();
       }

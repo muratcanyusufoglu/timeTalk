@@ -8,13 +8,26 @@
  * @format
  */
 
-import React from 'react';
-import {SafeAreaView, StyleSheet, Text, View, Dimensions} from 'react-native';
+import React, {useEffect} from 'react';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
 import {SegmentedButtons} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 import {useDispatch, useSelector} from 'react-redux';
+import storage from '../storage/storage';
+import RNRestart from 'react-native-restart';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 
 const window = Dimensions.get('window');
 
@@ -23,6 +36,12 @@ const App = () => {
   const userInfo = useSelector((store: any) => store.userReducer.userInfo);
 
   const navigation = useNavigation();
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId:
+        '101181523513-2halvkj3k0a6j8fqpvbf92002b5dequk.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+    });
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -67,6 +86,30 @@ const App = () => {
           },
         ]}
       />
+      <TouchableOpacity
+        onPress={() => {
+          storage.save({
+            key: 'isLogin',
+            data: {
+              token: '',
+            },
+            expires: null,
+          });
+          console.log('logs');
+          const signOut = async () => {
+            try {
+              await GoogleSignin.revokeAccess();
+              await GoogleSignin.signOut();
+            } catch (error) {
+              console.error(error);
+            }
+          };
+          signOut();
+          RNRestart.Restart();
+        }}
+        style={{alignItems: 'center', flexDirection: 'row'}}>
+        <Text style={{color: '#000A1A'}}>Token</Text>
+      </TouchableOpacity>
       {/* <Text style={{color: '#000A1A'}}>{userInfo.user.email}</Text> */}
     </SafeAreaView>
   );
