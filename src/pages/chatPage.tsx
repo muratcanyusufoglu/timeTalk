@@ -35,8 +35,6 @@ export default function ChatPage() {
   const ADRESS = Config.ADRESS;
 
   useEffect(() => {
-    console.log('asd');
-
     const fetch = async () => {
       try {
         await AsyncStorage.setItem('isLogin', 'false');

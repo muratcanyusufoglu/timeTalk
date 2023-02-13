@@ -43,7 +43,7 @@ const Chatpage = () => <ChatPage />;
 
 const DiscoverRoute = () => <DiscoverPage />;
 
-function App() {  
+function App() {
   const [isLogin, setIsLogin] = React.useState();
   useEffect(() => {
     storage
