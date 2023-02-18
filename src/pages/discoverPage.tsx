@@ -21,10 +21,8 @@ const window = Dimensions.get('window');
 
 export default function DiscoverPage() {
   const [data, setData] = useState([]);
-  const [liked, isLiked] = useState<boolean>();
   const [bool, setBool] = useState<boolean>();
   const [userInfo, setUserInfo] = useState();
-  const [following, setFollowing] = useState(false);
 
   const messageData: {
     message: string;
@@ -57,6 +55,24 @@ export default function DiscoverPage() {
     fetch();
   }, [bool]);
 
+  return (
+    <View style={styles.container}>
+      <FlatList
+        extraData={data}
+        data={data}
+        refreshing={bool}
+        numColumns={1}
+        style={{flex: 1}}
+        renderItem={({item}) => <InsideFlatlist item={item} />}
+      />
+    </View>
+  );
+}
+
+function InsideFlatlist({item}) {
+  const [following, setFollowing] = useState(false);
+  const [liked, isLiked] = useState<boolean>(false);
+
   const follow = async user => {
     await axios
       .post(`${ADRESS}/follower`, {
@@ -74,58 +90,60 @@ export default function DiscoverPage() {
       });
   };
 
-  const animation = useRef(null);
+  const progress = useRef(new Animated.Value(0)).current;
 
-  //   useEffect(() => {
-  //     if (liked) {
-  //       animation.current.play(66, 66);
-  //     } else {
-  //       animation.current.play(19, 19);
-  //     }
-  //   }, [liked]);
+  const handleLikeAnimation = () => {
+    console.log('begenildi');
+    Animated.timing(progress, {
+      toValue: 0.3,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+  };
+  const handleUnLikeAnimation = () => {
+    console.log('begenilmedi');
+    Animated.timing(progress, {
+      toValue: 0.46,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  useEffect(() => {
+    liked ? handleUnLikeAnimation() : handleLikeAnimation();
+  }, [liked]);
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        extraData={data}
-        data={data}
-        refreshing={bool}
-        numColumns={1}
-        style={{flex: 1}}
-        renderItem={({item}) => (
-          <>
-            <View style={styles.messageSection}>
-              <View style={styles.photoSection}>
-                <View style={styles.photoPrompt}>
-                  <Text style={styles.sendedSection}>user/ {item.user}</Text>
-                  <TouchableOpacity onPress={() => follow(item.user)}>
-                    <Text style={styles.sendedSection}>
-                      {following ? 'Follow' : 'following'}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                <Image
-                  source={{
-                    uri: item.response,
-                  }}
-                  style={styles.imageStyle}
-                  resizeMode="cover"
-                />
-                <View style={styles.photoDescription}>
-                  <Text style={styles.sendedSection}>{item.prompt}</Text>
-                </View>
-                <LottieView
-                  ref={animation}
-                  source={require('../assets/animations/like-animation.json')}
-                  style={styles.animation}
-                  autoPlay={false}
-                  loop={false}
-                />
-              </View>
-            </View>
-          </>
-        )}
-      />
+    <View style={styles.messageSection}>
+      <View style={styles.photoSection}>
+        <View style={styles.photoPrompt}>
+          <Text style={styles.sendedSection}>user/ {item.user}</Text>
+          <TouchableOpacity onPress={() => follow(item.user)}>
+            <Text style={styles.sendedSection}>
+              {following ? 'Follow' : 'following'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <Image
+          source={{
+            uri: item.response,
+          }}
+          style={styles.imageStyle}
+          resizeMode="cover"
+        />
+        <View style={styles.likeAndDescription}>
+          <View style={styles.photoDescription}>
+            <Text style={styles.sendedSection}>{item.prompt}</Text>
+          </View>
+          <TouchableOpacity onPress={() => isLiked(!liked)}>
+            <LottieView
+              progress={progress}
+              source={require('../assets/animations/like-animation.json')}
+              style={styles.animation}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 }
@@ -152,8 +170,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   animation: {
-    width: window.width / 20,
-    height: window.height / 20,
+    width: window.width / 15,
+    height: window.height / 15,
   },
   sendMessageSection: {
     flexDirection: 'row',
@@ -178,19 +196,16 @@ const styles = StyleSheet.create({
     borderColor: '#D6DAE2',
     borderRadius: 4,
   },
-  sendIcon: {},
   photoPrompt: {
     width: window.width,
     borderWidth: 1,
-    margin: 5,
     color: 'black',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 15,
+    padding: 0,
   },
   photoDescription: {
     borderWidth: 1,
-    margin: 5,
     color: 'black',
   },
   photoSection: {
@@ -202,5 +217,11 @@ const styles = StyleSheet.create({
     width: window.width,
     height: window.height / 2.5,
     borderColor: 'transparent',
+  },
+  likeAndDescription: {
+    width: window.width,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
 });

@@ -21,6 +21,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {onUpdateLogin} from '../redux/action/index';
 import RNRestart from 'react-native-restart';
 import storage from '../storage/storage';
+import Lottie from 'lottie-react-native';
+
 // const TaskSchema = {
 //   name: 'Task',
 //   login: true,
@@ -116,20 +118,6 @@ const App = () => {
         Alert.alert('An error accurated');
       }
     }
-
-    // realm.write(() => {
-    //   task1 = realm.create('Task', {
-    //     _id: 1,
-    //     name: 'go grocery shopping',
-    //     status: 'Open',
-    //   });
-    //   task2 = realm.create('Task', {
-    //     _id: 2,
-    //     name: 'go exercise',
-    //     status: 'Open',
-    //   });
-    //   console.log(`created two tasks: ${task1.name} & ${task2.name}`);
-    // });
   };
 
   const signOut = async () => {
@@ -219,6 +207,12 @@ const styles = StyleSheet.create({
     height: 24,
     width: 24,
     marginRight: 0,
+  },
+  animation: {
+    width: window.width / 20,
+    height: window.height / 20,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 export default App;
