@@ -19,6 +19,7 @@ import {MasonryFlashList} from '@shopify/flash-list';
 import {Modal} from 'react-native-paper';
 import RNFetchBlob from 'rn-fetch-blob';
 import {AsyncStorage} from 'react-native';
+import storage from '../storage/storage';
 
 const window = Dimensions.get('window');
 
@@ -28,6 +29,8 @@ export default function ImagePage() {
   const [bool, setBool] = useState<boolean>();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [imageUri, setImageUri] = useState<string>('');
+  const [userInfo, setUserInfo] = useState();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const messageData: {
     message: string;
@@ -39,15 +42,20 @@ export default function ImagePage() {
   const ADRESS = Config.ADRESS;
 
   useEffect(() => {
-    console.log('asd');
+    storage
+      .load({
+        key: 'userInfo',
+      })
+      .then(async resp => {
+        setUserInfo(resp);
+        console.log('respaaa', userInfo);
+      });
+  });
 
+  useEffect(() => {
     const fetch = async () => {
-      try {
-        await AsyncStorage.setItem('isLogin', 'false');
-      } catch (error) {
-        // Error saving data
-      }
-      console.log('asdb');
+      setLoading(true);
+
       await axios
         .get(`${ADRESS}/dalle`)
         .then(item => {
@@ -56,6 +64,7 @@ export default function ImagePage() {
           console.log('itemss', messageData);
         })
         .catch(error => console.log('error', error));
+      setLoading(false);
     };
     fetch();
   }, [bool]);
@@ -73,8 +82,10 @@ export default function ImagePage() {
     await axios
       .post(`${ADRESS}/dalle`, {
         prompt: `${input}`,
-        user: 'crazy_61',
+        user: `${userInfo.user.name}`,
+        userId: `${userInfo.user.id}`,
         response: `${items}`,
+        likeNumber: 0,
       })
       .then(resp => {
         console.log('resp', resp, input);
@@ -165,6 +176,16 @@ export default function ImagePage() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.loadingView}>
+        {loading ? (
+          <Lottie
+            source={require('../assets/animations/messageLoad.json')}
+            style={styles.animationLoading}
+            autoPlay
+            loop
+          />
+        ) : null}
+      </View>
       <MasonryFlashList
         extraData={data}
         data={data}
@@ -275,6 +296,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  loadingView: {
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  animationLoading: {
+    width: window.width / 12,
+    height: window.height / 12,
+  },
   sendMessageSection: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -298,7 +327,6 @@ const styles = StyleSheet.create({
     borderColor: '#D6DAE2',
     borderRadius: 4,
   },
-  sendIcon: {},
   photoPrompt: {
     backgroundColor: 'transparent',
     borderWidth: 1,

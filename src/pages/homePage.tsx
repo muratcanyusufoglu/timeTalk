@@ -89,9 +89,12 @@ const App = () => {
       <TouchableOpacity
         onPress={() => {
           storage.save({
-            key: 'isLogin',
+            key: 'userInfo',
             data: {
-              token: '',
+              //token: Platform.OS === 'ios' ? apnToken : fcmToken,
+              accessToken: '',
+              idToken: '',
+              user: '',
             },
             expires: null,
           });

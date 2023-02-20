@@ -16,6 +16,7 @@ import LottieView from 'lottie-react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {AsyncStorage} from 'react-native';
 import storage from '../storage/storage';
+import Lottie from 'lottie-react-native';
 
 const window = Dimensions.get('window');
 
@@ -23,21 +24,37 @@ export default function DiscoverPage() {
   const [data, setData] = useState([]);
   const [bool, setBool] = useState<boolean>();
   const [userInfo, setUserInfo] = useState();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const messageData: {
     message: string;
     user: string;
     response: string;
+    likeNumber: number;
     _id: string;
   }[] = [];
 
   const ADRESS = Config.ADRESS;
 
   useEffect(() => {
+    storage
+      .load({
+        key: 'userInfo',
+      })
+      .then(async resp => {
+        setUserInfo(resp.token);
+        console.log('respaaa', userInfo.id);
+      });
+  });
+
+  useEffect(() => {
     const fetch = async () => {
+      setLoading(true);
+
       await axios
         .get(`${ADRESS}/dalle`)
         .then(item => {
+          console.log('itemmm', item);
           item.data.map(mes => messageData.push(mes));
           setData(messageData.reverse());
         })
@@ -45,24 +62,35 @@ export default function DiscoverPage() {
 
       storage
         .load({
-          key: 'isLogin',
+          key: 'userInfo',
         })
         .then(async resp => {
           setUserInfo(resp.token);
           console.log('respaaa', userInfo.id);
         });
+      setLoading(false);
     };
     fetch();
   }, [bool]);
 
   return (
     <View style={styles.container}>
+      <View style={styles.loadingView}>
+        {loading ? (
+          <Lottie
+            source={require('../assets/animations/messageLoad.json')}
+            style={styles.animationLoading}
+            autoPlay
+            loop
+          />
+        ) : null}
+      </View>
       <FlatList
         extraData={data}
         data={data}
         refreshing={bool}
         numColumns={1}
-        style={{flex: 1}}
+        style={{}}
         renderItem={({item}) => <InsideFlatlist item={item} />}
       />
     </View>
@@ -72,14 +100,30 @@ export default function DiscoverPage() {
 function InsideFlatlist({item}) {
   const [following, setFollowing] = useState(false);
   const [liked, isLiked] = useState<boolean>(false);
+  const [userInfo, setUserInfo] = useState();
+  const [likeNumber, setLikeNumber] = useState(item.likeNumber);
+
+  const ADRESS = Config.ADRESS;
+
+  useEffect(() => {
+    storage
+      .load({
+        key: 'userInfo',
+      })
+      .then(async resp => {
+        setUserInfo(resp);
+        console.log('respaaa', userInfo);
+      });
+  });
 
   const follow = async user => {
+    console.log('object', user);
     await axios
       .post(`${ADRESS}/follower`, {
-        follower: userInfo.familyName,
+        follower: userInfo.user.name,
         following: user,
-        followerId: userInfo.id,
-        followingId: userInfo.id,
+        followerId: userInfo.user.id,
+        followingId: user,
       })
       .then(resp => {
         console.log('resp post', resp);
@@ -92,16 +136,28 @@ function InsideFlatlist({item}) {
 
   const progress = useRef(new Animated.Value(0)).current;
 
-  const handleLikeAnimation = () => {
+  const handleLikeAnimation = async () => {
+    setLikeNumber(likeNumber - 1);
+
     console.log('begenildi');
+    await axios.patch(`${ADRESS}/dalle/${item._id}`, {
+      likeNumber: item.likeNumber - 1,
+    });
     Animated.timing(progress, {
       toValue: 0.3,
       duration: 1000,
       useNativeDriver: true,
     }).start();
   };
-  const handleUnLikeAnimation = () => {
+  const handleUnLikeAnimation = async () => {
     console.log('begenilmedi');
+    setLikeNumber(likeNumber + 1);
+
+    liked
+      ? await axios.patch(`${ADRESS}/dalle/${item._id}`, {
+          likeNumber: item.likeNumber + 1,
+        })
+      : null;
     Animated.timing(progress, {
       toValue: 0.46,
       duration: 1000,
@@ -135,12 +191,22 @@ function InsideFlatlist({item}) {
           <View style={styles.photoDescription}>
             <Text style={styles.sendedSection}>{item.prompt}</Text>
           </View>
-          <TouchableOpacity onPress={() => isLiked(!liked)}>
+          <TouchableOpacity
+            onPress={() => isLiked(!liked)}
+            style={{
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flex: 1,
+            }}>
             <LottieView
               progress={progress}
               source={require('../assets/animations/like-animation.json')}
               style={styles.animation}
             />
+            <Text style={styles.likedNumber}>
+              {likeNumber ? likeNumber : null} likes
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -170,6 +236,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   animation: {
+    alignItems: 'center',
+    justifyContent: 'center',
     width: window.width / 15,
     height: window.height / 15,
   },
@@ -207,6 +275,7 @@ const styles = StyleSheet.create({
   photoDescription: {
     borderWidth: 1,
     color: 'black',
+    flex: 4,
   },
   photoSection: {
     borderWidth: 1,
@@ -223,5 +292,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  loadingView: {
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    flex: 1,
+  },
+  animationLoading: {
+    width: window.width / 12,
+    height: window.height / 12,
+  },
+  likedNumber: {
+    color: 'white',
+    alignItems: 'center',
   },
 });

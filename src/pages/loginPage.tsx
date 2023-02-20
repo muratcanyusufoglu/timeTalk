@@ -81,14 +81,15 @@ const App = () => {
             }),
           );
           storage.save({
-            key: 'isLogin',
+            key: 'userInfo',
             data: {
               //token: Platform.OS === 'ios' ? apnToken : fcmToken,
-              token: user,
+              accessToken: accessToken,
+              idToken: idToken,
+              user: user,
             },
             expires: null,
           });
-          console.log('asd');
           Toast.show({
             type: 'success',
             text1: 'Hello',

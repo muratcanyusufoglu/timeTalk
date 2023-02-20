@@ -20,6 +20,7 @@ export default function ChatPage() {
   const [data, setData] = useState([]);
   const [input, setInput] = useState<string>();
   const [bool, setBool] = useState<boolean>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const messageData: {
     message: string;
@@ -36,11 +37,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     const fetch = async () => {
-      try {
-        await AsyncStorage.setItem('isLogin', 'false');
-      } catch (error) {
-        // Error saving data
-      }
+      setLoading(true);
 
       await axios
         .get(`${ADRESS}/messages`)
@@ -49,7 +46,10 @@ export default function ChatPage() {
           item.data.map(mes => messageData.push(mes));
           setData(messageData.reverse());
         })
-        .catch(error => console.log('error', error));
+        .catch(error => {
+          console.log('error', error);
+        });
+      setLoading(false);
     };
 
     fetch();
@@ -96,6 +96,16 @@ export default function ChatPage() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.loadingView}>
+        {loading ? (
+          <Lottie
+            source={require('../assets/animations/messageLoad.json')}
+            style={styles.animationLoading}
+            autoPlay
+            loop
+          />
+        ) : null}
+      </View>
       <FlatList
         inverted
         extraData={data}
@@ -170,6 +180,15 @@ const styles = StyleSheet.create({
     height: window.height / 20,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  loadingView: {
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    flex: 1,
+  },
+  animationLoading: {
+    width: window.width / 12,
+    height: window.height / 12,
   },
   sendMessageSection: {
     flexDirection: 'row',

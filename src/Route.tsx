@@ -44,17 +44,17 @@ const Chatpage = () => <ChatPage />;
 const DiscoverRoute = () => <DiscoverPage />;
 
 function App() {
-  const [isLogin, setIsLogin] = React.useState();
+  const [userInfo, setUserInfo] = React.useState();
   useEffect(() => {
     storage
       .load({
-        key: 'isLogin',
+        key: 'userInfo',
       })
       .then(async resp => {
-        setIsLogin(resp.token);
-        console.log('respa', resp.token, isLogin);
+        setUserInfo(resp.token);
+        console.log('respa', resp.token, userInfo);
         if (!resp.token) {
-          setIsLogin(false);
+          setUserInfo(false);
         }
       });
   }, []);
@@ -148,12 +148,12 @@ function App() {
             shifting={true}
             navigationState={{
               index,
-              routes: isLogin == undefined ? routesSignIn : routes,
+              routes: userInfo == undefined ? routesSignIn : routes,
             }}
             onIndexChange={setIndex}
             renderScene={renderScene}
             barStyle={
-              isLogin == undefined
+              userInfo == undefined
                 ? {height: 0}
                 : {backgroundColor: '#E0ECFF', height: 70}
             }
