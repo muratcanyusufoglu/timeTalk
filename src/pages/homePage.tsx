@@ -41,6 +41,14 @@ const App = () => {
       webClientId:
         '101181523513-2halvkj3k0a6j8fqpvbf92002b5dequk.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
     });
+
+    storage
+      .load({
+        key: 'userInfo',
+      })
+      .then(async resp => {
+        console.log('respaaa', resp);
+      });
   }, []);
 
   return (

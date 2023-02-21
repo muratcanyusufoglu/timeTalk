@@ -22,6 +22,8 @@ import {onUpdateLogin} from '../redux/action/index';
 import RNRestart from 'react-native-restart';
 import storage from '../storage/storage';
 import Lottie from 'lottie-react-native';
+import axios from 'axios';
+import Config from 'react-native-config';
 
 // const TaskSchema = {
 //   name: 'Task',
@@ -37,11 +39,11 @@ import Lottie from 'lottie-react-native';
 
 const window = Dimensions.get('window');
 const App = () => {
-  console.log('ad');
+  const ADRESS = Config.ADRESS;
+
   const dispatch = useDispatch();
   const [userInfo, setuserInfo] = useState();
   const user: any = useSelector((store: any) => store.userReducer.userInfo);
-  console.log('User', user);
 
   const [loggedIn, setloggedIn] = useState(false);
 
@@ -63,7 +65,7 @@ const App = () => {
     try {
       await GoogleSignin.hasPlayServices();
       const {accessToken, idToken, user} = await GoogleSignin.signIn();
-      console.log('auth', user.id, user.name, await GoogleSignin.signIn());
+      //console.log('auth', user.id, user.name, await GoogleSignin.signIn());
       setloggedIn(true);
       const credential = auth.GoogleAuthProvider.credential(
         idToken,
@@ -72,7 +74,33 @@ const App = () => {
       await auth().signInWithCredential(credential);
       console.log('id', idToken);
       if (idToken) {
-        function navigateHome() {
+        async function navigateHome() {
+          await axios
+            .get(`${ADRESS}/users/${user.id}`)
+            .then(item => {
+              console.log('itemmm', item);
+            })
+            .catch(error => {
+              console.log('error', error);
+              async function postUser() {
+                await axios
+                  .post(`${ADRESS}/users`, {
+                    user: `${user.name}`,
+                    userId: `${idToken}`,
+                    userPhoto: `${user.photo}`,
+                    gptToken: 0,
+                    dalleToken: 0,
+                    freeToken: 25,
+                  })
+                  .then(resp => {
+                    console.log('resp', resp);
+                  })
+                  .catch(errors => {
+                    console.log('error', errors);
+                  });
+              }
+              postUser();
+            });
           dispatch(
             onUpdateLogin({
               accessToken: accessToken,
@@ -87,6 +115,7 @@ const App = () => {
               accessToken: accessToken,
               idToken: idToken,
               user: user,
+              moneyToken: 25,
             },
             expires: null,
           });
