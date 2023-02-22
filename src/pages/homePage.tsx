@@ -28,12 +28,15 @@ import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
+import axios from 'axios';
+import Config from 'react-native-config';
 
 const window = Dimensions.get('window');
 
 const App = () => {
   const [value, setValue] = React.useState('');
   const userInfo = useSelector((store: any) => store.userReducer.userInfo);
+  const ADRESS = Config.ADRESS;
 
   const navigation = useNavigation();
   useEffect(() => {
@@ -47,7 +50,7 @@ const App = () => {
         key: 'userInfo',
       })
       .then(async resp => {
-        console.log('respaaa', resp);
+        console.log('respaaahome', resp);
       });
   }, []);
 

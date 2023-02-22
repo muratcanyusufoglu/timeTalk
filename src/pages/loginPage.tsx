@@ -72,13 +72,25 @@ const App = () => {
         accessToken,
       );
       await auth().signInWithCredential(credential);
-      console.log('id', idToken);
       if (idToken) {
         async function navigateHome() {
           await axios
             .get(`${ADRESS}/users/${user.id}`)
             .then(item => {
               console.log('itemmm', item);
+              storage.save({
+                key: 'userInfo',
+                data: {
+                  //token: Platform.OS === 'ios' ? apnToken : fcmToken,
+                  accessToken: accessToken,
+                  idToken: user.id,
+                  user: user,
+                  gptToken: item.data.gptToken,
+                  freeToken: item.data.freeToken,
+                  dalleToken: item.data.dalleToken,
+                },
+                expires: null,
+              });
             })
             .catch(error => {
               console.log('error', error);
@@ -86,7 +98,7 @@ const App = () => {
                 await axios
                   .post(`${ADRESS}/users`, {
                     user: `${user.name}`,
-                    userId: `${idToken}`,
+                    userId: `${user.id}`,
                     userPhoto: `${user.photo}`,
                     gptToken: 0,
                     dalleToken: 0,
@@ -98,27 +110,29 @@ const App = () => {
                   .catch(errors => {
                     console.log('error', errors);
                   });
+                storage.save({
+                  key: 'userInfo',
+                  data: {
+                    //token: Platform.OS === 'ios' ? apnToken : fcmToken,
+                    accessToken: accessToken,
+                    idToken: user.id,
+                    user: user,
+                    gptToken: 0,
+                    freeToken: 25,
+                    dalleToken: 0,
+                  },
+                  expires: null,
+                });
               }
               postUser();
             });
-          dispatch(
-            onUpdateLogin({
-              accessToken: accessToken,
-              idToken: idToken,
-              user: user,
-            }),
-          );
-          storage.save({
-            key: 'userInfo',
-            data: {
-              //token: Platform.OS === 'ios' ? apnToken : fcmToken,
-              accessToken: accessToken,
-              idToken: idToken,
-              user: user,
-              moneyToken: 25,
-            },
-            expires: null,
-          });
+          // dispatch(
+          //   onUpdateLogin({
+          //     accessToken: accessToken,
+          //     idToken: idToken,
+          //     user: user,
+          //   }),
+          // );
           Toast.show({
             type: 'success',
             text1: 'Hello',
@@ -155,7 +169,6 @@ const App = () => {
       await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
       setloggedIn(false);
-      setuserInfo([]);
     } catch (error) {
       console.error(error);
     }

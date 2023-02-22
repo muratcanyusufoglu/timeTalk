@@ -43,7 +43,7 @@ export default function DiscoverPage() {
       })
       .then(async resp => {
         setUserInfo(resp.token);
-        console.log('respaaa', userInfo.id);
+        console.log('respaaa', userInfo);
       });
   });
 

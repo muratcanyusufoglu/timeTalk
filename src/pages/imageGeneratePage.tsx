@@ -72,35 +72,55 @@ export default function ImagePage() {
   const addArray = async () => {
     setBool(true);
     var items;
-    await axios
-      .get(`${ADRESS}/dalle/${input}`)
-      .then(item => {
-        items = item.data;
-      })
-      .catch(error => console.log('error', error));
+    if (userInfo.freeToken > 0 || userInfo.dalleToken > 0) {
+      const freeTokenCount = userInfo.freeToken;
+      const dalleTokenCount = userInfo.dalleToken;
 
-    await axios
-      .post(`${ADRESS}/dalle`, {
-        prompt: `${input}`,
-        user: `${userInfo.user.name}`,
-        userId: `${userInfo.user.id}`,
-        response: `${items}`,
-        likeNumber: 0,
-      })
-      .then(resp => {
-        console.log('resp', resp, input);
-      })
-      .catch(error => {
-        console.log('error', error);
-      });
+      await axios
+        .get(`${ADRESS}/dalle/${input}`)
+        .then(async item => {
+          items = item.data;
+          console.log(items);
+          if (items) {
+            if (freeTokenCount) {
+              console.log('ftk', freeTokenCount);
+              await axios.patch(`${ADRESS}/users/${userInfo.idToken}`, {
+                freeToken: freeTokenCount - 1,
+              });
+            } else {
+              await axios.patch(`${ADRESS}/users/${userInfo.idToken}`, {
+                freeToken: dalleTokenCount - 1,
+              });
+            }
+          }
+        })
+        .catch(error => console.log('error', error));
 
-    await axios
-      .get(`${ADRESS}/dalle`)
-      .then(item => {
-        const messages = item.data;
-        messageData.push(messages);
-      })
-      .catch(error => console.log('error', error));
+      await axios
+        .post(`${ADRESS}/dalle`, {
+          prompt: `${input}`,
+          user: `${userInfo.user.name}`,
+          userId: `${userInfo.user.id}`,
+          response: `${items}`,
+          likeNumber: 0,
+        })
+        .then(resp => {
+          console.log('resp', resp);
+        })
+        .catch(error => {
+          console.log('error', error);
+        });
+
+      await axios
+        .get(`${ADRESS}/dalle`)
+        .then(item => {
+          const messages = item.data;
+          messageData.push(messages);
+        })
+        .catch(error => console.log('error', error));
+    } else {
+      console.log('tokenınız bulunmamaktadır');
+    }
     setInput('');
     setBool(false);
   };
