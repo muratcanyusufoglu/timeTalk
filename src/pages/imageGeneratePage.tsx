@@ -89,7 +89,7 @@ export default function ImagePage() {
               });
             } else {
               await axios.patch(`${ADRESS}/users/${userInfo.idToken}`, {
-                freeToken: dalleTokenCount - 1,
+                dalleToken: dalleTokenCount - 1,
               });
             }
           }

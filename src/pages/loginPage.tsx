@@ -77,7 +77,7 @@ const App = () => {
           await axios
             .get(`${ADRESS}/users/${user.id}`)
             .then(item => {
-              console.log('itemmm', item);
+              console.log('itemlogin', item);
               storage.save({
                 key: 'userInfo',
                 data: {
@@ -93,7 +93,7 @@ const App = () => {
               });
             })
             .catch(error => {
-              console.log('error', error);
+              console.log('errorlogin', error);
               async function postUser() {
                 await axios
                   .post(`${ADRESS}/users`, {

@@ -12,7 +12,8 @@ import axios from 'axios';
 import Config from 'react-native-config';
 import Lottie from 'lottie-react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {AsyncStorage} from 'react-native';
+import storage from '../storage/storage';
+import ChatService from '../services/chatService';
 
 const window = Dimensions.get('window');
 
@@ -21,6 +22,9 @@ export default function ChatPage() {
   const [input, setInput] = useState<string>();
   const [bool, setBool] = useState<boolean>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [userInfo, setUserInfo] = useState();
+
+  const chatServices = new ChatService();
 
   const messageData: {
     message: string;
@@ -39,15 +43,21 @@ export default function ChatPage() {
     const fetch = async () => {
       setLoading(true);
 
-      await axios
-        .get(`${ADRESS}/messages`)
-        .then(item => {
-          console.log('item', item, `${ADRESS}/messages`);
-          item.data.map(mes => messageData.push(mes));
+      await chatServices
+        .getChatHistory()
+        .then(resp => {
+          resp.data.map(mes => messageData.push(mes));
           setData(messageData.reverse());
         })
-        .catch(error => {
-          console.log('error', error);
+        .catch(error => console.log('error', error));
+
+      storage
+        .load({
+          key: 'userInfo',
+        })
+        .then(async resp => {
+          setUserInfo(resp);
+          console.log('respaaa', userInfo);
         });
       setLoading(false);
     };
@@ -58,38 +68,83 @@ export default function ChatPage() {
   const addArray = async () => {
     setBool(true);
     var items;
-    await axios
-      .get(`${ADRESS}/messages/${input}`)
-      .then(item => {
-        items = item.data;
-        console.log('dataresponse', item.data);
-      })
-      .catch(error => console.log('error', error));
+    if (userInfo.freeToken > 0 || userInfo.gptToken > 0) {
+      const freeTokenCount = userInfo.freeToken;
+      const gptTokenCount = userInfo.gptToken;
 
-    await axios
-      .post(`${ADRESS}/messages`, {
-        user: 'crazy_61',
-        messageInfo: {
-          message: `${input}`,
-          user: 'crazy_61',
-          response: `${items}`,
-          date: '05.05.2010',
-        },
-      })
-      .then(resp => {
-        console.log('resp post', resp);
-      })
-      .catch(error => {
-        console.log('error post', error);
-      });
+      // await axios
+      //   .get(`${ADRESS}/messages/${input}`)
+      //   .then(async item => {
+      //     items = item.data;
 
-    await axios
-      .get(`${ADRESS}/messages`)
-      .then(item => {
-        const messages = item.data;
-        messageData.push(messages);
-      })
-      .catch(error => console.log('error', error));
+      //     if (items) {
+      //       if (freeTokenCount) {
+      //         console.log('ftk', freeTokenCount);
+      //         await axios.patch(`${ADRESS}/users/${userInfo.idToken}`, {
+      //           freeToken: freeTokenCount - 1,
+      //         });
+      //       } else {
+      //         await axios.patch(`${ADRESS}/users/${userInfo.idToken}`, {
+      //           gptToken: gptTokenCount - 1,
+      //         });
+      //       }
+      //     }
+      //   })
+      //   .catch(error => console.log('error', error));
+
+      await chatServices
+        .getGptAnswer(input, freeTokenCount, gptTokenCount, userInfo.idToken)
+        .then(resp => {
+          console.log('resp get', resp);
+          items = resp;
+        })
+        .catch(error => {
+          console.log('get error get', error);
+        });
+
+      // await axios
+      //   .post(`${ADRESS}/messages`, {
+      //     user: 'crazy_61',
+      //     messageInfo: {
+      //       message: `${input}`,
+      //       user: 'crazy_61',
+      //       response: `${items}`,
+      //       date: '05.05.2010',
+      //     },
+      //   })
+      //   .then(resp => {
+      //     console.log('resp post', resp);
+      //   })
+      //   .catch(error => {
+      //     console.log('error post', error);
+      //   });
+
+      await chatServices
+        .senMessage(userInfo.user.id, input, items)
+        .then(resp => {
+          console.log('resp post', resp);
+        })
+        .catch(error => {
+          console.log('error post', error);
+        });
+
+      await chatServices
+        .getChatHistory()
+        .then(resp => {
+          console.log('newservice', resp);
+          messageData.push(resp);
+        })
+        .catch(error => console.log('error', error));
+      // await axios
+      //   .get(`${ADRESS}/messages`)
+      //   .then(item => {
+      //     const messages = item.data;
+      //     messageData.push(messages);
+      //   })
+      //   .catch(error => console.log('error', error));
+    } else {
+      console.log('Token Bulunamamaktadır');
+    }
     setInput('');
     setBool(false);
   };
