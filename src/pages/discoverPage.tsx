@@ -25,12 +25,21 @@ export default function DiscoverPage() {
   const [bool, setBool] = useState<boolean>();
   const [userInfo, setUserInfo] = useState();
   const [loading, setLoading] = useState<boolean>(false);
+  //const [followerId, setFollowerIds] = useState([]);
 
   const messageData: {
     message: string;
     user: string;
     response: string;
     likeNumber: number;
+    _id: string;
+  }[] = [];
+
+  const followerId: {
+    follower: string;
+    followerId: string;
+    following: string;
+    followingId: number;
     _id: string;
   }[] = [];
 
@@ -42,8 +51,16 @@ export default function DiscoverPage() {
         key: 'userInfo',
       })
       .then(async resp => {
-        setUserInfo(resp.token);
-        console.log('respaaa', userInfo);
+        setUserInfo(resp);
+        console.log('resp info', userInfo);
+        await axios
+          .get(`${ADRESS}/follower/${resp.idToken}`)
+          .then(item => {
+            console.log('item follower', item);
+            item.data.map(usersId => followerId.push(usersId.followingId));
+            console.log('object', followerId);
+          })
+          .catch(error => console.log('error', error));
       });
   });
 
@@ -55,8 +72,14 @@ export default function DiscoverPage() {
         .get(`${ADRESS}/dalle`)
         .then(item => {
           console.log('itemmm', item);
-          item.data.map(mes => messageData.push(mes));
+          const filterList = item.data.filter(
+            mes => !followerId.includes(mes.userId),
+          );
+          console.log('filterList', filterList);
+
+          filterList.map(mes => messageData.push(mes));
           setData(messageData.reverse());
+          console.log('filterList2', data);
         })
         .catch(error => console.log('error', error));
 
@@ -66,7 +89,7 @@ export default function DiscoverPage() {
         })
         .then(async resp => {
           setUserInfo(resp.token);
-          console.log('respaaa', userInfo.id);
+          console.log('respaaa', userInfo.idToken);
         });
       setLoading(false);
     };
@@ -121,9 +144,9 @@ function InsideFlatlist({item}) {
     await axios
       .post(`${ADRESS}/follower`, {
         follower: userInfo.user.name,
-        following: user,
-        followerId: userInfo.user.id,
-        followingId: user,
+        following: item.user,
+        followerId: userInfo.idToken,
+        followingId: item.userId,
       })
       .then(resp => {
         console.log('resp post', resp);
@@ -173,7 +196,7 @@ function InsideFlatlist({item}) {
     <View style={styles.messageSection}>
       <View style={styles.photoSection}>
         <View style={styles.photoPrompt}>
-          <Text style={styles.sendedSection}>user/ {item.user}</Text>
+          <Text style={styles.sendedSection}>user/ {item.userId}</Text>
           <TouchableOpacity onPress={() => follow(item.user)}>
             <Text style={styles.sendedSection}>
               {following ? 'Follow' : 'following'}

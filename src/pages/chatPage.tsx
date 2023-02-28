@@ -72,26 +72,6 @@ export default function ChatPage() {
       const freeTokenCount = userInfo.freeToken;
       const gptTokenCount = userInfo.gptToken;
 
-      // await axios
-      //   .get(`${ADRESS}/messages/${input}`)
-      //   .then(async item => {
-      //     items = item.data;
-
-      //     if (items) {
-      //       if (freeTokenCount) {
-      //         console.log('ftk', freeTokenCount);
-      //         await axios.patch(`${ADRESS}/users/${userInfo.idToken}`, {
-      //           freeToken: freeTokenCount - 1,
-      //         });
-      //       } else {
-      //         await axios.patch(`${ADRESS}/users/${userInfo.idToken}`, {
-      //           gptToken: gptTokenCount - 1,
-      //         });
-      //       }
-      //     }
-      //   })
-      //   .catch(error => console.log('error', error));
-
       await chatServices
         .getGptAnswer(input, freeTokenCount, gptTokenCount, userInfo.idToken)
         .then(resp => {
@@ -101,23 +81,6 @@ export default function ChatPage() {
         .catch(error => {
           console.log('get error get', error);
         });
-
-      // await axios
-      //   .post(`${ADRESS}/messages`, {
-      //     user: 'crazy_61',
-      //     messageInfo: {
-      //       message: `${input}`,
-      //       user: 'crazy_61',
-      //       response: `${items}`,
-      //       date: '05.05.2010',
-      //     },
-      //   })
-      //   .then(resp => {
-      //     console.log('resp post', resp);
-      //   })
-      //   .catch(error => {
-      //     console.log('error post', error);
-      //   });
 
       await chatServices
         .senMessage(userInfo.user.id, input, items)
@@ -135,13 +98,6 @@ export default function ChatPage() {
           messageData.push(resp);
         })
         .catch(error => console.log('error', error));
-      // await axios
-      //   .get(`${ADRESS}/messages`)
-      //   .then(item => {
-      //     const messages = item.data;
-      //     messageData.push(messages);
-      //   })
-      //   .catch(error => console.log('error', error));
     } else {
       console.log('Token Bulunamamaktadır');
     }
