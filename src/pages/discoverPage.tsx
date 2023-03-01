@@ -122,7 +122,7 @@ export default function DiscoverPage() {
 
 function InsideFlatlist({item}) {
   const [following, setFollowing] = useState(false);
-  const [liked, isLiked] = useState<boolean>(false);
+  const [liked, isLiked] = useState<number>(0);
   const [userInfo, setUserInfo] = useState();
   const [likeNumber, setLikeNumber] = useState(item.likeNumber);
 
@@ -176,20 +176,27 @@ function InsideFlatlist({item}) {
     console.log('begenilmedi');
     setLikeNumber(likeNumber + 1);
 
-    liked
-      ? await axios.patch(`${ADRESS}/dalle/${item._id}`, {
-          likeNumber: item.likeNumber + 1,
-        })
-      : null;
+    await axios.patch(`${ADRESS}/dalle/${item._id}`, {
+      likeNumber: item.likeNumber + 1,
+    });
     Animated.timing(progress, {
-      toValue: 0.46,
+      toValue: 0.54,
       duration: 1000,
       useNativeDriver: true,
     }).start();
   };
 
   useEffect(() => {
-    liked ? handleUnLikeAnimation() : handleLikeAnimation();
+    console.log('objectliked', liked);
+    if (liked == 0) {
+      Animated.timing(progress, {
+        toValue: 0.3,
+        duration: 1000,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      liked % 2 ? handleUnLikeAnimation() : handleLikeAnimation();
+    }
   }, [liked]);
 
   return (
@@ -215,7 +222,7 @@ function InsideFlatlist({item}) {
             <Text style={styles.sendedSection}>{item.prompt}</Text>
           </View>
           <TouchableOpacity
-            onPress={() => isLiked(!liked)}
+            onPress={() => isLiked(liked + 1)}
             style={{
               flexDirection: 'column',
               justifyContent: 'center',

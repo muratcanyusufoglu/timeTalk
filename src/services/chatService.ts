@@ -54,7 +54,7 @@ class ChatService {
     await axios
       .get(urlGpt)
       .then(async item => {
-        answerGpt = item.data;
+        answerGpt = item.data.content;
         console.log('answer', answerGpt);
         if (answerGpt) {
           if (freeTokenCount) {
