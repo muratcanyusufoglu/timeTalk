@@ -58,7 +58,8 @@ export default function DiscoverPage() {
           .then(item => {
             console.log('item follower', item);
             item.data.map(usersId => followerId.push(usersId.followingId));
-            console.log('object', followerId);
+            followerId.push(userInfo.idToken);
+            console.log('followerIds', followerId);
           })
           .catch(error => console.log('error', error));
       });
@@ -141,20 +142,30 @@ function InsideFlatlist({item}) {
 
   const follow = async user => {
     console.log('object', user);
-    await axios
-      .post(`${ADRESS}/follower`, {
-        follower: userInfo.user.name,
-        following: item.user,
-        followerId: userInfo.idToken,
-        followingId: item.userId,
-      })
-      .then(resp => {
-        console.log('resp post', resp);
-        setFollowing(true);
-      })
-      .catch(error => {
-        console.log('error post', error);
-      });
+    if (following == false) {
+      await axios
+        .post(`${ADRESS}/follower`, {
+          follower: userInfo.user.name,
+          following: item.user,
+          followerId: userInfo.idToken,
+          followingId: item.userId,
+        })
+        .then(resp => {
+          console.log('resp post', resp);
+          setFollowing(true);
+        })
+        .catch(error => {
+          console.log('error post', error);
+        });
+    } else {
+      axios
+        .delete(
+          `${ADRESS}/follower/deleteUser/${item.userId}/${userInfo.idToken}`,
+        )
+        .then(resp => {
+          setFollowing(false);
+        });
+    }
   };
 
   const progress = useRef(new Animated.Value(0)).current;
@@ -206,7 +217,7 @@ function InsideFlatlist({item}) {
           <Text style={styles.sendedSection}>user/ {item.userId}</Text>
           <TouchableOpacity onPress={() => follow(item.user)}>
             <Text style={styles.sendedSection}>
-              {following ? 'Follow' : 'following'}
+              {following ? 'Following' : 'Follow'}
             </Text>
           </TouchableOpacity>
         </View>
