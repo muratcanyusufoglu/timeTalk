@@ -8,7 +8,7 @@
  * @format
  */
 
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -35,6 +35,8 @@ const window = Dimensions.get('window');
 
 const App = () => {
   const [value, setValue] = React.useState('');
+  const [data, setData] = useState([]);
+
   const userInfo = useSelector((store: any) => store.userReducer.userInfo);
   const ADRESS = Config.ADRESS;
 
@@ -44,13 +46,13 @@ const App = () => {
       webClientId:
         '101181523513-2halvkj3k0a6j8fqpvbf92002b5dequk.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
     });
-
     storage
       .load({
         key: 'userInfo',
       })
       .then(async resp => {
-        console.log('respaaahome', resp);
+        setData(resp);
+        console.log('respaaahome', data);
       });
   }, []);
 
@@ -62,8 +64,16 @@ const App = () => {
           <Text>Logo</Text>
         </View>
         <View style={{alignItems: 'center', flexDirection: 'row'}}>
-          <Text style={{color: '#000A1A'}}>Token</Text>
-          <Icon name="money" size={18} style={{color: '#75839D'}} />
+          <View style={{}}>
+            <Text style={{color: '#000A1A', fontSize: 10}}>
+              Chat: {data.freeToken + data.gptToken}
+            </Text>
+
+            <Text style={{color: '#000A1A', fontSize: 10}}>
+              Dalle: {data.freeToken + data.dalleToken}
+            </Text>
+          </View>
+          {/* <Icon name="money" size={18} style={{color: '#75839D'}} /> */}
         </View>
       </View>
       <SegmentedButtons
@@ -97,7 +107,7 @@ const App = () => {
           },
         ]}
       />
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => {
           storage.save({
             key: 'userInfo',
@@ -123,7 +133,7 @@ const App = () => {
         }}
         style={{alignItems: 'center', flexDirection: 'row'}}>
         <Text style={{color: '#000A1A'}}>Token</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       {/* <Text style={{color: '#000A1A'}}>{userInfo.user.email}</Text> */}
     </SafeAreaView>
   );

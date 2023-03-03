@@ -73,7 +73,7 @@ export default function ChatPage() {
       const gptTokenCount = userInfo.gptToken;
 
       await chatServices
-        .getGptAnswer(input, freeTokenCount, gptTokenCount, userInfo.idToken)
+        .getGptAnswer(input, userInfo)
         .then(resp => {
           console.log('resp get', resp);
           items = resp;
@@ -99,7 +99,7 @@ export default function ChatPage() {
         })
         .catch(error => console.log('error', error));
     } else {
-      console.log('Token Bulunamamaktadır');
+      console.log('Tokenınız bitmiştir');
     }
     setInput('');
     setBool(false);

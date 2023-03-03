@@ -40,6 +40,7 @@ export default function DiscoverPage() {
     followerId: string;
     following: string;
     followingId: number;
+    followingPhoto: string;
     _id: string;
   }[] = [];
 
@@ -78,20 +79,20 @@ export default function DiscoverPage() {
           );
           console.log('filterList', filterList);
 
-          filterList.map(mes => messageData.push(mes));
-          setData(messageData.reverse());
+          filterList.map(mes => data.push(mes));
+          setData(data.reverse());
           console.log('filterList2', data);
         })
         .catch(error => console.log('error', error));
 
-      storage
-        .load({
-          key: 'userInfo',
-        })
-        .then(async resp => {
-          setUserInfo(resp.token);
-          console.log('respaaa', userInfo.idToken);
-        });
+      // storage
+      //   .load({
+      //     key: 'userInfo',
+      //   })
+      //   .then(async resp => {
+      //     setUserInfo(resp.token);
+      //     console.log('respaaa', userInfo.idToken);
+      //   });
       setLoading(false);
     };
     fetch();
@@ -141,7 +142,6 @@ function InsideFlatlist({item}) {
   });
 
   const follow = async user => {
-    console.log('object', user);
     if (following == false) {
       await axios
         .post(`${ADRESS}/follower`, {
@@ -149,6 +149,7 @@ function InsideFlatlist({item}) {
           following: item.user,
           followerId: userInfo.idToken,
           followingId: item.userId,
+          followingPhoto: userInfo.user.photo,
         })
         .then(resp => {
           console.log('resp post', resp);

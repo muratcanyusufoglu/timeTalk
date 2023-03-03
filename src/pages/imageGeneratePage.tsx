@@ -97,10 +97,11 @@ export default function ImagePage() {
         .catch(error => console.log('error', error));
 
       await axios
-        .post(`${ADRESS}/dalle`, {
+        .post(`${ADRESS}/dalle`, {  
           prompt: `${input}`,
           user: `${userInfo.user.name}`,
           userId: `${userInfo.user.id}`,
+          userPhoto: `${userInfo.user.photo}`,
           response: `${items}`,
           likeNumber: 0,
         })

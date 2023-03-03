@@ -1,10 +1,11 @@
 import axios from 'axios';
 import Config from 'react-native-config';
+import storage from '../storage/storage';
 
 class ChatService {
   ADRESS = Config.ADRESS;
 
-  async getChatHistory() {
+  async   getChatHistory() {
     let url = this.ADRESS + '/messages';
     let chatHistory: any;
 
@@ -41,14 +42,9 @@ class ChatService {
       });
   }
 
-  async getGptAnswer(
-    input: string,
-    freeTokenCount: number,
-    gptTokenCount: number,
-    userInfo: string,
-  ) {
+  async getGptAnswer(input: string, userInfo: any) {
     let urlGpt = this.ADRESS + '/messages/' + input;
-    let urlUser = this.ADRESS + '/user/' + userInfo;
+    let urlUser = this.ADRESS + '/users/' + userInfo.idToken;
     let answerGpt: any;
 
     await axios
@@ -56,16 +52,51 @@ class ChatService {
       .then(async item => {
         answerGpt = item.data.content;
         console.log('answer', answerGpt);
+        console.log('userInfoGPt', userInfo);
         if (answerGpt) {
-          if (freeTokenCount) {
-            console.log('ftk', freeTokenCount);
-            await axios.patch(urlUser, {
-              freeToken: freeTokenCount - 1,
-            });
+          if (userInfo.freeToken > 0) {
+            console.log('ftk', userInfo.freeToken);
+            await axios
+              .patch(urlUser, {
+                freeToken: userInfo.freeToken - 1,
+              })
+              .then(resp => {
+                console.log('insideInternet', resp);
+                storage.save({
+                  key: 'userInfo',
+                  data: {
+                    //token: Platform.OS === 'ios' ? apnToken : fcmToken,
+                    accessToken: userInfo.accessToken,
+                    idToken: userInfo.idToken,
+                    user: userInfo.user,
+                    gptToken: userInfo.gptToken,
+                    freeToken: userInfo.freeToken - 1,
+                    dalleToken: userInfo.dalleToken,
+                  },
+                  expires: null,
+                });
+              });
           } else {
-            await axios.patch(urlUser, {
-              gptToken: gptTokenCount - 1,
-            });
+            await axios
+              .patch(urlUser, {
+                gptToken: userInfo.gptTokenCount - 1,
+              })
+              .then(resp => {
+                console.log('insideInternet', resp);
+                storage.save({
+                  key: 'userInfo',
+                  data: {
+                    //token: Platform.OS === 'ios' ? apnToken : fcmToken,
+                    accessToken: userInfo.accessToken,
+                    idToken: userInfo.idToken,
+                    user: userInfo.user,
+                    gptToken: userInfo.gptToken - 1,
+                    freeToken: userInfo.freeToken,
+                    dalleToken: userInfo.dalleToken,
+                  },
+                  expires: null,
+                });
+              });
           }
         }
         return answerGpt;
