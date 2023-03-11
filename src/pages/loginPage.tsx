@@ -41,13 +41,7 @@ const window = Dimensions.get('window');
 const App = () => {
   const ADRESS = Config.ADRESS;
 
-  const dispatch = useDispatch();
-  const [userInfo, setuserInfo] = useState();
-  const user: any = useSelector((store: any) => store.userReducer.userInfo);
-
   const [loggedIn, setloggedIn] = useState(false);
-
-  const navigation = useNavigation();
 
   useEffect(() => {
     GoogleSignin.configure({

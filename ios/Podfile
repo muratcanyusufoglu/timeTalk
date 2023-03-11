@@ -4,6 +4,7 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 platform :ios, '12.4'
 install! 'cocoapods', :deterministic_uuids => false
 
+
 target 'questionAnswerBot' do
   config = use_native_modules!
 
@@ -25,6 +26,16 @@ target 'questionAnswerBot' do
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
+
+  pod 'Firebase', :modular_headers => true
+  pod 'FirebaseCoreInternal', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
+  pod 'Firebase/Messaging'
+  pod 'GoogleUtilities', :modular_headers => true
+
+
+
 
   target 'questionAnswerBotTests' do
     inherit! :complete

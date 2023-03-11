@@ -18,7 +18,7 @@ export default function Profile() {
 
   //const [userInfo, setUserInfo] = useState();
   const [data, setData] = useState([]);
-  const [followers, setFollowers] = useState();
+  const [followers, setFollowers] = useState([]);
   const [refresh, setRefresh] = useState<boolean>();
 
   const userData: {
@@ -41,13 +41,15 @@ export default function Profile() {
         await axios
           .get(`${ADRESS}/follower/${resp.user.id}`)
           .then(item => {
-            setFollowers(item);
-            //item.data.map(mes => userData.push(mes));
-            //setData(userData.reverse());
-            console.log('filterListUser', followers);
+            setFollowers(item.data);
           })
           .catch(error => console.log('error', error));
       });
+  }, []);
+
+  useEffect(() => {
+    async function getUser() {}
+    getUser();
   }, []);
 
   return (
@@ -62,14 +64,14 @@ export default function Profile() {
         />
         <Text>{data.name}</Text>
       </View>
-      <FlatList
-        extraData={userData}
-        data={userData}
+      {/* <FlatList
+        extraData={followers}
+        data={followers}
         refreshing={refresh}
         numColumns={1}
         style={{}}
         renderItem={({item}) => <InsideFlatlist item={item} />}
-      />
+      /> */}
     </View>
   );
 }
@@ -78,15 +80,15 @@ function InsideFlatlist({item}) {
   console.log('itemitem', item);
   return (
     <View style={styles.messageSection}>
-      {/* <Image
-          source={{
-            uri: item.response,
-          }}
-          style={styles.imageStyle}
-          resizeMode="cover"
-        /> */}
+      <Image
+        source={{
+          uri: item.followingPhoto,
+        }}
+        style={styles.profileImage}
+        resizeMode="cover"
+      />
       <View style={styles.photoDescription}>
-        <Text style={styles.sendedSection}>{item.following}</Text>
+        <Text style={styles.sendedSection}>{item.followingId}</Text>
       </View>
       {/* <TouchableOpacity
         onPress={{}}
@@ -110,6 +112,8 @@ const styles = StyleSheet.create({
   messageSection: {
     alignItems: 'center',
     marginBottom: 30,
+    flex: 1,
+    flexDirection: 'row',
   },
   sendedSection: {
     padding: 5,
@@ -135,12 +139,11 @@ const styles = StyleSheet.create({
   photoDescription: {
     borderWidth: 1,
     color: 'black',
-    flex: 4,
   },
   profileImage: {
-    width: window.height / 10,
-    height: window.height / 10,
-    borderRadius: window.height / 5,
+    width: window.height / 11,
+    height: window.height / 11,
+    borderRadius: window.height / 5.5,
     borderColor: 'transparent',
   },
   userInfos: {
