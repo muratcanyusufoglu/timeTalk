@@ -6,6 +6,7 @@ import {
   TextInput,
   StyleSheet,
   Dimensions,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
@@ -99,7 +100,7 @@ export default function ChatPage() {
         })
         .catch(error => console.log('error', error));
     } else {
-      console.log('Tokenınız bitmiştir');
+      Alert.alert('Your GPT token run out.', 'Please buy coin.');
     }
     setInput('');
     setBool(false);
@@ -125,12 +126,16 @@ export default function ChatPage() {
         renderItem={({item}) => (
           <>
             <View style={styles.messageSection}>
-              <Text style={styles.sendedSection}>
-                {item.messageInfo.message}
-              </Text>
-              <Text style={styles.responsSection}>
-                {item.messageInfo.response}
-              </Text>
+              <View style={styles.sendedSection}>
+                <Text style={styles.sendedSectionText}>
+                  {item.messageInfo.message}
+                </Text>
+              </View>
+              <View style={styles.responsSection}>
+                <Text style={styles.responsSectionText}>
+                  {item.messageInfo.response}
+                </Text>
+              </View>
             </View>
           </>
         )}
@@ -186,6 +191,8 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     borderRadius: 10,
   },
+  sendedSectionText: {},
+  responseSectionText: {},
   animation: {
     width: window.width / 20,
     height: window.height / 20,

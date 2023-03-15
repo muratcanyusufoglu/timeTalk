@@ -11,6 +11,7 @@ import React, {useEffect, useState} from 'react';
 import storage from '../storage/storage';
 import axios from 'axios';
 import Config from 'react-native-config';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const window = Dimensions.get('window');
 export default function Profile() {
@@ -53,7 +54,7 @@ export default function Profile() {
   }, []);
 
   return (
-    <View>
+    <SafeAreaView>
       <View style={styles.userInfos}>
         <Image
           source={{
@@ -72,7 +73,7 @@ export default function Profile() {
         style={{}}
         renderItem={({item}) => <InsideFlatlist item={item} />}
       /> */}
-    </View>
+    </SafeAreaView>
   );
 }
 

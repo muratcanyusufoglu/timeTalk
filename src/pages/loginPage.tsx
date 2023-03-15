@@ -50,22 +50,17 @@ const App = () => {
     });
   }, []);
 
-  // const realm = Realm.open({
-  //   path: 'realm-files/myrealm',
-  //   schema: [TaskSchema],
-  // });
-
   const signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
       const {accessToken, idToken, user} = await GoogleSignin.signIn();
-      //console.log('auth', user.id, user.name, await GoogleSignin.signIn());
       setloggedIn(true);
       const credential = auth.GoogleAuthProvider.credential(
         idToken,
         accessToken,
       );
-      await auth().signInWithCredential(credential);
+      //await auth().signInWithCredential(credential);
+      console.log('ididid', idToken);
       if (idToken) {
         async function navigateHome() {
           await axios
@@ -139,6 +134,7 @@ const App = () => {
         navigateHome();
       }
     } catch (error) {
+      console.log('error', error);
       Toast.show({
         type: 'error',
         text1: 'Opss',

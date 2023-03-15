@@ -84,7 +84,7 @@ const App = () => {
           {
             value: 'chats',
             label: 'Chats',
-            onPress: () => navigation.navigate('Chat' as never),
+            onPress: () => navigation.navigate('Time' as never),
             style: {
               borderRadius: 6,
             },

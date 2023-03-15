@@ -97,7 +97,7 @@ export default function ImagePage() {
         .catch(error => console.log('error', error));
 
       await axios
-        .post(`${ADRESS}/dalle`, {  
+        .post(`${ADRESS}/dalle`, {
           prompt: `${input}`,
           user: `${userInfo.user.name}`,
           userId: `${userInfo.user.id}`,
@@ -120,7 +120,7 @@ export default function ImagePage() {
         })
         .catch(error => console.log('error', error));
     } else {
-      console.log('tokenınız bulunmamaktadır');
+      Alert.alert('Your Dalle token run out.', 'Please buy coin.');
     }
     setInput('');
     setBool(false);
@@ -276,7 +276,7 @@ export default function ImagePage() {
             style={styles.input}
             onChangeText={(text: string) => setInput(text)}
             value={input}
-            placeholder="Image Text..."
+            placeholder="Create a picture..."
             multiline
           />
           <TouchableOpacity
@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
   },
   sendedSection: {
     padding: 5,
-    fontWeight: '900',
+    fontWeight: '500',
     fontSize: 15,
   },
   responsSection: {
@@ -338,6 +338,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderColor: '#D6DAE2',
     borderRadius: 4,
+    alignItems: 'center',
   },
   sendMessageButton: {
     alignItems: 'center',

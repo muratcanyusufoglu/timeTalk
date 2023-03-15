@@ -3,7 +3,6 @@ import {
   Text,
   StyleSheet,
   FlatList,
-  TextInput,
   TouchableOpacity,
   Dimensions,
   Image,
@@ -14,27 +13,19 @@ import React, {useEffect, useRef, useState} from 'react';
 import axios from 'axios';
 import Config from 'react-native-config';
 import LottieView from 'lottie-react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {AsyncStorage} from 'react-native';
+// import Icon from 'react-native-vector-icons/FontAwesome';
+// import {AsyncStorage} from 'react-native';
 import storage from '../storage/storage';
 import Lottie from 'lottie-react-native';
 
 const window = Dimensions.get('window');
 
-export default function DiscoverPage() {
+export default function TimePage() {
   const [data, setData] = useState([]);
   const [bool, setBool] = useState<boolean>();
   const [userInfo, setUserInfo] = useState();
   const [loading, setLoading] = useState<boolean>(false);
   //const [followerId, setFollowerIds] = useState([]);
-
-  const messageData: {
-    message: string;
-    user: string;
-    response: string;
-    likeNumber: number;
-    _id: string;
-  }[] = [];
 
   const followerId: {
     follower: string;
@@ -70,30 +61,21 @@ export default function DiscoverPage() {
   useEffect(() => {
     const fetch = async () => {
       setLoading(true);
+      followerId.map(async userId => {
+        await axios
+          .get(`${ADRESS}/dalle/findFollowingImages/${userId}`)
+          .then(item => {
+            console.log('itemmmIDD', item);
+            // const filterList = item.data;
 
-      await axios
-        .get(`${ADRESS}/dalle`)
-        .then(item => {
-          console.log('itemmm', item);
-          const filterList = item.data.filter(
-            mes => !followerId.includes(mes.userId),
-          );
-          console.log('filterList', filterList);
+            // console.log('filterList', filterList);
 
-          filterList.map(mes => data.push(mes));
-          setData(data.reverse());
-          console.log('filterList2', data);
-        })
-        .catch(error => console.log('error', error));
-
-      // storage
-      //   .load({
-      //     key: 'userInfo',
-      //   })
-      //   .then(async resp => {
-      //     setUserInfo(resp.token);
-      //     console.log('respaaa', userInfo.idToken);
-      //   });
+            // filterList.map(mes => data.push(mes));
+            // setData(data.reverse());
+            // console.log('filterList2', data);
+          })
+          .catch(error => console.log('errorTime', error));
+      });
       setLoading(false);
     };
     fetch();
@@ -141,34 +123,6 @@ function InsideFlatlist({item}) {
         console.log('respaaa', userInfo);
       });
   });
-
-  const follow = async user => {
-    if (following == false) {
-      await axios
-        .post(`${ADRESS}/follower`, {
-          follower: userInfo.user.name,
-          following: item.user,
-          followerId: userInfo.idToken,
-          followingId: item.userId,
-          followingPhoto: userInfo.user.photo,
-        })
-        .then(resp => {
-          console.log('resp post', resp);
-          setFollowing(true);
-        })
-        .catch(error => {
-          console.log('error post', error);
-        });
-    } else {
-      axios
-        .delete(
-          `${ADRESS}/follower/deleteUser/${item.userId}/${userInfo.idToken}`,
-        )
-        .then(resp => {
-          setFollowing(false);
-        });
-    }
-  };
 
   const progress = useRef(new Animated.Value(0)).current;
 
@@ -218,11 +172,6 @@ function InsideFlatlist({item}) {
         <View style={styles.photoSection}>
           <View style={styles.photoPrompt}>
             <Text style={styles.sendedSection}>user/ {item.userId}</Text>
-            <TouchableOpacity onPress={() => follow(item.user)}>
-              <Text style={styles.sendedSection}>
-                {following ? 'Following' : 'Follow'}
-              </Text>
-            </TouchableOpacity>
           </View>
           <Image
             source={{

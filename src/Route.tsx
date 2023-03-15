@@ -1,5 +1,6 @@
 // In App.js in a new project
 import React, {useEffect} from 'react';
+import {Dimensions} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomePage from './pages/homePage';
@@ -8,11 +9,14 @@ import DallePage from './pages/imageGeneratePage';
 import DiscoverPage from './pages/discoverPage';
 import LoginPage from './pages/loginPage';
 import Profile from './pages/profile';
+import TimePage from './pages/timePage';
 import {BottomNavigation} from 'react-native-paper';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider} from 'react-redux';
 import store from '../src/redux/store';
 import storage from './storage/storage';
+
+const window = Dimensions.get('window');
 
 const HomeStack = createNativeStackNavigator();
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -33,6 +37,11 @@ const Homepage = () => {
       <HomeStack.Screen
         name="Login"
         component={LoginPage}
+        options={{headerShown: false}}
+      />
+      <HomeStack.Screen
+        name="Time"
+        component={TimePage}
         options={{headerShown: false}}
       />
     </HomeStack.Navigator>
@@ -155,7 +164,7 @@ function App() {
             barStyle={
               userInfo == undefined
                 ? {height: 0}
-                : {backgroundColor: '#E0ECFF', height: 70}
+                : {backgroundColor: '#E0ECFF', height: window.height / 10}
             }
             activeColor={'#75839D'}
             theme={{colors: {secondaryContainer: 'transparent'}}}
