@@ -13,6 +13,7 @@ import axios from 'axios';
 import Config from 'react-native-config';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {MasonryFlashList} from '@shopify/flash-list';
 
 const window = Dimensions.get('window');
 export default function Profile() {
@@ -23,13 +24,12 @@ export default function Profile() {
   const [followers, setFollowers] = useState([]);
   const [refresh, setRefresh] = useState<boolean>();
   const [index, setIndex] = useState<number>(1);
+  const [photos, setPhotos] = useState<any>();
 
-  const userData: {
-    follower: string;
-    followerId: string;
-    following: string;
-    followingId: number;
-    followingPhoto: string;
+  const messageData: {
+    message: string;
+    user: string;
+    response: string;
     _id: string;
   }[] = [];
 
@@ -42,9 +42,17 @@ export default function Profile() {
         setData(resp.user);
         console.log('user', data);
         await axios
-          .get(`${ADRESS}/follower/${resp.user.id}`)
+          .get(`${ADRESS}/follower/withInfos/${resp.user.id}`)
           .then(item => {
             setFollowers(item.data);
+          })
+          .catch(error => console.log('error', error));
+        await axios
+          .get(`${ADRESS}/dalle/findFollowingImages/${resp.user.id}`)
+          .then(item => {
+            item.data.map(mes => messageData.push(mes));
+            setPhotos(messageData.reverse());
+            console.log('itemss', messageData);
           })
           .catch(error => console.log('error', error));
       });
@@ -56,7 +64,7 @@ export default function Profile() {
   }, []);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{flex: 1}}>
       <View style={styles.userInfos}>
         <Image
           source={{
@@ -107,13 +115,43 @@ export default function Profile() {
               : styles.altBarsButtonsInactive
           }
           onPress={() => setIndex(4)}>
-          <Text style={styles.userNameText}>Packages</Text>
+          <Text style={styles.userNameText}>Purchases</Text>
           <Icon name="box-open" size={15} color="black" />
         </TouchableOpacity>
       </View>
       <View style={styles.line} />
 
       {index == 1 ? (
+        <MasonryFlashList
+          extraData={photos}
+          data={photos}
+          numColumns={2}
+          style={{flex: 1}}
+          estimatedItemSize={100}
+          renderItem={({item}) => (
+            <>
+              <TouchableOpacity onPress={() => {}}>
+                <View style={styles.messageSection}>
+                  <View style={styles.photoSection}>
+                    <Image
+                      source={{
+                        uri: item.response,
+                      }}
+                      style={styles.flatlistImages}
+                      resizeMode="cover"
+                    />
+                    <View style={styles.photoPrompt}>
+                      <Text style={styles.sendedSection}>{item.prompt}</Text>
+                    </View>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </>
+          )}
+        />
+      ) : null}
+
+      {index == 3 ? (
         <FlatList
           extraData={followers}
           data={followers}
@@ -130,16 +168,17 @@ export default function Profile() {
 function InsideFlatlist({item}) {
   console.log('itemitem', item);
   return (
-    <View style={styles.messageSection}>
+    <TouchableOpacity style={styles.followingUserContent}>
       <Image
         source={{
           uri: item.followingPhoto,
         }}
-        style={styles.profileImage}
+        style={styles.profileImagesFollowers}
         resizeMode="cover"
       />
       <View style={styles.photoDescription}>
-        <Text style={styles.sendedSection}>{item.followingId}</Text>
+        <Text style={styles.sendedSection}>{item.following}</Text>
+        <Text style={styles.sendedSection}>Content Number</Text>
       </View>
       {/* <TouchableOpacity
         onPress={{}}
@@ -151,7 +190,7 @@ function InsideFlatlist({item}) {
         }}>
         <Text style={styles.likedNumber}>likes</Text>
       </TouchableOpacity> */}
-    </View>
+    </TouchableOpacity>
   );
 }
 const styles = StyleSheet.create({
@@ -162,8 +201,12 @@ const styles = StyleSheet.create({
 
   messageSection: {
     alignItems: 'center',
-    marginBottom: 30,
-    flex: 1,
+    margin: 20,
+  },
+  followingUserContent: {
+    alignItems: 'center',
+    marginHorizontal: 20,
+    marginVertical: 15,
     flexDirection: 'row',
   },
   sendedSection: {
@@ -180,20 +223,25 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   photoPrompt: {
-    width: window.width,
+    width: window.width / 2.2,
     borderWidth: 1,
     color: 'black',
     flexDirection: 'row',
-    justifyContent: 'space-between',
     padding: 0,
   },
   photoDescription: {
-    borderWidth: 1,
     color: 'black',
+    flexDirection: 'column',
   },
   profileImage: {
     width: window.height / 11,
     height: window.height / 11,
+    borderRadius: window.height / 5.5,
+    borderColor: 'transparent',
+  },
+  profileImagesFollowers: {
+    width: window.height / 15,
+    height: window.height / 15,
     borderRadius: window.height / 5.5,
     borderColor: 'transparent',
   },
@@ -210,22 +258,44 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-evenly',
-    marginTop: window.height / 25,
+    marginTop: window.height / 40,
   },
   altBarsButtonsActive: {
     backgroundColor: '#E0ECFF',
     alignItems: 'center',
-    padding: 10,
+    justifyContent: 'center',
+    padding: 15,
     borderRadius: 8,
   },
   altBarsButtonsInactive: {
     backgroundColor: 'white',
     alignItems: 'center',
-    padding: 10,
+    justifyContent: 'center',
+    paddingTop: 10,
     borderRadius: 8,
   },
   line: {
     margin: 10,
     borderWidth: 0.2,
+  },
+  photoSection: {
+    padding: 0,
+    borderWidth: 1,
+    borderColor: 'transparent',
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
+    borderTopRightRadius: 12,
+    borderTopLeftRadius: 12,
+    alignItems: 'center',
+  },
+  flatlistImages: {
+    width: window.width / 2.2,
+    height: window.height / 4,
+    borderWidth: 1,
+    borderColor: 'transparent',
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
   },
 });

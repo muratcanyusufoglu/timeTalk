@@ -9,6 +9,7 @@ import {
   Platform,
   PermissionsAndroid,
   Alert,
+  SafeAreaView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
@@ -196,7 +197,7 @@ export default function ImagePage() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.loadingView}>
         {loading ? (
           <Lottie
@@ -286,7 +287,7 @@ export default function ImagePage() {
           </TouchableOpacity>
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({

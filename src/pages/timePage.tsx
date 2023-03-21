@@ -27,18 +27,13 @@ export default function TimePage() {
   const [loading, setLoading] = useState<boolean>(false);
   //const [followerId, setFollowerIds] = useState([]);
 
-  const followerId: {
-    follower: string;
-    followerId: string;
-    following: string;
-    followingId: number;
-    followingPhoto: string;
-    _id: string;
-  }[] = [];
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const followerId: [] = [];
 
   const ADRESS = Config.ADRESS;
 
   useEffect(() => {
+    setLoading(true);
     storage
       .load({
         key: 'userInfo',
@@ -46,40 +41,34 @@ export default function TimePage() {
       .then(async resp => {
         setUserInfo(resp);
         console.log('resp info', userInfo);
-        await axios
-          .get(`${ADRESS}/follower/${resp.idToken}`)
-          .then(item => {
-            console.log('item follower', item);
-            item.data.map(usersId => followerId.push(usersId.followingId));
-            followerId.push(userInfo.idToken);
-            console.log('followerIds', followerId);
-          })
-          .catch(error => console.log('error', error));
+        const fetch = async () => {
+          await axios
+            .get(`${ADRESS}/follower/${resp.idToken}`)
+            .then(async item => {
+              console.log('followerIDs', item.data[0]);
+              await axios
+                .get(`${ADRESS}/dalle/findFollowingWithArray/${item.data[0]}`)
+                .then(item => {
+                  console.log(
+                    'itemmmIDD',
+                    `${ADRESS}/dalle/findFollowingWithArray/${item.data[0]}`,
+                    item,
+                  );
+                  const filterList = item.data;
+                  console.log('filterList', filterList);
+
+                  filterList.map(mes => data.push(mes));
+                  setData(data.reverse());
+                  // console.log('filterList2', data);
+                })
+                .catch(error => console.log('errorTime', error));
+            })
+            .catch(error => console.log('error', error));
+        };
+        fetch();
       });
-  });
-
-  useEffect(() => {
-    const fetch = async () => {
-      setLoading(true);
-      followerId.map(async userId => {
-        await axios
-          .get(`${ADRESS}/dalle/findFollowingImages/${userId}`)
-          .then(item => {
-            console.log('itemmmIDD', item);
-            // const filterList = item.data;
-
-            // console.log('filterList', filterList);
-
-            // filterList.map(mes => data.push(mes));
-            // setData(data.reverse());
-            // console.log('filterList2', data);
-          })
-          .catch(error => console.log('errorTime', error));
-      });
-      setLoading(false);
-    };
-    fetch();
-  }, [bool]);
+    setLoading(false);
+  }, [userInfo, ADRESS, followerId, data]);
 
   return (
     <View style={styles.container}>
