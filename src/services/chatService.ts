@@ -5,12 +5,12 @@ import storage from '../storage/storage';
 class ChatService {
   ADRESS = Config.ADRESS;
 
-  async   getChatHistory() {
-    let url = this.ADRESS + '/messages';
+  async getChatHistory(user: string) {
+    let urlPersonal = `${this.ADRESS}/messages/getPersonalChat/${user}`;
     let chatHistory: any;
-
+    console.log('urlurl ', `${this.ADRESS}/messages/getPersonalChat/${user}`);
     chatHistory = await axios
-      .get(url)
+      .get(urlPersonal)
       .then(resp => {
         console.log('resppp', resp);
         return resp;
@@ -51,8 +51,6 @@ class ChatService {
       .get(urlGpt)
       .then(async item => {
         answerGpt = item.data.content;
-        console.log('answer', answerGpt);
-        console.log('userInfoGPt', userInfo);
         if (answerGpt) {
           if (userInfo.freeToken > 0) {
             console.log('ftk', userInfo.freeToken);

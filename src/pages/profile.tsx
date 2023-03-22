@@ -48,7 +48,7 @@ export default function Profile() {
           })
           .catch(error => console.log('error', error));
         await axios
-          .get(`${ADRESS}/dalle/findFollowingImages/${resp.user.id}`)
+          .get(`${ADRESS}/dalle/findPersonalImages/${resp.user.id}`)
           .then(item => {
             item.data.map(mes => messageData.push(mes));
             setPhotos(messageData.reverse());

@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Dimensions,
   Alert,
+  SafeAreaView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
@@ -41,17 +42,8 @@ export default function ChatPage() {
   const ADRESS = Config.ADRESS;
 
   useEffect(() => {
+    setLoading(true);
     const fetch = async () => {
-      setLoading(true);
-
-      await chatServices
-        .getChatHistory()
-        .then(resp => {
-          resp.data.map(mes => messageData.push(mes));
-          setData(messageData.reverse());
-        })
-        .catch(error => console.log('error', error));
-
       storage
         .load({
           key: 'userInfo',
@@ -59,9 +51,16 @@ export default function ChatPage() {
         .then(async resp => {
           setUserInfo(resp);
           console.log('respaaa', userInfo);
+          await chatServices
+            .getChatHistory(resp.user.id)
+            .then(resp => {
+              resp.data.map(mes => messageData.push(mes));
+              setData(messageData.reverse());
+            })
+            .catch(error => console.log('error', error));
         });
-      setLoading(false);
     };
+    setLoading(false);
 
     fetch();
   }, [bool]);
@@ -93,7 +92,7 @@ export default function ChatPage() {
         });
 
       await chatServices
-        .getChatHistory()
+        .getChatHistory(userInfo.user.id)
         .then(resp => {
           console.log('newservice', resp);
           messageData.push(resp);
@@ -107,7 +106,7 @@ export default function ChatPage() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.loadingView}>
         {loading ? (
           <Lottie
@@ -164,7 +163,7 @@ export default function ChatPage() {
           <Icon name="send-o" size={20} />
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

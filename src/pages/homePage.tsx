@@ -30,6 +30,8 @@ import {
 } from '@react-native-google-signin/google-signin';
 import axios from 'axios';
 import Config from 'react-native-config';
+import ChatPage from './chatPage';
+import TimePage from './timePage';
 
 const window = Dimensions.get('window');
 
@@ -76,7 +78,7 @@ const App = () => {
           {/* <Icon name="money" size={18} style={{color: '#75839D'}} /> */}
         </View>
       </View>
-      <SegmentedButtons
+      {/* <SegmentedButtons
         value={value}
         onValueChange={setValue}
         style={styles.segmentedButtons}
@@ -84,7 +86,7 @@ const App = () => {
           {
             value: 'chats',
             label: 'Chats',
-            onPress: () => navigation.navigate('Time' as never),
+            onPress: () => ChatPage(),
             style: {
               borderRadius: 6,
             },
@@ -106,7 +108,9 @@ const App = () => {
             },
           },
         ]}
-      />
+      /> */}
+
+      <TimePage />
       {/* <TouchableOpacity
         onPress={() => {
           storage.save({
@@ -144,6 +148,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
     margin: (window.width - window.width / 1.2) / 3,
+    height: window.height / 50,
   },
   sectionsBar: {
     marginTop: 20,

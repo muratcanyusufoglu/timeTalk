@@ -50,25 +50,16 @@ export default function ImagePage() {
       .then(async resp => {
         setUserInfo(resp);
         console.log('respaaa', userInfo);
+        await axios
+          .get(`${ADRESS}/dalle/findPersonalImages/${resp.user.id}`)
+          .then(item => {
+            item.data.map(mes => messageData.push(mes));
+            setData(messageData.reverse());
+            console.log('itemss', messageData);
+          })
+          .catch(error => console.log('error', error));
       });
-  });
-
-  useEffect(() => {
-    const fetch = async () => {
-      setLoading(true);
-
-      await axios
-        .get(`${ADRESS}/dalle`)
-        .then(item => {
-          item.data.map(mes => messageData.push(mes));
-          setData(messageData.reverse());
-          console.log('itemss', messageData);
-        })
-        .catch(error => console.log('error', error));
-      setLoading(false);
-    };
-    fetch();
-  }, [bool]);
+  }, []);
 
   const addArray = async () => {
     setBool(true);

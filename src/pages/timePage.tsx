@@ -29,7 +29,7 @@ export default function TimePage() {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const followerId: [] = [];
-
+  const filterList: [] = [];
   const ADRESS = Config.ADRESS;
 
   useEffect(() => {
@@ -49,16 +49,13 @@ export default function TimePage() {
               await axios
                 .get(`${ADRESS}/dalle/findFollowingWithArray/${item.data[0]}`)
                 .then(item => {
-                  console.log(
-                    'itemmmIDD',
-                    `${ADRESS}/dalle/findFollowingWithArray/${item.data[0]}`,
-                    item,
-                  );
-                  const filterList = item.data;
-                  console.log('filterList', filterList);
-
-                  filterList.map(mes => data.push(mes));
-                  setData(data.reverse());
+                  // console.log(
+                  //   'itemmmIDD',
+                  //   `${ADRESS}/dalle/findFollowingWithArray/${item.data[0]}`,
+                  //   item,
+                  // );
+                  item.data.map(mes => filterList.push(mes));
+                  setData(filterList.reverse());
                   // console.log('filterList2', data);
                 })
                 .catch(error => console.log('errorTime', error));
@@ -68,7 +65,7 @@ export default function TimePage() {
         fetch();
       });
     setLoading(false);
-  }, [userInfo, ADRESS, followerId, data]);
+  }, [userInfo, ADRESS]);
 
   return (
     <View style={styles.container}>
@@ -175,12 +172,7 @@ function InsideFlatlist({item}) {
             </View>
             <TouchableOpacity
               onPress={() => isLiked(liked + 1)}
-              style={{
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flex: 1,
-              }}>
+              style={styles.likeSection}>
               <LottieView
                 progress={progress}
                 source={require('../assets/animations/like-animation.json')}
@@ -288,5 +280,11 @@ const styles = StyleSheet.create({
   likedNumber: {
     color: 'white',
     alignItems: 'center',
+  },
+  likeSection: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
   },
 });
