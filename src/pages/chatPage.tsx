@@ -16,7 +16,7 @@ import Lottie from 'lottie-react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import storage from '../storage/storage';
 import ChatService from '../services/chatService';
-
+import {messageInterface, UserInfoProp} from '../props/generalProp';
 const window = Dimensions.get('window');
 
 export default function ChatPage() {
@@ -24,7 +24,7 @@ export default function ChatPage() {
   const [input, setInput] = useState<string>();
   const [bool, setBool] = useState<boolean>();
   const [loading, setLoading] = useState<boolean>(false);
-  const [userInfo, setUserInfo] = useState();
+  const [userInfo, setUserInfo] = useState<UserInfoProp>();
 
   const chatServices = new ChatService();
 
@@ -39,7 +39,6 @@ export default function ChatPage() {
       response: string;
     };
   }[] = [];
-  const ADRESS = Config.ADRESS;
 
   useEffect(() => {
     setLoading(true);
@@ -53,8 +52,10 @@ export default function ChatPage() {
           console.log('respaaa', userInfo);
           await chatServices
             .getChatHistory(resp.user.id)
-            .then(resp => {
-              resp.data.map(mes => messageData.push(mes));
+            .then(respChat => {
+              respChat.data.map((mes: messageInterface) =>
+                messageData.push(mes),
+              );
               setData(messageData.reverse());
             })
             .catch(error => console.log('error', error));
@@ -69,9 +70,6 @@ export default function ChatPage() {
     setBool(true);
     var items;
     if (userInfo.freeToken > 0 || userInfo.gptToken > 0) {
-      const freeTokenCount = userInfo.freeToken;
-      const gptTokenCount = userInfo.gptToken;
-
       await chatServices
         .getGptAnswer(input, userInfo)
         .then(resp => {
@@ -83,7 +81,7 @@ export default function ChatPage() {
         });
 
       await chatServices
-        .senMessage(userInfo.user.id, input, items)
+        .senMessage(userInfo?.user.id, input, items)
         .then(resp => {
           console.log('resp post', resp);
         })
@@ -92,7 +90,7 @@ export default function ChatPage() {
         });
 
       await chatServices
-        .getChatHistory(userInfo.user.id)
+        .getChatHistory(userInfo?.user.id)
         .then(resp => {
           console.log('newservice', resp);
           messageData.push(resp);

@@ -59,7 +59,7 @@ export default function ImagePage() {
           })
           .catch(error => console.log('error', error));
       });
-  }, []);
+  }, [bool]);
 
   const addArray = async () => {
     setBool(true);
@@ -69,7 +69,7 @@ export default function ImagePage() {
       const dalleTokenCount = userInfo.dalleToken;
 
       await axios
-        .get(`${ADRESS}/dalle/${input}`)
+        .get(`${ADRESS}/dalle/createImage/${input}`)
         .then(async item => {
           items = item.data;
           console.log(items);
@@ -105,7 +105,7 @@ export default function ImagePage() {
         });
 
       await axios
-        .get(`${ADRESS}/dalle`)
+        .get(`${ADRESS}/dalle/findPersonalImages/${userInfo.user.id}`)
         .then(item => {
           const messages = item.data;
           messageData.push(messages);
