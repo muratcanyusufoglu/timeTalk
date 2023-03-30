@@ -162,7 +162,6 @@ export default function ImagePage() {
       // this is much more performant.
       fileCache: true,
       path: pathToWrite,
-
       addAndroidDownloads: {
         title: 'download.jpg',
         description: 'Download.jpg',
@@ -180,11 +179,6 @@ export default function ImagePage() {
         Alert.alert('Fotograf indirildi.', res.toString());
         console.log('res', res);
       });
-  };
-
-  const getExtention = filename => {
-    // To get the file extension
-    return /[.]/.exec(filename) ? /[^.]+$/.exec(filename) : undefined;
   };
 
   return (
@@ -350,6 +344,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     width: window.width / 2.2,
     color: 'black',
+    alignItems: 'stretch',
   },
   photoSection: {
     padding: 0,

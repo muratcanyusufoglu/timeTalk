@@ -25,6 +25,7 @@ export default function TimePage() {
   const [bool, setBool] = useState<boolean>();
   const [userInfo, setUserInfo] = useState();
   const [loading, setLoading] = useState<boolean>(false);
+  const [pagination, setPagination] = useState<number>(4);
   //const [followerId, setFollowerIds] = useState([]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -47,16 +48,12 @@ export default function TimePage() {
             .then(async item => {
               console.log('followerIDs', item.data[0]);
               await axios
-                .get(`${ADRESS}/dalle/findFollowingWithArray/${item.data[0]}`)
+                .get(
+                  `${ADRESS}/dalle/findFollowingWithArray/${item.data[0]}?limit=${pagination}`,
+                )
                 .then(item => {
-                  // console.log(
-                  //   'itemmmIDD',
-                  //   `${ADRESS}/dalle/findFollowingWithArray/${item.data[0]}`,
-                  //   item,
-                  // );
                   item.data.map(mes => filterList.push(mes));
-                  setData(filterList.reverse());
-                  // console.log('filterList2', data);
+                  setData(filterList);
                 })
                 .catch(error => console.log('errorTime', error));
             })
@@ -65,7 +62,12 @@ export default function TimePage() {
         fetch();
       });
     setLoading(false);
-  }, [userInfo, ADRESS]);
+  }, [userInfo, ADRESS, pagination]);
+
+  const handleOnEndReached = () => {
+    console.log('endReaced', pagination);
+    setPagination(pagination + 5);
+  };
 
   return (
     <View style={styles.container}>
@@ -83,9 +85,20 @@ export default function TimePage() {
         extraData={data}
         data={data}
         refreshing={bool}
+        onEndReached={handleOnEndReached}
         numColumns={1}
         style={{}}
         renderItem={({item}) => <InsideFlatlist item={item} />}
+        ListFooterComponent={
+          <View style={styles.loadingView}>
+            <Lottie
+              source={require('../assets/animations/messageLoad.json')}
+              style={styles.animationLoading}
+              autoPlay
+              loop
+            />
+          </View>
+        }
       />
     </View>
   );
@@ -159,17 +172,16 @@ function InsideFlatlist({item}) {
           <View style={styles.photoPrompt}>
             <Text style={styles.sendedSection}>user/ {item.userId}</Text>
           </View>
-          <Image
-            source={{
-              uri: item.response,
-            }}
-            style={styles.imageStyle}
-            resizeMode="cover"
-          />
+          <View style={styles.imageView}>
+            <Image
+              source={{
+                uri: item.response,
+              }}
+              style={styles.imageStyle}
+              resizeMode="cover"
+            />
+          </View>
           <View style={styles.likeAndDescription}>
-            <View style={styles.photoDescription}>
-              <Text style={styles.sendedSection}>{item.prompt}</Text>
-            </View>
             <TouchableOpacity
               onPress={() => isLiked(liked + 1)}
               style={styles.likeSection}>
@@ -182,6 +194,9 @@ function InsideFlatlist({item}) {
                 {likeNumber ? likeNumber : null} likes
               </Text>
             </TouchableOpacity>
+            <View style={styles.photoDescription}>
+              <Text style={styles.sendedSection}>{item.prompt}</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -213,8 +228,8 @@ const styles = StyleSheet.create({
   animation: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: window.width / 15,
     height: window.height / 15,
+    //padding: window.height / 25,
   },
   sendMessageSection: {
     flexDirection: 'row',
@@ -240,7 +255,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   photoPrompt: {
-    width: window.width,
+    width: window.width / 1.1,
     borderWidth: 1,
     color: 'black',
     flexDirection: 'row',
@@ -250,22 +265,26 @@ const styles = StyleSheet.create({
   photoDescription: {
     borderWidth: 1,
     color: 'black',
-    flex: 4,
+    flex: 1,
+    alignItems: 'flex-start',
+    marginHorizontal: window.width * 0.04,
   },
   photoSection: {
     borderWidth: 1,
     borderColor: 'transparent',
-    alignItems: 'flex-start',
+    alignItems: 'center',
   },
   imageStyle: {
-    width: window.width,
+    width: window.width / 1.1,
     height: window.height / 2.5,
     borderColor: 'transparent',
+    alignItems: 'center',
+    borderRadius: 8,
   },
   likeAndDescription: {
-    width: window.width,
-    flexDirection: 'row',
-    alignItems: 'center',
+    width: window.width / 1,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
   },
   loadingView: {
@@ -282,9 +301,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   likeSection: {
-    flexDirection: 'column',
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
+    marginHorizontal: window.width * 0.01,
+  },
+  imageView: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
