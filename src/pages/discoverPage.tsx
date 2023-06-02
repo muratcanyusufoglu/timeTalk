@@ -10,7 +10,7 @@ import {
 import React, {useEffect, useState} from 'react';
 import nameList from '../assets/localusers';
 import {categories} from '../assets/categories';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 import {MasonryFlashList} from '@shopify/flash-list/dist/MasonryFlashList';
 import {FlatList} from 'react-native-gesture-handler';
 import {TextInput} from 'react-native-paper';
@@ -52,10 +52,17 @@ export default function DiscoverPage() {
             style={{
               marginHorizontal: window.width / 24,
             }}>
-            <View style={{width: window.width}}>
+            <View style={styles.textInputView}>
+              <Icon
+                name="search"
+                color={'gray'}
+                style={{marginLeft: 10}}
+                size={15}
+              />
               <TextInput
                 style={styles.input}
                 onChangeText={onChangeText}
+                placeholder="Search"
                 value={text}
               />
             </View>
@@ -159,14 +166,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
   },
-  input: {
-    height: 48,
-    width: window.width / 1.25,
-    marginHorizontal: 12,
+  textInputView: {
+    backgroundColor: 'black',
     borderWidth: 1,
-    padding: 10,
-    borderColor: '#D6DAE2',
-    borderRadius: 4,
+    borderColor: 'black',
+    borderRadius: 15,
+    marginVertical: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  input: {
+    height: window.height / 25,
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 15,
+    marginVertical: 10,
+    backgroundColor: 'black',
+    marginRight: window.width / 22,
   },
   sendMessageButton: {
     alignItems: 'center',
