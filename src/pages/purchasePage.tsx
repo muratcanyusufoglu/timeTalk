@@ -4,7 +4,7 @@ import React from 'react';
 export default function PurchasePage() {
   return (
     <View>
-      <Text>purchasePage</Text>
+      <Text>Purchase Management</Text>
     </View>
   );
 }

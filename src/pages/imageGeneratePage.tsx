@@ -19,7 +19,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {MasonryFlashList} from '@shopify/flash-list';
 import {Modal} from 'react-native-paper';
 import RNFetchBlob from 'rn-fetch-blob';
-import {AsyncStorage} from 'react-native';
 import storage from '../storage/storage';
 
 const window = Dimensions.get('window');

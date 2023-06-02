@@ -12,6 +12,7 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		4A2578A929D9911D008C9F47 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A2578A829D9911C008C9F47 /* StoreKit.framework */; };
 		4A415EBA29BD14AC0061840D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4A415EB929BD14AC0061840D /* GoogleService-Info.plist */; };
 		4A415EC929BD18EE0061840D /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4A415EBE29BD18EE0061840D /* FontAwesome5_Brands.ttf */; };
 		4A415ECA29BD18EE0061840D /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4A415EBF29BD18EE0061840D /* MaterialCommunityIcons.ttf */; };
@@ -45,6 +46,7 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = questionAnswerBot/main.m; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-questionAnswerBot-questionAnswerBotTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-questionAnswerBot-questionAnswerBotTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B4392A12AC88292D35C810B /* Pods-questionAnswerBot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-questionAnswerBot.debug.xcconfig"; path = "Target Support Files/Pods-questionAnswerBot/Pods-questionAnswerBot.debug.xcconfig"; sourceTree = "<group>"; };
+		4A2578A829D9911C008C9F47 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		4A415EB929BD14AC0061840D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4A415EBE29BD18EE0061840D /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome5_Brands.ttf; sourceTree = "<group>"; };
 		4A415EBF29BD18EE0061840D /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C80B921A6F3F58F76C31292 /* libPods-questionAnswerBot.a in Frameworks */,
+				4A2578A929D9911D008C9F47 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -116,6 +119,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4A2578A829D9911C008C9F47 /* StoreKit.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				5DCACB8F33CDC322A6C60F78 /* libPods-questionAnswerBot.a */,
 				19F6CBCC0A4E27FBF8BF4A61 /* libPods-questionAnswerBot-questionAnswerBotTests.a */,

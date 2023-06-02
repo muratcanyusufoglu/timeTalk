@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Alert,
   Image,
+  Platform,
 } from 'react-native';
 import {
   GoogleSignin,
@@ -24,7 +25,7 @@ import storage from '../storage/storage';
 import Lottie from 'lottie-react-native';
 import axios from 'axios';
 import Config from 'react-native-config';
-
+import Purchases, {LOG_LEVEL} from 'react-native-purchases';
 // const TaskSchema = {
 //   name: 'Task',
 //   login: true,
@@ -41,6 +42,8 @@ const window = Dimensions.get('window');
 const App = () => {
   const ADRESS = Config.ADRESS;
 
+  const API_KEY = Config.API_KEY;
+
   const [loggedIn, setloggedIn] = useState(false);
 
   useEffect(() => {
@@ -48,6 +51,13 @@ const App = () => {
       webClientId:
         '101181523513-2halvkj3k0a6j8fqpvbf92002b5dequk.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
     });
+    // Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
+
+    // if (Platform.OS === 'ios') {
+    //   Purchases.configure({apiKey: API_KEY});
+    // } else if (Platform.OS === 'android') {
+    //   Purchases.configure({apiKey: Config.API_KEY});
+    // }
   }, []);
 
   const signIn = async () => {
@@ -59,6 +69,8 @@ const App = () => {
         idToken,
         accessToken,
       );
+      //Purchases.setDebugLogsEnabled(true);
+      //Purchases.setup(Config.API_KEY);
       //await auth().signInWithCredential(credential);
       console.log('ididid', idToken);
       if (idToken) {

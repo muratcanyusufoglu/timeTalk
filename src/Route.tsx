@@ -69,11 +69,17 @@ function App() {
   }, []);
   const [index, setIndex] = React.useState(0);
   const [routesSignIn, setRoutesSignIn] = React.useState([
+    // {
+    //   key: 'login',
+    //   title: 'Login',
+    //   focusedIcon: 'home-outline',
+    //   unfocusedIcon: 'home',
+    // },
     {
-      key: 'login',
-      title: 'Login',
-      focusedIcon: 'home-outline',
-      unfocusedIcon: 'home',
+      key: 'discover',
+      title: 'Discover',
+      focusedIcon: 'image-search-outline',
+      unfocusedIcon: 'image-search',
     },
     {
       key: 'home',
@@ -92,12 +98,6 @@ function App() {
       title: 'Dalle',
       focusedIcon: 'message-image-outline',
       unfocusedIcon: 'message-image',
-    },
-    {
-      key: 'discover',
-      title: 'Discover',
-      focusedIcon: 'image-search-outline',
-      unfocusedIcon: 'image-search',
     },
     {
       key: 'profile',

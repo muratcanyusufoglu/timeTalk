@@ -2,283 +2,151 @@ import {
   View,
   Text,
   StyleSheet,
-  FlatList,
-  TextInput,
   TouchableOpacity,
   Dimensions,
-  Image,
-  Animated,
   SafeAreaView,
+  ImageBackground,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
-import axios from 'axios';
-import Config from 'react-native-config';
-import LottieView from 'lottie-react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {AsyncStorage} from 'react-native';
-import storage from '../storage/storage';
-import Lottie from 'lottie-react-native';
+import React, {useEffect, useState} from 'react';
+import nameList from '../assets/localusers';
+import {categories} from '../assets/categories';
+
+import {MasonryFlashList} from '@shopify/flash-list/dist/MasonryFlashList';
+import {FlatList} from 'react-native-gesture-handler';
+import {TextInput} from 'react-native-paper';
 
 const window = Dimensions.get('window');
 
 export default function DiscoverPage() {
-  const [data, setData] = useState([]);
   const [bool, setBool] = useState<boolean>();
-  const [userInfo, setUserInfo] = useState();
   const [loading, setLoading] = useState<boolean>(false);
-  //const [followerId, setFollowerIds] = useState([]);
-
-  const messageData: {
-    message: string;
-    user: string;
-    response: string;
-    likeNumber: number;
-    _id: string;
-  }[] = [];
-
-  const followerId: {
-    follower: string;
-    followerId: string;
-    following: string;
-    followingId: number;
-    followingPhoto: string;
-    _id: string;
-  }[] = [];
-
-  const ADRESS = Config.ADRESS;
-
-  useEffect(() => {
-    storage
-      .load({
-        key: 'userInfo',
-      })
-      .then(async resp => {
-        setUserInfo(resp);
-        console.log('resp info', userInfo);
-        await axios
-          .get(`${ADRESS}/follower/${resp.idToken}`)
-          .then(item => {
-            console.log('item follower', item);
-            item.data.map(usersId => followerId.push(usersId.followingId));
-            followerId.push(userInfo.idToken);
-            console.log('followerIds', followerId);
-          })
-          .catch(error => console.log('error', error));
-      });
-  });
+  const [text, setText] = useState<String>('');
 
   useEffect(() => {
     const fetch = async () => {
       setLoading(true);
 
-      await axios
-        .get(`${ADRESS}/dalle`)
-        .then(item => {
-          console.log('itemmm', item);
-          const filterList = item.data.filter(
-            mes => !followerId.includes(mes.userId),
-          );
-          console.log('filterList', filterList);
-
-          filterList.map(mes => data.push(mes));
-          setData(data.reverse());
-          console.log('filterList2', data);
-        })
-        .catch(error => console.log('error', error));
-
-      // storage
-      //   .load({
-      //     key: 'userInfo',
-      //   })
-      //   .then(async resp => {
-      //     setUserInfo(resp.token);
-      //     console.log('respaaa', userInfo.idToken);
-      //   });
+      console.log('nameList', nameList.nameList);
+      //setData(nameList[0]);
       setLoading(false);
     };
     fetch();
   }, [bool]);
 
+  const onChangeText = (key: String) => {
+    console.log('key', key);
+    setText(key);
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={styles.loadingView}>
-        {loading ? (
-          <Lottie
-            source={require('../assets/animations/messageLoad.json')}
-            style={styles.animationLoading}
-            autoPlay
-            loop
-          />
-        ) : null}
-      </View>
-      <FlatList
-        extraData={data}
-        data={data}
+    <SafeAreaView style={styles.container}>
+      <MasonryFlashList
+        extraData={nameList.nameList}
+        data={nameList.nameList}
         refreshing={bool}
-        numColumns={1}
-        style={{}}
-        renderItem={({item}) => <InsideFlatlist item={item} />}
-      />
-    </View>
-  );
-}
-
-function InsideFlatlist({item}) {
-  const [following, setFollowing] = useState(false);
-  const [liked, isLiked] = useState<number>(0);
-  const [userInfo, setUserInfo] = useState();
-  const [likeNumber, setLikeNumber] = useState(item.likeNumber);
-
-  const ADRESS = Config.ADRESS;
-
-  useEffect(() => {
-    storage
-      .load({
-        key: 'userInfo',
-      })
-      .then(async resp => {
-        setUserInfo(resp);
-        console.log('respaaa', userInfo);
-      });
-  });
-
-  const follow = async user => {
-    if (following == false) {
-      await axios
-        .post(`${ADRESS}/follower`, {
-          follower: userInfo.user.name,
-          following: item.user,
-          followerId: userInfo.idToken,
-          followingId: item.userId,
-          followingPhoto: userInfo.user.photo,
-        })
-        .then(resp => {
-          console.log('resp post', resp);
-          setFollowing(true);
-        })
-        .catch(error => {
-          console.log('error post', error);
-        });
-    } else {
-      axios
-        .delete(
-          `${ADRESS}/follower/deleteUser/${item.userId}/${userInfo.idToken}`,
-        )
-        .then(resp => {
-          setFollowing(false);
-        });
-    }
-  };
-
-  const progress = useRef(new Animated.Value(0)).current;
-
-  const handleLikeAnimation = async () => {
-    setLikeNumber(likeNumber - 1);
-
-    console.log('begenildi');
-    await axios.patch(`${ADRESS}/dalle/${item._id}`, {
-      likeNumber: item.likeNumber - 1,
-    });
-    Animated.timing(progress, {
-      toValue: 0.3,
-      duration: 1000,
-      useNativeDriver: true,
-    }).start();
-  };
-  const handleUnLikeAnimation = async () => {
-    console.log('begenilmedi');
-    setLikeNumber(likeNumber + 1);
-
-    await axios.patch(`${ADRESS}/dalle/${item._id}`, {
-      likeNumber: item.likeNumber + 1,
-    });
-    Animated.timing(progress, {
-      toValue: 0.54,
-      duration: 1000,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  useEffect(() => {
-    console.log('objectliked', liked);
-    if (liked == 0) {
-      Animated.timing(progress, {
-        toValue: 0.3,
-        duration: 1000,
-        useNativeDriver: true,
-      }).start();
-    } else {
-      liked % 2 ? handleUnLikeAnimation() : handleLikeAnimation();
-    }
-  }, [liked]);
-
-  return (
-    <SafeAreaView>
-      <View style={styles.messageSection}>
-        <View style={styles.photoSection}>
-          <View style={styles.photoPrompt}>
-            <Text style={styles.sendedSection}>user/ {item.userId}</Text>
-            <TouchableOpacity onPress={() => follow(item.user)}>
-              <Text style={styles.sendedSection}>
-                {following ? 'Following' : 'Follow'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <Image
-            source={{
-              uri: item.response,
-            }}
-            style={styles.imageStyle}
-            resizeMode="cover"
-          />
-          <View style={styles.likeAndDescription}>
-            <View style={styles.photoDescription}>
-              <Text style={styles.sendedSection}>{item.prompt}</Text>
-            </View>
-            <TouchableOpacity
-              onPress={() => isLiked(liked + 1)}
-              style={{
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flex: 1,
-              }}>
-              <LottieView
-                progress={progress}
-                source={require('../assets/animations/like-animation.json')}
-                style={styles.animation}
+        numColumns={2}
+        style={{flex: 1}}
+        estimatedItemSize={200}
+        ListHeaderComponent={
+          <View
+            style={{
+              marginHorizontal: window.width / 24,
+            }}>
+            <View style={{width: window.width}}>
+              <TextInput
+                style={styles.input}
+                onChangeText={onChangeText}
+                value={text}
               />
-              <Text style={styles.likedNumber}>
-                {likeNumber ? likeNumber : null} likes
-              </Text>
-            </TouchableOpacity>
+            </View>
+            <FlatList
+              data={categories}
+              refreshing={bool}
+              style={{}}
+              horizontal={true}
+              alwaysBounceHorizontal
+              renderItem={({item}) => (
+                <>
+                  <TouchableOpacity
+                    // eslint-disable-next-line react-native/no-inline-styles
+                    style={{
+                      width: window.width / 4,
+                      height: window.height / 25,
+                      backgroundColor: item.color,
+                      borderRadius: 7,
+                      marginHorizontal: 5,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                    onPress={() => console.log('object')}>
+                    <Text>{item.category}</Text>
+                  </TouchableOpacity>
+                </>
+              )}
+            />
           </View>
-        </View>
-      </View>
+        }
+        renderItem={({item}) => (
+          <>
+            <TouchableOpacity onPress={() => console.log('object')}>
+              <View style={styles.photoSection}>
+                <ImageBackground
+                  source={require('../assets/photos/einstein.jpeg')}
+                  imageStyle={{borderRadius: 6}}
+                  style={
+                    item.userId % 4 == 1 || item.userId % 4 == 0
+                      ? styles.flatlistImages
+                      : styles.flatlistImagesOne
+                  }>
+                  <View style={styles.textSection}>
+                    <Text style={styles.userNameText}>{item.username}</Text>
+                    <Text style={styles.userInfoText}>{item.userinfo}</Text>
+                  </View>
+                </ImageBackground>
+              </View>
+            </TouchableOpacity>
+          </>
+        )}
+      />
     </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: '#23242B',
+    width: window.width,
+    height: window.height,
   },
 
   messageSection: {
     alignItems: 'center',
     marginBottom: 30,
   },
-  sendedSection: {
-    padding: 5,
-    color: 'white',
+  userNameText: {
+    color: 'black',
+    fontSize: 12,
+    textAlign: 'right',
+    fontWeight: '600',
+    marginRight: 2,
   },
-  responsSection: {
-    backgroundColor: '#E9EEF8',
-    marginRight: window.width / 3,
-    marginLeft: window.width / 20,
-    padding: 15,
-    marginVertical: 2,
-    borderRadius: 10,
+  userInfoText: {
+    color: 'black',
+    fontSize: 10,
+    textAlign: 'right',
+    marginRight: 2,
+  },
+  textSection: {
+    position: 'absolute',
+    bottom: 0,
+    height: window.height / 20,
+    width: window.width / 2.4,
+    backgroundColor: '#D9D9D9',
+    opacity: 0.7,
+    borderWidth: 1,
+    borderColor: 'transparent',
+    borderBottomLeftRadius: 6,
+    borderBottomRightRadius: 6,
   },
   animation: {
     alignItems: 'center',
@@ -310,7 +178,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   photoPrompt: {
-    width: window.width,
+    width: window.width / 2,
     borderWidth: 1,
     color: 'black',
     flexDirection: 'row',
@@ -323,32 +191,24 @@ const styles = StyleSheet.create({
     flex: 4,
   },
   photoSection: {
-    borderWidth: 1,
-    borderColor: 'transparent',
-    alignItems: 'flex-start',
-  },
-  imageStyle: {
-    width: window.width,
-    height: window.height / 2.5,
-    borderColor: 'transparent',
-  },
-  likeAndDescription: {
-    width: window.width,
-    flexDirection: 'row',
+    marginVertical: 20,
     alignItems: 'center',
-    justifyContent: 'space-between',
   },
-  loadingView: {
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    flex: 1,
+  flatlistImagesOne: {
+    width: window.width / 2.4,
+    height: window.height / 4,
   },
-  animationLoading: {
-    width: window.width / 12,
-    height: window.height / 12,
+  flatlistImages: {
+    width: window.width / 2.4,
+    height: window.height / 3,
   },
-  likedNumber: {
-    color: 'white',
-    alignItems: 'center',
+  categoriesStyle: {
+    width: window.width / 4,
+    height: window.height / 20,
+    backgroundColor: '#E1CEF4',
+    borderRadius: 7,
+  },
+  categoriesView: {
+    marginHorizontal: window.width / 24,
   },
 });
