@@ -17,16 +17,18 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import storage from '../storage/storage';
 import ChatService from '../services/chatService';
 import {messageInterface, UserInfoProp} from '../props/generalProp';
+import {useNavigation} from '@react-navigation/native';
 const window = Dimensions.get('window');
 
-export default function ChatPage() {
+export default function ChatPage(prop) {
   const [data, setData] = useState([]);
-  const [input, setInput] = useState<string>();
+  const [input, setInput] = useState<String>();
   const [bool, setBool] = useState<boolean>();
   const [loading, setLoading] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<UserInfoProp>();
-
   const chatServices = new ChatService();
+
+  console.log('prop', prop.route.params.whom);
 
   const messageData: {
     message: string;
@@ -42,63 +44,63 @@ export default function ChatPage() {
 
   useEffect(() => {
     setLoading(true);
-    const fetch = async () => {
-      storage
-        .load({
-          key: 'userInfo',
-        })
-        .then(async resp => {
-          setUserInfo(resp);
-          console.log('respaaa', userInfo);
-          await chatServices
-            .getChatHistory(resp.user.id)
-            .then(respChat => {
-              respChat.data.map((mes: messageInterface) =>
-                messageData.push(mes),
-              );
-              setData(messageData.reverse());
-            })
-            .catch(error => console.log('error', error));
-        });
-    };
+    // const fetch = async () => {
+    //   storage
+    //     .load({
+    //       key: 'userInfo',
+    //     })
+    //     .then(async resp => {
+    //       setUserInfo(resp);
+    //       console.log('respaaa', userInfo);
+    //       await chatServices
+    //         .getChatHistory(resp.user.id)
+    //         .then(respChat => {
+    //           respChat.data.map((mes: messageInterface) =>
+    //             messageData.push(mes),
+    //           );
+    //           setData(messageData.reverse());
+    //         })
+    //         .catch(error => console.log('error', error));
+    //     });
+    // };
     setLoading(false);
 
-    fetch();
+    //fetch();
   }, [bool]);
 
   const addArray = async () => {
     setBool(true);
     var items;
-    if (userInfo.freeToken > 0 || userInfo.gptToken > 0) {
-      await chatServices
-        .getGptAnswer(input, userInfo)
-        .then(resp => {
-          console.log('resp get', resp);
-          items = resp;
-        })
-        .catch(error => {
-          console.log('get error get', error);
-        });
+    //if (userInfo.freeToken > 0 || userInfo.gptToken > 0) {
+    await chatServices
+      .getGptAnswer(input, userInfo, prop.route.params.whom)
+      .then(resp => {
+        console.log('then getGptAnswer : ', resp);
+        items = resp;
+      })
+      .catch(error => {
+        console.log('error getGptAnswer : ', error);
+      });
 
-      await chatServices
-        .senMessage(userInfo?.user.id, input, items)
-        .then(resp => {
-          console.log('resp post', resp);
-        })
-        .catch(error => {
-          console.log('error post', error);
-        });
+    await chatServices
+      .sendMessage(userInfo?.user.id, input, items, prop.route.params.whom)
+      .then(resp => {
+        console.log('resp post', resp);
+      })
+      .catch(error => {
+        console.log('error post', error);
+      });
 
-      await chatServices
-        .getChatHistory(userInfo?.user.id)
-        .then(resp => {
-          console.log('newservice', resp);
-          messageData.push(resp);
-        })
-        .catch(error => console.log('error', error));
-    } else {
-      Alert.alert('Your GPT token run out.', 'Please buy coin.');
-    }
+    await chatServices
+      .getChatHistory(userInfo?.user.id)
+      .then(resp => {
+        console.log('newservice', resp);
+        messageData.push(resp);
+      })
+      .catch(error => console.log('error', error));
+    //} else {
+    //  Alert.alert('Your GPT token run out.', 'Please buy coin.');
+    //}
     setInput('');
     setBool(false);
   };

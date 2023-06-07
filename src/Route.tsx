@@ -24,6 +24,11 @@ const Homepage = () => {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
+        name="Discover"
+        component={DiscoverPage}
+        options={{headerShown: false}}
+      />
+      <HomeStack.Screen
         name="Home"
         component={HomePage}
         options={{headerShown: false}}
@@ -76,17 +81,18 @@ function App() {
     //   unfocusedIcon: 'home',
     // },
     {
-      key: 'discover',
-      title: 'Discover',
-      focusedIcon: 'image-search-outline',
-      unfocusedIcon: 'image-search',
-    },
-    {
       key: 'home',
       title: 'Home',
       focusedIcon: 'home-outline',
       unfocusedIcon: 'home',
     },
+    {
+      key: 'discover',
+      title: 'Discover',
+      focusedIcon: 'image-search-outline',
+      unfocusedIcon: 'image-search',
+    },
+
     {
       key: 'chat',
       title: 'Chat',

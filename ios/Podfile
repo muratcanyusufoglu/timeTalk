@@ -22,7 +22,7 @@ target 'questionAnswerBot' do
     #
     # Note that if you have use_frameworks! enabled, Flipper will not work and
     # you should disable the next line.
-    use_frameworks! :linkage => :static,
+    #use_frameworks! :linkage => :static,
 
     :flipper_configuration => FlipperConfiguration.enabled,
     # An absolute path to your application root.

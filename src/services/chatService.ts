@@ -6,7 +6,7 @@ class ChatService {
   ADRESS = Config.ADRESS;
 
   async getChatHistory(user: string) {
-    let urlPersonal = `${this.ADRESS}/messages/getPersonalChat/${user}`;
+    let urlPersonal = `${this.ADRESS}/messages/${user}`;
     let chatHistory: any;
     console.log('urlurl ', `${this.ADRESS}/messages/getPersonalChat/${user}`);
     chatHistory = await axios
@@ -20,7 +20,12 @@ class ChatService {
     return chatHistory;
   }
 
-  async senMessage(user: string, message: string, response: string) {
+  async sendMessage(
+    user: string,
+    message: string,
+    response: string,
+    whom: string,
+  ) {
     let url = this.ADRESS + '/messages';
     let date = new Date();
 
@@ -28,8 +33,9 @@ class ChatService {
       .post(url, {
         user: user,
         messageInfo: {
-          message: message,
           user: 'crazy_61',
+          whom: whom,
+          message: message,
           response: response,
           date: date,
         },
@@ -42,14 +48,16 @@ class ChatService {
       });
   }
 
-  async getGptAnswer(input: string, userInfo: any) {
-    let urlGpt = this.ADRESS + '/messages/' + input;
-    let urlUser = this.ADRESS + '/users/' + userInfo.idToken;
+  async getGptAnswer(input: String, userInfo: any, whom: string) {
+    let urlGpt = this.ADRESS + `/messages/gpt/${whom}/${input}`;
+    //let urlUser = this.ADRESS + '/users/' + userInfo.idToken;
     let answerGpt: any;
 
+    console.log('URLGPT', urlGpt);
     await axios
       .get(urlGpt)
       .then(async item => {
+        console.log('urlGPTT', item);
         answerGpt = item.data.content;
         if (answerGpt) {
           if (userInfo.freeToken > 0) {
@@ -99,7 +107,7 @@ class ChatService {
         }
         return answerGpt;
       })
-      .catch(error => console.log('error', error));
+      .catch(error => console.log('errorGPT', error));
     return answerGpt;
   }
 }

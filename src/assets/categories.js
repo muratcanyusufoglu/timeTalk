@@ -1,58 +1,54 @@
 export const categories = [
   {
-    category: 'music',
+    category: 'Music',
     color: '#E1CEF4',
   },
   {
-    category: 'art',
+    category: 'Art',
     color: '#C7E9F0',
   },
   {
-    category: 'history',
+    category: 'History',
     color: '#F0E0C7',
   },
   {
-    category: 'literature',
+    category: 'Literature',
     color: '#C7F0D0',
   },
   {
-    category: 'politics',
+    category: 'Politics',
     color: '#E17676',
   },
   {
-    category: 'science',
+    category: 'Science',
     color: '#E1CEF4',
   },
   {
-    category: 'activism',
+    category: 'Activism',
     color: '#C7E9F0',
   },
   {
-    category: 'entartainment',
+    category: 'Entartainment',
     color: '#F0E0C7',
   },
   {
-    category: 'royality',
+    category: 'Royality',
     color: '#C7F0D0',
   },
   {
-    category: 'exploration',
+    category: 'Exploration',
     color: '#E17676',
   },
   {
-    category: 'exploration',
+    category: 'Religion',
     color: '#E1CEF4',
   },
   {
-    category: 'religion',
+    category: 'Literature',
     color: '#C7E9F0',
   },
   {
-    category: 'literature',
+    category: 'Philosophy',
     color: '#F0E0C7',
-  },
-  {
-    category: 'philosophy',
-    color: '#C7F0D0',
   },
 ];
