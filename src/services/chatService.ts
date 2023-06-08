@@ -50,7 +50,7 @@ class ChatService {
 
   async getGptAnswer(input: String, userInfo: any, whom: string) {
     let urlGpt = this.ADRESS + `/messages/gpt/${whom}/${input}`;
-    //let urlUser = this.ADRESS + '/users/' + userInfo.idToken;
+    let urlUser = this.ADRESS + '/users/' + userInfo.idToken;
     let answerGpt: any;
 
     console.log('URLGPT', urlGpt);
