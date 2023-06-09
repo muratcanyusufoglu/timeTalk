@@ -19,6 +19,8 @@ import storage from './storage/storage';
 const window = Dimensions.get('window');
 
 const HomeStack = createNativeStackNavigator();
+const ChatStack = createNativeStackNavigator();
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Homepage = () => {
   return (
@@ -30,7 +32,7 @@ const Homepage = () => {
       />
       <HomeStack.Screen
         name="Home"
-        component={HomePage}
+        component={Chatpage}
         options={{headerShown: false}}
       />
       <HomeStack.Screen name="Chat" component={ChatPage} />
@@ -53,7 +55,7 @@ const Homepage = () => {
   );
 };
 
-const Chatpage = () => <ChatPage />;
+const Chatpage = () => <HomePage />;
 
 const DiscoverRoute = () => <DiscoverPage />;
 
@@ -74,12 +76,12 @@ function App() {
   }, []);
   const [index, setIndex] = React.useState(0);
   const [routesSignIn, setRoutesSignIn] = React.useState([
-    // {
-    //   key: 'login',
-    //   title: 'Login',
-    //   focusedIcon: 'home-outline',
-    //   unfocusedIcon: 'home',
-    // },
+    {
+      key: 'login',
+      title: 'Login',
+      focusedIcon: 'home-outline',
+      unfocusedIcon: 'home',
+    },
     {
       key: 'home',
       title: 'Home',
@@ -98,12 +100,6 @@ function App() {
       title: 'Chat',
       focusedIcon: 'forum-outline',
       unfocusedIcon: 'forum',
-    },
-    {
-      key: 'dalle',
-      title: 'Dalle',
-      focusedIcon: 'message-image-outline',
-      unfocusedIcon: 'message-image',
     },
     {
       key: 'profile',
@@ -127,12 +123,6 @@ function App() {
       unfocusedIcon: 'forum',
     },
     {
-      key: 'dalle',
-      title: 'Dalle',
-      focusedIcon: 'message-image-outline',
-      unfocusedIcon: 'message-image',
-    },
-    {
       key: 'discover',
       title: 'Discover',
       focusedIcon: 'image-search-outline',
@@ -150,7 +140,7 @@ function App() {
     home: Homepage,
     discover: DiscoverRoute,
     dalle: DallePage,
-    chat: Chatpage,
+    chat: Homepage,
     profile: Profile,
     login: LoginPage,
   });
@@ -170,7 +160,7 @@ function App() {
             barStyle={
               userInfo == undefined
                 ? {height: 0}
-                : {backgroundColor: '#E0ECFF', height: window.height / 10}
+                : {backgroundColor: '#000000', height: window.height / 11}
             }
             activeColor={'#75839D'}
             theme={{colors: {secondaryContainer: 'transparent'}}}
