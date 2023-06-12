@@ -34,38 +34,34 @@ export default function ChatPage(prop) {
     message: string;
     user: string;
     date: string;
-    messageData: {
-      message: string;
-      user: string;
-      date: string;
-      response: string;
-    };
+    whom: string;
+    response: string;
   }[] = [];
 
   useEffect(() => {
     setLoading(true);
-    // const fetch = async () => {
-    //   storage
-    //     .load({
-    //       key: 'userInfo',
-    //     })
-    //     .then(async resp => {
-    //       setUserInfo(resp);
-    //       console.log('respaaa', userInfo);
-    //       await chatServices
-    //         .getChatHistory(resp.user.id)
-    //         .then(respChat => {
-    //           respChat.data.map((mes: messageInterface) =>
-    //             messageData.push(mes),
-    //           );
-    //           setData(messageData.reverse());
-    //         })
-    //         .catch(error => console.log('error', error));
-    //     });
-    // };
+    const fetch = async () => {
+      storage
+        .load({
+          key: 'userInfo',
+        })
+        .then(async resp => {
+          setUserInfo(resp);
+          console.log('respaaa', userInfo);
+          await chatServices
+            .getChatHistory(resp.user.id, prop.route.params.whom)
+            .then(respChat => {
+              respChat.data.map((mes: messageInterface) =>
+                messageData.push(mes),
+              );
+              setData(messageData.reverse());
+            })
+            .catch(error => console.log('error', error));
+        });
+    };
     setLoading(false);
 
-    //fetch();
+    fetch();
   }, [bool]);
 
   const addArray = async () => {
@@ -126,14 +122,10 @@ export default function ChatPage(prop) {
           <>
             <View style={styles.messageSection}>
               <View style={styles.sendedSection}>
-                <Text style={styles.sendedSectionText}>
-                  {item.messageInfo.message}
-                </Text>
+                <Text style={styles.sendedSectionText}>{item.message}</Text>
               </View>
               <View style={styles.responsSection}>
-                <Text style={styles.responsSectionText}>
-                  {item.messageInfo.response}
-                </Text>
+                <Text style={styles.sendedSectionText}>{item.response}</Text>
               </View>
             </View>
           </>

@@ -61,23 +61,6 @@ const App = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Toast position="bottom" bottomOffset={0} type="success" />
-      <View style={styles.coinHeader}>
-        <View>
-          <Text>Logo</Text>
-        </View>
-        <View style={{alignItems: 'center', flexDirection: 'row'}}>
-          <View style={{}}>
-            <Text style={{color: '#000A1A', fontSize: 10}}>
-              Chat: {data.freeToken + data.gptToken}
-            </Text>
-
-            <Text style={{color: '#000A1A', fontSize: 10}}>
-              Dalle: {data.freeToken + data.dalleToken}
-            </Text>
-          </View>
-          {/* <Icon name="money" size={18} style={{color: '#75839D'}} /> */}
-        </View>
-      </View>
       {/* <SegmentedButtons
         value={value}
         onValueChange={setValue}

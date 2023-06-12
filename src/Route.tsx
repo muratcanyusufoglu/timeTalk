@@ -15,11 +15,10 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider} from 'react-redux';
 import store from '../src/redux/store';
 import storage from './storage/storage';
-
+import TimeLine from './pages/chatTimeLine';
 const window = Dimensions.get('window');
 
 const HomeStack = createNativeStackNavigator();
-const ChatStack = createNativeStackNavigator();
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Homepage = () => {
@@ -57,7 +56,7 @@ const Homepage = () => {
 
 const Chatpage = () => <HomePage />;
 
-const DiscoverRoute = () => <DiscoverPage />;
+const DiscoverRoute = () => <TimeLine />;
 
 function App() {
   const [userInfo, setUserInfo] = React.useState();
@@ -140,7 +139,7 @@ function App() {
     home: Homepage,
     discover: DiscoverRoute,
     dalle: DallePage,
-    chat: Homepage,
+    chat: ChatPage,
     profile: Profile,
     login: LoginPage,
   });

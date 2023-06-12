@@ -5,10 +5,24 @@ import storage from '../storage/storage';
 class ChatService {
   ADRESS = Config.ADRESS;
 
-  async getChatHistory(user: string) {
-    let urlPersonal = `${this.ADRESS}/messages/${user}`;
+  async getChatHistory(user: string, whom: string) {
+    let urlPersonal = `${this.ADRESS}/messagesWhom/getPersonalChat/${user}/${whom}`;
     let chatHistory: any;
     console.log('urlurl ', `${this.ADRESS}/messages/getPersonalChat/${user}`);
+    chatHistory = await axios
+      .get(urlPersonal)
+      .then(resp => {
+        console.log('resppp', resp);
+        return resp;
+      })
+      .catch(error => console.log(error));
+
+    return chatHistory;
+  }
+
+  async getLastMessages(user: string) {
+    let urlPersonal = `${this.ADRESS}/lastmessage/${user}`;
+    let chatHistory: any;
     chatHistory = await axios
       .get(urlPersonal)
       .then(resp => {

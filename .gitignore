@@ -1,7 +1,6 @@
 # OSX
 #
 .DS_Store
-.env
 # Xcode
 #
 build/
@@ -20,8 +19,6 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
-ios/.xcode.env.local
-
 # Android/IntelliJ
 #
 build/
