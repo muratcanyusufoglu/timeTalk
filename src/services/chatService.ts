@@ -40,22 +40,33 @@ class ChatService {
     response: string,
     whom: string,
   ) {
-    let url = this.ADRESS + '/messages';
-    let date = new Date();
+    let url = this.ADRESS + '/messagesWhom';
+    let sendedDate = new Date().toLocaleString();
 
     await axios
       .post(url, {
         user: user,
-        messageInfo: {
-          user: 'crazy_61',
-          whom: whom,
-          message: message,
-          response: response,
-          date: date,
-        },
+        whom: whom,
+        message: message,
+        response: response,
+        date: sendedDate,
       })
-      .then(resp => {
+      .then(async resp => {
         console.log('resp post', resp);
+        let lastmessageurl = this.ADRESS + '/lastmessage';
+        await axios
+          .post(lastmessageurl, {
+            user: user,
+            whom: whom,
+            response: response,
+            date: sendedDate,
+          })
+          .then(resplastmessage => {
+            console.log('resp post', resplastmessage);
+          })
+          .catch(error => {
+            console.log('error post', error);
+          });
       })
       .catch(error => {
         console.log('error post', error);
@@ -63,7 +74,7 @@ class ChatService {
   }
 
   async getGptAnswer(input: String, userInfo: any, whom: string) {
-    let urlGpt = this.ADRESS + `/messages/gpt/${whom}/${input}`;
+    let urlGpt = this.ADRESS + `/messagesWhom/gpt/${whom}/${input}`;
     let urlUser = this.ADRESS + '/users/' + userInfo.idToken;
     let answerGpt: any;
 

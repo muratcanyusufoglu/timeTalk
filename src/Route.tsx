@@ -1,173 +1,55 @@
 // In App.js in a new project
-import React, {useEffect} from 'react';
-import {Dimensions} from 'react-native';
+import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import HomePage from './pages/homePage';
 import ChatPage from './pages/chatPage';
-import DallePage from './pages/imageGeneratePage';
 import DiscoverPage from './pages/discoverPage';
-import LoginPage from './pages/loginPage';
 import Profile from './pages/profile';
-import TimePage from './pages/timePage';
-import {BottomNavigation} from 'react-native-paper';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {Provider} from 'react-redux';
-import store from '../src/redux/store';
-import storage from './storage/storage';
-import TimeLine from './pages/chatTimeLine';
-const window = Dimensions.get('window');
 
-const HomeStack = createNativeStackNavigator();
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import ChatTimeLine from './pages/chatTimeLine';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const Homepage = () => {
+const ChatStack = createNativeStackNavigator();
+const DiscoverStack = createNativeStackNavigator();
+
+const Tab = createBottomTabNavigator();
+
+const HomeRoute = () => {
   return (
-    <HomeStack.Navigator>
-      <HomeStack.Screen
-        name="Discover"
-        component={DiscoverPage}
-        options={{headerShown: false}}
-      />
-      <HomeStack.Screen
-        name="Home"
-        component={Chatpage}
-        options={{headerShown: false}}
-      />
-      <HomeStack.Screen name="Chat" component={ChatPage} />
-      <HomeStack.Screen
-        name="Dalle"
-        component={DallePage}
-        options={{headerShown: false}}
-      />
-      <HomeStack.Screen
-        name="Login"
-        component={LoginPage}
-        options={{headerShown: false}}
-      />
-      <HomeStack.Screen
-        name="Time"
-        component={TimePage}
-        options={{headerShown: false}}
-      />
-    </HomeStack.Navigator>
+    <Tab.Navigator initialRouteName="ChatRoute">
+      <Tab.Screen name="ChatRoute" component={ChatRoute} />
+      <Tab.Screen name="DiscoverRoute" component={DiscoverRoute} />
+      <Tab.Screen name="ProfileRoute" component={Profile} />
+    </Tab.Navigator>
   );
 };
 
-const Chatpage = () => <HomePage />;
-
-const DiscoverRoute = () => <TimeLine />;
-
-function App() {
-  const [userInfo, setUserInfo] = React.useState();
-  useEffect(() => {
-    storage
-      .load({
-        key: 'userInfo',
-      })
-      .then(async resp => {
-        setUserInfo(resp.token);
-        console.log('respa', resp.token, userInfo);
-        if (!resp.token) {
-          setUserInfo(false);
-        }
-      });
-  }, []);
-  const [index, setIndex] = React.useState(0);
-  const [routesSignIn, setRoutesSignIn] = React.useState([
-    {
-      key: 'login',
-      title: 'Login',
-      focusedIcon: 'home-outline',
-      unfocusedIcon: 'home',
-    },
-    {
-      key: 'home',
-      title: 'Home',
-      focusedIcon: 'home-outline',
-      unfocusedIcon: 'home',
-    },
-    {
-      key: 'discover',
-      title: 'Discover',
-      focusedIcon: 'image-search-outline',
-      unfocusedIcon: 'image-search',
-    },
-
-    {
-      key: 'chat',
-      title: 'Chat',
-      focusedIcon: 'forum-outline',
-      unfocusedIcon: 'forum',
-    },
-    {
-      key: 'profile',
-      title: 'Profile',
-      focusedIcon: 'account-outline',
-      unfocusedIcon: 'account',
-    },
-  ]);
-
-  const [routes, setRoutes] = React.useState([
-    {
-      key: 'home',
-      title: 'Home',
-      focusedIcon: 'home-outline',
-      unfocusedIcon: 'home',
-    },
-    {
-      key: 'chat',
-      title: 'Chat',
-      focusedIcon: 'forum-outline',
-      unfocusedIcon: 'forum',
-    },
-    {
-      key: 'discover',
-      title: 'Discover',
-      focusedIcon: 'image-search-outline',
-      unfocusedIcon: 'image-search',
-    },
-    {
-      key: 'profile',
-      title: 'Profile',
-      focusedIcon: 'account-outline',
-      unfocusedIcon: 'account',
-    },
-  ]);
-
-  const renderScene = BottomNavigation.SceneMap({
-    home: Homepage,
-    discover: DiscoverRoute,
-    dalle: DallePage,
-    chat: ChatPage,
-    profile: Profile,
-    login: LoginPage,
-  });
-
+const ChatRoute = () => {
   return (
-    <Provider store={store}>
-      <SafeAreaProvider>
-        <NavigationContainer>
-          <BottomNavigation
-            shifting={true}
-            navigationState={{
-              index,
-              routes: userInfo == undefined ? routesSignIn : routes,
-            }}
-            onIndexChange={setIndex}
-            renderScene={renderScene}
-            barStyle={
-              userInfo == undefined
-                ? {height: 0}
-                : {backgroundColor: '#000000', height: window.height / 11}
-            }
-            activeColor={'#75839D'}
-            theme={{colors: {secondaryContainer: 'transparent'}}}
-            sceneAnimationEnabled={true}
-          />
-        </NavigationContainer>
-      </SafeAreaProvider>
-    </Provider>
+    <ChatStack.Navigator>
+      <ChatStack.Screen name="ChatTimeLine" component={ChatTimeLine} />
+      <ChatStack.Screen name="ChatPage" component={ChatPage} />
+    </ChatStack.Navigator>
+  );
+};
+const DiscoverRoute = () => {
+  return (
+    <DiscoverStack.Navigator>
+      <DiscoverStack.Screen name="DiscoverPage" component={DiscoverPage} />
+      <DiscoverStack.Screen name="ChatTimeLine" component={ChatTimeLine} />
+      <DiscoverStack.Screen name="ChatPage" component={ChatPage} />
+    </DiscoverStack.Navigator>
+  );
+};
+
+const Stack = createNativeStackNavigator();
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomeRoute} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 export default App;

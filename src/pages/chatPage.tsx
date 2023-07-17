@@ -18,6 +18,7 @@ import storage from '../storage/storage';
 import ChatService from '../services/chatService';
 import {messageInterface, UserInfoProp} from '../props/generalProp';
 import {useNavigation} from '@react-navigation/native';
+import LoadingBar from '../components/loadingBar';
 const window = Dimensions.get('window');
 
 export default function ChatPage(prop) {
@@ -27,8 +28,6 @@ export default function ChatPage(prop) {
   const [loading, setLoading] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<UserInfoProp>();
   const chatServices = new ChatService();
-
-  console.log('prop', prop.route.params.whom);
 
   const messageData: {
     message: string;
@@ -88,7 +87,7 @@ export default function ChatPage(prop) {
       });
 
     await chatServices
-      .getChatHistory(userInfo?.user.id)
+      .getChatHistory(userInfo?.user.id, prop.route.params.whom)
       .then(resp => {
         console.log('newservice', resp);
         messageData.push(resp);
@@ -103,16 +102,7 @@ export default function ChatPage(prop) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.loadingView}>
-        {loading ? (
-          <Lottie
-            source={require('../assets/animations/messageLoad.json')}
-            style={styles.animationLoading}
-            autoPlay
-            loop
-          />
-        ) : null}
-      </View>
+      <View style={styles.loadingView}>{loading ? <LoadingBar /> : null}</View>
       <FlatList
         inverted
         extraData={data}
@@ -131,16 +121,7 @@ export default function ChatPage(prop) {
           </>
         )}
       />
-      <View style={{alignItems: 'center'}}>
-        {bool ? (
-          <Lottie
-            source={require('../assets/animations/messageLoad.json')}
-            style={styles.animation}
-            autoPlay
-            loop
-          />
-        ) : null}
-      </View>
+      <View style={{alignItems: 'center'}}>{bool ? <LoadingBar /> : null}</View>
       <View style={styles.sendMessageSection}>
         <TextInput
           style={styles.input}

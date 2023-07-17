@@ -5,16 +5,10 @@ import {
   TouchableOpacity,
   Dimensions,
   SafeAreaView,
-  ImageBackground,
   Image,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import nameList from '../assets/localusers';
-import {categories} from '../assets/categories';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {MasonryFlashList} from '@shopify/flash-list/dist/MasonryFlashList';
 import {FlatList} from 'react-native-gesture-handler';
-import {TextInput} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import storage from '../storage/storage';
 import {messageInterface, UserInfoProp} from '../props/generalProp';
@@ -31,12 +25,13 @@ interface messageInfo {
 
 export default function TimeLine() {
   const [bool, setBool] = useState<boolean>();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>();
   const [messageData, setmessageData] = useState<Array<messageInfo>>();
   const [userInfo, setUserInfo] = useState<UserInfoProp>();
 
-  const chatServices = new ChatService();
   const navigation = useNavigation();
+
+  const chatServices = new ChatService();
 
   const messageDataArray: {
     message: string;
@@ -47,6 +42,7 @@ export default function TimeLine() {
   }[] = [];
 
   useEffect(() => {
+    console.log('dasdasdasd');
     setLoading(true);
     const fetch = async () => {
       storage
@@ -67,63 +63,64 @@ export default function TimeLine() {
             .catch(error => console.log('error', error));
         });
     };
-    setLoading(false);
-
     fetch();
-  }, [bool]);
+    setLoading(false);
+  }, [loading]);
+
+  function insideFlatlist(item: any) {
+    return (
+      <View>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('ChatPage', {whom: item.whom})}>
+          <View style={styles.viewMessages}>
+            <Image
+              source={require('../assets/photos/mariecurie.png')}
+              style={styles.photoStyle}
+            />
+            <View style={styles.messageSlot}>
+              <View style={styles.textSection}>
+                <Text numberOfLines={1} style={styles.userNameText}>
+                  {item.whom}
+                </Text>
+                <Text numberOfLines={1} style={styles.dateInfoText}>
+                  {item.date}
+                </Text>
+              </View>
+              <View style={styles.textSection}>
+                <Text numberOfLines={2} style={styles.responseInfoText}>
+                  {item.response}
+                </Text>
+              </View>
+            </View>
+          </View>
+        </TouchableOpacity>
+        <View style={{}} />
+        <View
+          style={{
+            borderWidth: 0.8,
+            borderColor: '#4B4B4B',
+            marginLeft: window.width / 5 + 10,
+            marginRight: window.width / 14,
+            marginVertical: 10,
+          }}
+        />
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
-      <MasonryFlashList
+      <FlatList
         extraData={messageData}
         data={messageData}
         refreshing={bool}
         style={{flex: 1}}
-        estimatedItemSize={200}
-        renderItem={({item}) => (
-          <>
-            <View>
-              <TouchableOpacity
-                onPress={
-                  () => console.log('object') //navigation.navigate('Chat', {whom: item.username})
-                }>
-                <View style={styles.viewMessages}>
-                  <Image
-                    source={require('../assets/photos/mariecurie.png')}
-                    style={styles.photoStyle}
-                  />
-                  <View style={styles.messageSlot}>
-                    <View style={styles.textSection}>
-                      <Text style={styles.userNameText}>{item.whom}</Text>
-                      <Text style={styles.dateInfoText}>{item.date}</Text>
-                    </View>
-                    <View>
-                      <Text numberOfLines={2} style={styles.responseInfoText}>
-                        {item.response}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              </TouchableOpacity>
-              <View
-                style={{
-                  alignItems: 'center',
-                }}
-              />
-              <View
-                style={{
-                  borderWidth: 1,
-                  borderColor: 'gray',
-                  width: window.width / 1.1,
-                }}
-              />
-            </View>
-          </>
-        )}
+        renderItem={({item}) => insideFlatlist(item)}
       />
     </SafeAreaView>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -132,13 +129,14 @@ const styles = StyleSheet.create({
     height: window.height,
   },
   photoStyle: {
-    height: window.width / 6,
-    width: window.width / 6,
-    borderRadius: window.width / 12,
+    height: window.width / 6.5,
+    width: window.width / 6.5,
+    borderRadius: window.width / 13,
     alignItems: 'center',
   },
   messageSlot: {
     flex: 1,
+    justifyContent: 'center',
   },
 
   messageSection: {
@@ -147,27 +145,31 @@ const styles = StyleSheet.create({
   },
   userNameText: {
     color: 'white',
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '500',
-    marginLeft: 5,
+    marginLeft: 20,
+    flex: 6,
+    alignItems: 'center',
   },
   dateInfoText: {
     color: 'white',
     fontSize: 13,
     textAlign: 'right',
     marginRight: 2,
+    flex: 4,
+    alignItems: 'center',
   },
   responseInfoText: {
     color: 'white',
     fontSize: 13,
     textAlign: 'left',
-    marginLeft: 5,
+    marginLeft: 20,
   },
   textSection: {
-    alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
-    flex: 1,
+    flex: 10,
+    //backgroundColor: 'white',
   },
   animation: {
     alignItems: 'center',
@@ -223,7 +225,8 @@ const styles = StyleSheet.create({
     flex: 4,
   },
   viewMessages: {
-    margin: 10,
+    marginHorizontal: 10,
+    marginVertical: 5,
     alignItems: 'center',
     flexDirection: 'row',
     width: window.width / 1.1,

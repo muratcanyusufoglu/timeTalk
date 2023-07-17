@@ -45,7 +45,7 @@ export default function DiscoverPage() {
 
   const onChangeText = (key: String) => {
     if (key.length >= 1) {
-      const filterUsers = nameList.nameList.filter(item => {
+      const rfilterUsers = nameList.nameList.filter(item => {
         if (item.username.toLowerCase().indexOf(key.toLowerCase()) > -1) {
           return item;
         }
@@ -137,7 +137,7 @@ export default function DiscoverPage() {
           <>
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate('Chat', {whom: item.username})
+                navigation.navigate('ChatTimeLine', {whom: item.username})
               }>
               <View style={styles.photoSection}>
                 <ImageBackground

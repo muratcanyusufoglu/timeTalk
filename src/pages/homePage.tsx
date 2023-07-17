@@ -36,13 +36,8 @@ import TimePage from './timePage';
 const window = Dimensions.get('window');
 
 const App = () => {
-  const [value, setValue] = React.useState('');
   const [data, setData] = useState([]);
 
-  const userInfo = useSelector((store: any) => store.userReducer.userInfo);
-  const ADRESS = Config.ADRESS;
-
-  const navigation = useNavigation();
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:
