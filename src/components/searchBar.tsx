@@ -3,16 +3,19 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import GlobalSizes from '../constants/sizes/globalSizes';
 
-export default function SearchBar(props: {onChangeTextFunc: any}) {
-  const text = '';
+export default function SearchBar(props: {
+  onChangeTextFunc: any;
+  value: string;
+  placeHolder: string;
+}) {
   return (
     <View style={styles.textInputView}>
       <Icon name="search" color={'gray'} style={{marginLeft: 10}} size={15} />
       <TextInput
         style={styles.input}
         onChangeText={newText => props.onChangeTextFunc(newText)}
-        placeholder="Search"
-        value={text}
+        placeholder={props.placeHolder}
+        value={props.value}
       />
     </View>
   );
@@ -20,6 +23,7 @@ export default function SearchBar(props: {onChangeTextFunc: any}) {
 
 const styles = StyleSheet.create({
   textInputView: {
+    flex: 1,
     backgroundColor: 'black',
     borderWidth: 1,
     borderColor: 'black',

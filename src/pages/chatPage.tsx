@@ -141,18 +141,22 @@ function messageBlock(item: any) {
     <View style={styles.messageSection}>
       <View style={styles.sendingMessageStyle}>
         <View style={styles.sendedSection}>
-          <Text style={styles.sendedSectionText}>{item.message}</Text>
+          <Text style={styles.messageTextStyle}>{item.message}</Text>
         </View>
-        <CustomImageComponent
-          imageUri={'https://reactnative.dev/img/tiny_logo.png'}
-        />
+        <View style={{justifyContent: 'flex-end'}}>
+          <CustomImageComponent
+            imageUri={'https://reactnative.dev/img/tiny_logo.png'}
+          />
+        </View>
       </View>
       <View style={styles.incomingMessageStyle}>
-        <CustomImageComponent
-          imageUri={'https://reactnative.dev/img/tiny_logo.png'}
-        />
+        <View style={{justifyContent: 'flex-start'}}>
+          <CustomImageComponent
+            imageUri={'https://reactnative.dev/img/tiny_logo.png'}
+          />
+        </View>
         <View style={styles.responsSection}>
-          <Text style={styles.sendedSectionText}>{item.response}</Text>
+          <Text style={styles.messageTextStyle}>{item.response}</Text>
         </View>
       </View>
     </View>
@@ -169,22 +173,24 @@ const styles = StyleSheet.create({
   },
   sendedSection: {
     backgroundColor: GlobalColors.sendingMessageSectionColor,
-    marginLeft: window.width / 25,
+    marginLeft: window.width / 2.5,
     padding: 15,
-    marginVertical: 5,
+    marginBottom: 30,
     borderRadius: 10,
-    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0,
+    marginHorizontal: 5,
   },
   responsSection: {
     backgroundColor: GlobalColors.incomingMessageSectionColor,
     marginRight: window.width / 2.5,
+    marginTop: 30,
     padding: 15,
-    marginVertical: 5,
     borderRadius: 10,
     borderTopLeftRadius: 0,
-    flexDirection: 'row',
   },
-  sendedSectionText: {},
+  messageTextStyle: {
+    color: GlobalColors.messageTextColor,
+  },
   responseSectionText: {},
   animation: {
     width: window.width / 20,
@@ -231,7 +237,6 @@ const styles = StyleSheet.create({
   },
   sendingMessageStyle: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
     justifyContent: 'flex-end',
   },
 });

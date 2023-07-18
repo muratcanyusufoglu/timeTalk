@@ -13,6 +13,7 @@ import {useNavigation} from '@react-navigation/native';
 import storage from '../storage/storage';
 import {messageInterface, UserInfoProp} from '../props/generalProp';
 import ChatService from '../services/chatService';
+import { GlobalColors } from '../constants/colors/globalColors';
 
 const window = Dimensions.get('window');
 
@@ -110,6 +111,7 @@ export default function TimeLine() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View></View>
       <FlatList
         extraData={messageData}
         data={messageData}
@@ -124,7 +126,7 @@ export default function TimeLine() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#23242B',
+    backgroundColor: GlobalColors.backGroundColor,
     width: window.width,
     height: window.height,
   },

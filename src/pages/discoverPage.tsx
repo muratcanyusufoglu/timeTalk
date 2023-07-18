@@ -32,7 +32,7 @@ interface userInfos {
 export default function DiscoverPage() {
   const [bool, setBool] = useState<boolean>();
   const [loading, setLoading] = useState<boolean>(false);
-  const [text, setText] = useState<String>('');
+  const [text, setText] = useState<string>('');
   const [userData, setUserData] = useState<Array<userInfos>>(nameList.nameList);
   const [categoryInfo, setCategoryInfo] = useState<String>('');
   const navigation = useNavigation();
@@ -90,7 +90,11 @@ export default function DiscoverPage() {
             style={{
               marginHorizontal: GlobalSizes.widthAllScreen / 24,
             }}>
-            <SearchBar onChangeTextFunc={onChangeText} />
+            <SearchBar
+              onChangeTextFunc={onChangeText}
+              value={text}
+              placeHolder={'Search Anybody'}
+            />
             <FlatList
               data={categories}
               refreshing={bool}
