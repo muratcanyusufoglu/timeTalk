@@ -15,6 +15,9 @@ import {MasonryFlashList} from '@shopify/flash-list/dist/MasonryFlashList';
 import {FlatList} from 'react-native-gesture-handler';
 import {TextInput} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
+import CustomIcon from '../assets/icons/customIcons';
+import SearchBar from '../components/searchBar';
+import GlobalSizes from '../constants/sizes/globalSizes';
 
 const window = Dimensions.get('window');
 
@@ -85,22 +88,9 @@ export default function DiscoverPage() {
         ListHeaderComponent={
           <View
             style={{
-              marginHorizontal: window.width / 24,
+              marginHorizontal: GlobalSizes.widthAllScreen / 24,
             }}>
-            <View style={styles.textInputView}>
-              <Icon
-                name="search"
-                color={'gray'}
-                style={{marginLeft: 10}}
-                size={15}
-              />
-              <TextInput
-                style={styles.input}
-                onChangeText={onChangeText}
-                placeholder="Search"
-                value={text}
-              />
-            </View>
+            <SearchBar onChangeTextFunc={onChangeText} />
             <FlatList
               data={categories}
               refreshing={bool}
@@ -110,7 +100,6 @@ export default function DiscoverPage() {
               renderItem={({item}) => (
                 <>
                   <TouchableOpacity
-                    // eslint-disable-next-line react-native/no-inline-styles
                     style={{
                       width: window.width / 4,
                       height: window.height / 25,
@@ -137,7 +126,7 @@ export default function DiscoverPage() {
           <>
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate('ChatTimeLine', {whom: item.username})
+                navigation.navigate('ChatPage', {whom: item.username})
               }>
               <View style={styles.photoSection}>
                 <ImageBackground

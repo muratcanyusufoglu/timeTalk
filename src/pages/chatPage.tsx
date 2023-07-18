@@ -8,6 +8,7 @@ import {
   Dimensions,
   Alert,
   SafeAreaView,
+  Image,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
@@ -19,6 +20,8 @@ import ChatService from '../services/chatService';
 import {messageInterface, UserInfoProp} from '../props/generalProp';
 import {useNavigation} from '@react-navigation/native';
 import LoadingBar from '../components/loadingBar';
+import CustomImageComponent from '../components/customImageComponent';
+import {GlobalColors} from '../constants/colors/globalColors';
 const window = Dimensions.get('window');
 
 export default function ChatPage(prop) {
@@ -108,18 +111,7 @@ export default function ChatPage(prop) {
         extraData={data}
         data={data}
         refreshing={bool}
-        renderItem={({item}) => (
-          <>
-            <View style={styles.messageSection}>
-              <View style={styles.sendedSection}>
-                <Text style={styles.sendedSectionText}>{item.message}</Text>
-              </View>
-              <View style={styles.responsSection}>
-                <Text style={styles.sendedSectionText}>{item.response}</Text>
-              </View>
-            </View>
-          </>
-        )}
+        renderItem={({item}) => messageBlock(item)}
       />
       <View style={{alignItems: 'center'}}>{bool ? <LoadingBar /> : null}</View>
       <View style={styles.sendMessageSection}>
@@ -140,28 +132,57 @@ export default function ChatPage(prop) {
   );
 }
 
+function messageBlock(item: any) {
+  const image = item.whom.split(' ').join('').toLowerCase();
+  const imageAdress = `../assets/photos/${image}.png`;
+
+  console.log('image', imageAdress);
+  return (
+    <View style={styles.messageSection}>
+      <View style={styles.sendingMessageStyle}>
+        <View style={styles.sendedSection}>
+          <Text style={styles.sendedSectionText}>{item.message}</Text>
+        </View>
+        <CustomImageComponent
+          imageUri={'https://reactnative.dev/img/tiny_logo.png'}
+        />
+      </View>
+      <View style={styles.incomingMessageStyle}>
+        <CustomImageComponent
+          imageUri={'https://reactnative.dev/img/tiny_logo.png'}
+        />
+        <View style={styles.responsSection}>
+          <Text style={styles.sendedSectionText}>{item.response}</Text>
+        </View>
+      </View>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: GlobalColors.backGroundColor,
   },
   messageSection: {
     margin: 5,
   },
   sendedSection: {
-    backgroundColor: '#E0ECFF',
-    marginLeft: window.width / 3,
-    marginRight: window.width / 20,
+    backgroundColor: GlobalColors.sendingMessageSectionColor,
+    marginLeft: window.width / 25,
     padding: 15,
     marginVertical: 5,
     borderRadius: 10,
+    borderTopRightRadius: 0,
   },
   responsSection: {
-    backgroundColor: '#E9EEF8',
-    marginRight: window.width / 3,
-    marginLeft: window.width / 20,
+    backgroundColor: GlobalColors.incomingMessageSectionColor,
+    marginRight: window.width / 2.5,
     padding: 15,
     marginVertical: 5,
     borderRadius: 10,
+    borderTopLeftRadius: 0,
+    flexDirection: 'row',
   },
   sendedSectionText: {},
   responseSectionText: {},
@@ -203,5 +224,14 @@ const styles = StyleSheet.create({
     borderColor: '#D6DAE2',
     borderRadius: 4,
   },
-  sendIcon: {},
+  incomingMessageStyle: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+  },
+  sendingMessageStyle: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-end',
+  },
 });
