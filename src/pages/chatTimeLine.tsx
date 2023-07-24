@@ -10,10 +10,9 @@ import {
 import React, {useEffect, useState} from 'react';
 import {FlatList} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
-import storage from '../storage/storage';
 import {messageInterface, UserInfoProp} from '../props/generalProp';
 import ChatService from '../services/chatService';
-import { GlobalColors } from '../constants/colors/globalColors';
+import {GlobalColors} from '../constants/colors/globalColors';
 
 const window = Dimensions.get('window');
 
@@ -42,31 +41,31 @@ export default function TimeLine() {
     response: string;
   }[] = [];
 
-  useEffect(() => {
-    console.log('dasdasdasd');
-    setLoading(true);
-    const fetch = async () => {
-      storage
-        .load({
-          key: 'userInfo',
-        })
-        .then(async resp => {
-          setUserInfo(resp);
-          console.log('respaaa', userInfo);
-          await chatServices
-            .getLastMessages(resp.user.id)
-            .then(respChat => {
-              respChat.data.map((mes: messageInterface) =>
-                messageDataArray.push(mes),
-              );
-              setmessageData(messageDataArray.reverse());
-            })
-            .catch(error => console.log('error', error));
-        });
-    };
-    fetch();
-    setLoading(false);
-  }, [loading]);
+  // useEffect(() => {
+  //   console.log('dasdasdasd');
+  //   setLoading(true);
+  //   const fetch = async () => {
+  //     storage
+  //       .load({
+  //         key: 'userInfo',
+  //       })
+  //       .then(async resp => {
+  //         setUserInfo(resp);
+  //         console.log('respaaa', userInfo);
+  //         await chatServices
+  //           .getLastMessages(resp.user.id)
+  //           .then(respChat => {
+  //             respChat.data.map((mes: messageInterface) =>
+  //               messageDataArray.push(mes),
+  //             );
+  //             setmessageData(messageDataArray.reverse());
+  //           })
+  //           .catch(error => console.log('error', error));
+  //       });
+  //   };
+  //   fetch();
+  //   setLoading(false);
+  // }, [loading]);
 
   function insideFlatlist(item: any) {
     return (

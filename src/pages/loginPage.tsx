@@ -25,7 +25,6 @@ import storage from '../storage/storage';
 import Lottie from 'lottie-react-native';
 import axios from 'axios';
 import Config from 'react-native-config';
-import Purchases, {LOG_LEVEL} from 'react-native-purchases';
 // const TaskSchema = {
 //   name: 'Task',
 //   login: true,

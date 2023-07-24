@@ -3,11 +3,12 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import ChatPage from './pages/chatPage';
 import DiscoverPage from './pages/discoverPage';
-import Profile from './pages/profile';
+import {IApController} from './pages/profile';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ChatTimeLine from './pages/chatTimeLine';
+import {withIAPContext} from 'react-native-iap';
 
 const ChatStack = createNativeStackNavigator();
 const DiscoverStack = createNativeStackNavigator();
@@ -29,7 +30,7 @@ const HomeRoute = () => {
       />
       <Tab.Screen
         name="ProfileRoute"
-        component={Profile}
+        component={IApController}
         options={{headerShown: false}}
       />
     </Tab.Navigator>
