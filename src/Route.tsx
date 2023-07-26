@@ -3,12 +3,11 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import ChatPage from './pages/chatPage';
 import DiscoverPage from './pages/discoverPage';
-import {IApController} from './pages/profile';
-
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ChatTimeLine from './pages/chatTimeLine';
-import {withIAPContext} from 'react-native-iap';
+import {RevenueCatProvider} from './providers/reveneuCatProvider';
+import Profile from './pages/profile';
 
 const ChatStack = createNativeStackNavigator();
 const DiscoverStack = createNativeStackNavigator();
@@ -30,7 +29,7 @@ const HomeRoute = () => {
       />
       <Tab.Screen
         name="ProfileRoute"
-        component={IApController}
+        component={Profile}
         options={{headerShown: false}}
       />
     </Tab.Navigator>
@@ -78,15 +77,17 @@ const DiscoverRoute = () => {
 const Stack = createNativeStackNavigator();
 function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Home"
-          component={HomeRoute}
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <RevenueCatProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Home"
+            component={HomeRoute}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </RevenueCatProvider>
   );
 }
 export default App;
