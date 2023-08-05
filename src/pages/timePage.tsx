@@ -42,24 +42,6 @@ export default function TimePage() {
       .then(async resp => {
         setUserInfo(resp);
         console.log('resp info', userInfo);
-        const fetch = async () => {
-          await axios
-            .get(`${ADRESS}/follower/${resp.idToken}`)
-            .then(async item => {
-              console.log('followerIDs', item.data[0]);
-              await axios
-                .get(
-                  `${ADRESS}/dalle/findFollowingWithArray/${item.data[0]}?limit=${pagination}`,
-                )
-                .then(item => {
-                  item.data.map(mes => filterList.push(mes));
-                  setData(filterList);
-                })
-                .catch(error => console.log('errorTime', error));
-            })
-            .catch(error => console.log('error', error));
-        };
-        fetch();
       });
     setLoading(false);
   }, [userInfo, ADRESS, pagination]);

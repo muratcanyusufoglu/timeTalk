@@ -22,41 +22,30 @@ import {useDispatch, useSelector} from 'react-redux';
 import {onUpdateLogin} from '../redux/action/index';
 import RNRestart from 'react-native-restart';
 import storage from '../storage/storage';
-import Lottie from 'lottie-react-native';
 import axios from 'axios';
 import Config from 'react-native-config';
-// const TaskSchema = {
-//   name: 'Task',
-//   login: true,
-//   properties: {
-//     _id: 'int',
-//     name: 'string',
-//     status: 'string?',
-//     owner_id: 'string?',
-//   },
-//   primaryKey: '_id',
-// };
 
 const window = Dimensions.get('window');
 const App = () => {
   const ADRESS = Config.ADRESS;
 
-  const API_KEY = Config.API_KEY;
-
   const [loggedIn, setloggedIn] = useState(false);
+  const navigation = useNavigation();
 
   useEffect(() => {
+    storage
+      .load({
+        key: 'userInfo',
+      })
+      .then(async resp => {
+        if (resp) {
+          navigation.navigate('Home' as never);
+        }
+      });
     GoogleSignin.configure({
       webClientId:
         '101181523513-2halvkj3k0a6j8fqpvbf92002b5dequk.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
     });
-    // Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
-
-    // if (Platform.OS === 'ios') {
-    //   Purchases.configure({apiKey: API_KEY});
-    // } else if (Platform.OS === 'android') {
-    //   Purchases.configure({apiKey: Config.API_KEY});
-    // }
   }, []);
 
   const signIn = async () => {
@@ -68,41 +57,36 @@ const App = () => {
         idToken,
         accessToken,
       );
-      //Purchases.setDebugLogsEnabled(true);
-      //Purchases.setup(Config.API_KEY);
-      //await auth().signInWithCredential(credential);
-      console.log('ididid', idToken);
       if (idToken) {
         async function navigateHome() {
           await axios
             .get(`${ADRESS}/users/${user.id}`)
-            .then(item => {
-              console.log('itemlogin', item);
-              storage.save({
+            .then(async item => {
+              await storage.save({
                 key: 'userInfo',
                 data: {
-                  //token: Platform.OS === 'ios' ? apnToken : fcmToken,
                   accessToken: accessToken,
                   idToken: user.id,
                   user: user,
-                  gptToken: item.data.gptToken,
-                  freeToken: item.data.freeToken,
-                  dalleToken: item.data.dalleToken,
+                  freeCoin: item.data.freeCoin,
+                  messageCoin: item.data.messageCoin,
+                  packageName: item.data.packageName,
                 },
                 expires: null,
               });
+              setloggedIn(true);
+              navigation.navigate('Home' as never);
             })
             .catch(error => {
-              console.log('errorlogin', error);
               async function postUser() {
                 await axios
                   .post(`${ADRESS}/users`, {
                     user: `${user.name}`,
                     userId: `${user.id}`,
                     userPhoto: `${user.photo}`,
-                    gptToken: 0,
-                    dalleToken: 0,
-                    freeToken: 25,
+                    freeCoin: 5,
+                    messageCoin: 0,
+                    packageName: '',
                   })
                   .then(resp => {
                     console.log('resp', resp);
@@ -113,34 +97,24 @@ const App = () => {
                 storage.save({
                   key: 'userInfo',
                   data: {
-                    //token: Platform.OS === 'ios' ? apnToken : fcmToken,
                     accessToken: accessToken,
                     idToken: user.id,
                     user: user,
-                    gptToken: 0,
-                    freeToken: 25,
-                    dalleToken: 0,
+                    freeCoin: 5,
+                    messageCoin: 0,
+                    packageName: '',
                   },
                   expires: null,
                 });
               }
               postUser();
             });
-          // dispatch(
-          //   onUpdateLogin({
-          //     accessToken: accessToken,
-          //     idToken: idToken,
-          //     user: user,
-          //   }),
-          // );
           Toast.show({
             type: 'success',
             text1: 'Hello',
             text2: 'Your login process succesfull 👋',
           });
-          RNRestart.Restart();
-
-          //navigation.navigate('Home' as never);
+          //RNRestart.Restart();
         }
         navigateHome();
       }
@@ -191,13 +165,6 @@ const App = () => {
               source={require('../assets/photos/google.png')}
             />
             <Text style={styles.googleButtonText}>Sign in with Google</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.googleButton} onPress={signOut}>
-            <Image
-              style={styles.googleIcon}
-              source={require('../assets/photos/google.png')}
-            />
-            <Text style={styles.googleButtonText}>Sign Out</Text>
           </TouchableOpacity>
         </View>
       </View>

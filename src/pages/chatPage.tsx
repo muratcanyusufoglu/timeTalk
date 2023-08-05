@@ -9,6 +9,8 @@ import {
   Alert,
   SafeAreaView,
   Image,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
@@ -32,13 +34,7 @@ export default function ChatPage(prop) {
   const [userInfo, setUserInfo] = useState<UserInfoProp>();
   const chatServices = new ChatService();
 
-  const messageData: {
-    message: string;
-    user: string;
-    date: string;
-    whom: string;
-    response: string;
-  }[] = [];
+  const messageData: [] = [];
 
   useEffect(() => {
     setLoading(true);
@@ -49,12 +45,13 @@ export default function ChatPage(prop) {
         })
         .then(async resp => {
           setUserInfo(resp);
-          console.log('respaaa', userInfo);
           await chatServices
             .getChatHistory(resp.user.id, prop.route.params.whom)
             .then(respChat => {
-              respChat.data.map((mes: messageInterface) =>
-                messageData.push(mes),
+              console.log('respChatttt', respChat);
+              respChat.map(
+                mes => messageData.push(mes),
+                console.log('xxx', messageData),
               );
               setData(messageData.reverse());
             })
@@ -81,7 +78,14 @@ export default function ChatPage(prop) {
       });
 
     await chatServices
-      .sendMessage(userInfo?.user.id, input, items, prop.route.params.whom)
+      .sendMessage(
+        userInfo?.user.id,
+        'photo',
+        input,
+        items,
+        prop.route.params.whom,
+        'date',
+      )
       .then(resp => {
         console.log('resp post', resp);
       })
@@ -104,7 +108,9 @@ export default function ChatPage(prop) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
       <View style={styles.loadingView}>{loading ? <LoadingBar /> : null}</View>
       <FlatList
         inverted
@@ -128,15 +134,15 @@ export default function ChatPage(prop) {
           <Icon name="send-o" size={20} />
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 
 function messageBlock(item: any) {
-  const image = item.whom.split(' ').join('').toLowerCase();
-  const imageAdress = `../assets/photos/${image}.png`;
+  //const image = item.whom.split(' ').join('').toLowerCase();
+  //const imageAdress = `../assets/photos/${image}.png`;
 
-  console.log('image', imageAdress);
+  //console.log('image', imageAdress);
   return (
     <View style={styles.messageSection}>
       <View style={styles.sendingMessageStyle}>
@@ -210,7 +216,7 @@ const styles = StyleSheet.create({
   sendMessageSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 90,
   },
   input: {
     height: 48,
@@ -220,6 +226,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderColor: '#D6DAE2',
     borderRadius: 4,
+    color: 'white',
   },
   sendMessageButton: {
     alignItems: 'center',

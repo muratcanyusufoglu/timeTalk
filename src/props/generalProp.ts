@@ -8,13 +8,14 @@ export interface UserInfoProp {
 }
 
 export interface messageInterface {
-  message: string;
-  user: string;
-  date: string;
-  messageData: {
-    message: string;
-    user: string;
-    date: string;
-    response: string;
+  [index: number]: {
+    whom: string;
+    userId: string;
+    userPhoto: string;
+    messageArray: {
+      message: string;
+      date: string;
+      response: string;
+    };
   };
 }

@@ -8,6 +8,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ChatTimeLine from './pages/chatTimeLine';
 import {RevenueCatProvider} from './providers/reveneuCatProvider';
 import Profile from './pages/profile';
+import Login from './pages/loginPage';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const ChatStack = createNativeStackNavigator();
 const DiscoverStack = createNativeStackNavigator();
@@ -16,21 +18,43 @@ const Tab = createBottomTabNavigator();
 
 const HomeRoute = () => {
   return (
-    <Tab.Navigator initialRouteName="ChatRoute">
+    <Tab.Navigator
+      screenOptions={{
+        tabBarStyle: {position: 'absolute', height:80},
+      }}
+      initialRouteName="ChatRoute">
       <Tab.Screen
         name="ChatRoute"
         component={ChatRoute}
-        options={{headerShown: false}}
+        options={{
+          headerShown: false,
+          tabBarLabel: 'Chat',
+          tabBarIcon: ({color, size}) => (
+            <Icon name="comments" color={color} size={size} />
+          ),
+        }}
       />
       <Tab.Screen
         name="DiscoverRoute"
         component={DiscoverRoute}
-        options={{headerShown: false}}
+        options={{
+          headerShown: false,
+          tabBarLabel: 'Discover',
+          tabBarIcon: ({color, size}) => (
+            <Icon name="archway" color={color} size={size} />
+          ),
+        }}
       />
       <Tab.Screen
         name="ProfileRoute"
         component={Profile}
-        options={{headerShown: false}}
+        options={{
+          headerShown: false,
+          tabBarLabel: 'Profile',
+          tabBarIcon: ({color, size}) => (
+            <Icon name="user-tie" color={color} size={size} />
+          ),
+        }}
       />
     </Tab.Navigator>
   );
@@ -80,6 +104,7 @@ function App() {
     <RevenueCatProvider>
       <NavigationContainer>
         <Stack.Navigator>
+          <Stack.Screen name="Login" component={Login} />
           <Stack.Screen
             name="Home"
             component={HomeRoute}

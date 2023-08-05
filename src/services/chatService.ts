@@ -1,27 +1,27 @@
-import axios from 'axios';
+import axios, {AxiosResponse} from 'axios';
 import Config from 'react-native-config';
 import storage from '../storage/storage';
+import {messageInterface} from '../props/generalProp';
 
 class ChatService {
   ADRESS = Config.ADRESS;
 
   async getChatHistory(user: string, whom: string) {
     let urlPersonal = `${this.ADRESS}/messagesWhom/getPersonalChat/${user}/${whom}`;
-    let chatHistory: any;
-    console.log('urlurl ', `${this.ADRESS}/messages/getPersonalChat/${user}`);
-    chatHistory = await axios
-      .get(urlPersonal)
+    let response;
+    response = await axios
+      .get<messageInterface>(urlPersonal)
       .then(resp => {
-        console.log('resppp', resp);
-        return resp;
+        response = resp.data[0].messageArray;
+        return resp.data[0].messageArray;
       })
       .catch(error => console.log(error));
-
-    return chatHistory;
+    return response;
   }
 
   async getLastMessages(user: string) {
     let urlPersonal = `${this.ADRESS}/lastmessage/${user}`;
+    console.log('urlpersonal', urlPersonal);
     let chatHistory: any;
     chatHistory = await axios
       .get(urlPersonal)
@@ -35,28 +35,29 @@ class ChatService {
   }
 
   async sendMessage(
-    user: string,
+    userId: string,
+    userPhoto: string,
     message: string,
     response: string,
     whom: string,
+    date: string,
   ) {
     let url = this.ADRESS + '/messagesWhom';
     let sendedDate = new Date().toLocaleString();
 
     await axios
       .post(url, {
-        user: user,
+        userId: userId,
+        userPhoto: userPhoto,
         whom: whom,
-        message: message,
-        response: response,
-        date: sendedDate,
+        messageArray: [{message: message, response: response, date: date}],
       })
       .then(async resp => {
         console.log('resp post', resp);
         let lastmessageurl = this.ADRESS + '/lastmessage';
         await axios
           .post(lastmessageurl, {
-            user: user,
+            user: userId,
             whom: whom,
             response: response,
             date: sendedDate,
@@ -86,13 +87,11 @@ class ChatService {
         answerGpt = item.data.content;
         if (answerGpt) {
           if (userInfo.freeToken > 0) {
-            console.log('ftk', userInfo.freeToken);
             await axios
               .patch(urlUser, {
                 freeToken: userInfo.freeToken - 1,
               })
               .then(resp => {
-                console.log('insideInternet', resp);
                 storage.save({
                   key: 'userInfo',
                   data: {

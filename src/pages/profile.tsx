@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Button,
+  SafeAreaView
 } from 'react-native';
 import React, {useLayoutEffect} from 'react';
 import {useRevenueCat} from '../providers/reveneuCatProvider';
@@ -34,28 +35,30 @@ const Profile = () => {
   };
 
   return (
-    <ScrollView>
-      {/* Display the packages */}
-      <View style={styles.container}>
-        {packages.map(pack => (
-          <TouchableOpacity
-            key={pack.identifier}
-            onPress={() => onPurchase(pack)}
-            style={styles.button}>
-            <View style={styles.text}>
-              <Text>{pack.product.title}</Text>
-              <Text style={styles.desc}>{pack.product.description}</Text>
-            </View>
-            <View style={styles.price}>
-              <Text>{pack.product.priceString}</Text>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </View>
+    <SafeAreaView>
+      <ScrollView>
+        {/* Display the packages */}
+        <View style={styles.container}>
+          {packages.map(pack => (
+            <TouchableOpacity
+              key={pack.identifier}
+              onPress={() => onPurchase(pack)}
+              style={styles.button}>
+              <View style={styles.text}>
+                <Text>{pack.product.title}</Text>
+                <Text style={styles.desc}>{pack.product.description}</Text>
+              </View>
+              <View style={styles.price}>
+                <Text>{pack.product.priceString}</Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
 
-      {/* Display the user state */}
-      <User user={user} />
-    </ScrollView>
+        {/* Display the user state */}
+        <User user={user} />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({

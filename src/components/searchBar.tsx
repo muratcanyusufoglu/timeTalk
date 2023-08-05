@@ -41,6 +41,8 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     marginVertical: 10,
     backgroundColor: 'black',
-    marginRight: GlobalSizes.widthAllScreen / 22,
+    color: 'white',
+    tintColor: 'white'
+    
   },
 });

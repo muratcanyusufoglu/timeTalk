@@ -13,6 +13,8 @@ import {useNavigation} from '@react-navigation/native';
 import {messageInterface, UserInfoProp} from '../props/generalProp';
 import ChatService from '../services/chatService';
 import {GlobalColors} from '../constants/colors/globalColors';
+import storage from '../storage/storage';
+import SearchBar from '../components/searchBar';
 
 const window = Dimensions.get('window');
 
@@ -28,6 +30,7 @@ export default function TimeLine() {
   const [loading, setLoading] = useState<boolean>();
   const [messageData, setmessageData] = useState<Array<messageInfo>>();
   const [userInfo, setUserInfo] = useState<UserInfoProp>();
+  const [searchText, setSearchText] = useState<String>();
 
   const navigation = useNavigation();
 
@@ -41,31 +44,44 @@ export default function TimeLine() {
     response: string;
   }[] = [];
 
-  // useEffect(() => {
-  //   console.log('dasdasdasd');
-  //   setLoading(true);
-  //   const fetch = async () => {
-  //     storage
-  //       .load({
-  //         key: 'userInfo',
-  //       })
-  //       .then(async resp => {
-  //         setUserInfo(resp);
-  //         console.log('respaaa', userInfo);
-  //         await chatServices
-  //           .getLastMessages(resp.user.id)
-  //           .then(respChat => {
-  //             respChat.data.map((mes: messageInterface) =>
-  //               messageDataArray.push(mes),
-  //             );
-  //             setmessageData(messageDataArray.reverse());
-  //           })
-  //           .catch(error => console.log('error', error));
-  //       });
-  //   };
-  //   fetch();
-  //   setLoading(false);
-  // }, [loading]);
+  useEffect(() => {
+    setLoading(true);
+    const fetch = async () => {
+      storage
+        .load({
+          key: 'userInfo',
+        })
+        .then(async resp => {
+          setUserInfo(resp);
+          await chatServices
+            .getLastMessages(resp.user.id)
+            .then(respChat => {
+              respChat.data.map((mes: messageInterface) =>
+                messageDataArray.push(mes),
+              );
+              setmessageData(messageDataArray.reverse());
+            })
+            .catch(error => console.log('error', error));
+        });
+    };
+    fetch();
+    setLoading(false);
+  }, [loading]);
+
+  const onChangeText = (key: String) => {
+    // if (key.length >= 1) {
+    //   const filterUsers = messageData.filter(item => {
+    //     if (item.username.toLowerCase().indexOf(key.toLowerCase()) > -1) {
+    //       return item;
+    //     }
+    //   });
+    //   setUserData(filterUsers);
+    //   setText(key);
+    // } else {
+    //   setText('');
+    //   setUserData(nameList.nameList);
+    // }
+  };
 
   function insideFlatlist(item: any) {
     return (
@@ -110,12 +126,18 @@ export default function TimeLine() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View></View>
       <FlatList
         extraData={messageData}
         data={messageData}
         refreshing={bool}
         style={{flex: 1}}
+        ListHeaderComponent={
+          <SearchBar
+            onChangeTextFunc={onChangeText}
+            value={searchText}
+            placeHolder={'Search'}
+          />
+        }
         renderItem={({item}) => insideFlatlist(item)}
       />
     </SafeAreaView>

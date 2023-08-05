@@ -48,7 +48,7 @@ export default function DiscoverPage() {
 
   const onChangeText = (key: String) => {
     if (key.length >= 1) {
-      const rfilterUsers = nameList.nameList.filter(item => {
+      const filterUsers = nameList.nameList.filter(item => {
         if (item.username.toLowerCase().indexOf(key.toLowerCase()) > -1) {
           return item;
         }
@@ -93,7 +93,7 @@ export default function DiscoverPage() {
             <SearchBar
               onChangeTextFunc={onChangeText}
               value={text}
-              placeHolder={'Search Anybody'}
+              placeHolder={'Search'}
             />
             <FlatList
               data={categories}
