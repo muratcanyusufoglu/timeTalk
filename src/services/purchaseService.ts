@@ -6,19 +6,93 @@ import {messageInterface} from '../props/generalProp';
 class PurchaseService {
   ADRESS = Config.ADRESS;
 
-  async getUserInfo(packageName: string, messageCoin?: number, finishDate: any) {
+  async getUserInfo(
+    packageName: string,
+    messageCoin?: number,
+    finishDate?: string,
+  ) {
     await storage
       .load({
         key: 'userInfo',
       })
       .then(async resp => {
-        console.log('customerInfo22', resp);
         let urlUser = this.ADRESS + '/users/' + resp.idToken;
+        console.log(urlUser);
         await axios
           .get(urlUser)
-          .then(resp => {
-            if(resp.data.finishDate == finishDate){
-                
+          .then(async resp => {
+            if (packageName != undefined) {
+              const messageCoin =
+                packageName == 'rc_monthly_500'
+                  ? 500
+                  : packageName == 'rc_mothly_1000'
+                  ? 1000
+                  : 5000;
+              if (resp.data.packageName == packageName) {
+                if (resp.data.finishDate == finishDate) {
+                  return null;
+                } else {
+                  await axios
+                    .patch(urlUser, {
+                      finishDate: finishDate,
+                      messageCoin: messageCoin,
+                    })
+                    .then(resp => {
+                      storage.load({key: 'userInfo'}).then(resp => {
+                        storage.save({
+                          key: 'userInfo',
+                          data: {
+                            accessToken: resp.accessToken,
+                            idToken: resp.idToken,
+                            user: resp.user,
+                            messageCoin: messageCoin,
+                            packageName: packageName,
+                            finishDate: finishDate,
+                          },
+                          expires: null,
+                        });
+                      });
+                    });
+                }
+              } else {
+                await axios
+                  .patch(urlUser, {
+                    finishDate: finishDate,
+                    messageCoin: messageCoin,
+                    packageName: packageName,
+                  })
+                  .then(resp => {
+                    storage.load({key: 'userInfo'}).then(resp => {
+                      storage.save({
+                        key: 'userInfo',
+                        data: {
+                          accessToken: resp.accessToken,
+                          idToken: resp.idToken,
+                          user: resp.user,
+                          messageCoin: messageCoin,
+                          packageName: packageName,
+                          finishDate: finishDate,
+                        },
+                        expires: null,
+                      });
+                    });
+                  });
+              }
+            } else {
+              storage.load({key: 'userInfo'}).then(resp => {
+                storage.save({
+                  key: 'userInfo',
+                  data: {
+                    accessToken: resp.accessToken,
+                    idToken: resp.idToken,
+                    user: resp.user,
+                    messageCoin: messageCoin,
+                    packageName: '',
+                    finishDate: finishDate,
+                  },
+                  expires: null,
+                });
+              });
             }
             // storage.save({
             //   key: 'userInfo',
@@ -34,7 +108,7 @@ class PurchaseService {
             //   expires: null,
             // });
           })
-          .catch(error => console.log('customerInfo3', error));
+          .catch(error => console.log('customerInfo333333', error));
       });
   }
 }

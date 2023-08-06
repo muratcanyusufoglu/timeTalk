@@ -78,19 +78,36 @@ export const RevenueCatProvider = ({children}: any) => {
     const activeSubscription = customerInfo.activeSubscriptions[0];
     const exprationDate = customerInfo.latestExpirationDate;
 
-    console.log('customerInfo61', customerInfo.latestExpirationDate);
+    console.log('customerInfo61', exprationDate, ' ::  ', activeSubscription);
 
     if (activeSubscription == 'rc_monthly_500') {
       console.log('firsttt1');
 
-      await purchaseService.getUserInfo('', 500, exprationDate);
+      await purchaseService.getUserInfo(activeSubscription, 500, exprationDate);
     } else if (activeSubscription == 'rc_monthly_1000') {
       console.log('firsttt2');
 
-      await purchaseService.getUserInfo('', 1000, exprationDate);
+      await purchaseService.getUserInfo(
+        activeSubscription,
+        1000,
+        exprationDate,
+      );
     } else if (activeSubscription == 'rc_monthly_unlimited') {
       console.log('firsttt3');
-      await purchaseService.getUserInfo('', 5000, exprationDate);
+      await purchaseService.getUserInfo(
+        activeSubscription,
+        5000,
+        exprationDate,
+      );
+    }
+
+    else if (activeSubscription == undefined) {
+      console.log('firsttt3');
+      await purchaseService.getUserInfo(
+        activeSubscription,
+        0,
+        exprationDate,
+      );
     }
   };
 
