@@ -17,9 +17,11 @@ import {
 } from '@react-native-google-signin/google-signin';
 import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
-import auth from '@react-native-firebase/auth';
-import {useDispatch, useSelector} from 'react-redux';
-import {onUpdateLogin} from '../redux/action/index';
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/messaging';
+import PushNotification from 'react-native-push-notification';
+import {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import RNRestart from 'react-native-restart';
 import storage from '../storage/storage';
 import axios from 'axios';
@@ -53,10 +55,10 @@ const App = () => {
       await GoogleSignin.hasPlayServices();
       const {accessToken, idToken, user} = await GoogleSignin.signIn();
       setloggedIn(true);
-      const credential = auth.GoogleAuthProvider.credential(
-        idToken,
-        accessToken,
-      );
+      // const credential = auth.GoogleAuthProvider.credential(
+      //   idToken,
+      //   accessToken,
+      // );
       if (idToken) {
         async function navigateHome() {
           await axios
