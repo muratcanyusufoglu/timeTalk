@@ -17,18 +17,40 @@ import {
 } from '@react-native-google-signin/google-signin';
 import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
-import firebase from '@react-native-firebase/app';
-import '@react-native-firebase/messaging';
+import messaging, {
+  FirebaseMessagingTypes,
+} from '@react-native-firebase/messaging';
 import PushNotification from 'react-native-push-notification';
-import {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import RNRestart from 'react-native-restart';
+import {firebase} from '@react-native-firebase/messaging';
 import storage from '../storage/storage';
 import axios from 'axios';
 import Config from 'react-native-config';
 
 const window = Dimensions.get('window');
 const App = () => {
+  useEffect(() => {
+    firebase.messaging().onMessage(response => {
+      console.log(JSON.stringify(response));
+      if (Platform.OS !== 'ios') {
+        showNotification(response.notification!);
+        return;
+      }
+      PushNotificationIOS.requestPermissions().then(() =>
+        showNotification(response.notification!),
+      );
+    });
+  }, []);
+  const showNotification = (
+    notification: FirebaseMessagingTypes.Notification,
+  ) => {
+    PushNotification.localNotification({
+      title: notification.title,
+      message: notification.body!,
+    });
+  };
+
   const ADRESS = Config.ADRESS;
 
   const [loggedIn, setloggedIn] = useState(false);
@@ -46,7 +68,7 @@ const App = () => {
       });
     GoogleSignin.configure({
       webClientId:
-        '101181523513-2halvkj3k0a6j8fqpvbf92002b5dequk.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+        '515496165016-cl5voj2dcqnv0g9ucqhmur7dck0bioho.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
     });
   }, []);
 
