@@ -98,6 +98,16 @@ const App = () => {
                 },
                 expires: null,
               });
+              await axios
+                .patch(`${ADRESS}/users`, {
+                  lastLogin: Date.now.toString,
+                })
+                .then(resp => {
+                  console.log('resp', resp);
+                })
+                .catch(errors => {
+                  console.log('error', errors);
+                });
               setloggedIn(true);
               navigation.navigate('Home' as never);
             })
@@ -111,6 +121,7 @@ const App = () => {
                     freeCoin: 5,
                     messageCoin: 0,
                     packageName: '',
+                    lastLogin: Date.now.toString,
                   })
                   .then(resp => {
                     console.log('resp', resp);
