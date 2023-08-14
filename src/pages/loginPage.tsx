@@ -30,7 +30,13 @@ import Config from 'react-native-config';
 
 const window = Dimensions.get('window');
 const App = () => {
+  const [fToken, setFToken] = useState<string>();
   useEffect(() => {
+    messaging()
+      .getToken(firebase.app().options.messagingSenderId)
+      .then(x => setFToken(x))
+      .catch(e => console.log(e));
+
     firebase.messaging().onMessage(response => {
       console.log(JSON.stringify(response));
       if (Platform.OS !== 'ios') {
@@ -55,7 +61,7 @@ const App = () => {
 
   const [loggedIn, setloggedIn] = useState(false);
   const navigation = useNavigation();
-
+  2;
   useEffect(() => {
     storage
       .load({
@@ -63,6 +69,20 @@ const App = () => {
       })
       .then(async resp => {
         if (resp) {
+          console.log(resp);
+          const timeElapsed = Date.now().toString();
+          console.log('firstdateTime', timeElapsed);
+          await axios
+            .patch(`${ADRESS}/users/${resp.idToken}`, {
+              lastLogin: timeElapsed,
+              notificationToken: fToken,
+            })
+            .then(resp => {
+              console.log('respdate', resp);
+            })
+            .catch(errors => {
+              console.log('errordate', errors);
+            });
           navigation.navigate('Home' as never);
         }
       });
@@ -95,19 +115,10 @@ const App = () => {
                   freeCoin: item.data.freeCoin,
                   messageCoin: item.data.messageCoin,
                   packageName: item.data.packageName,
+                  notificationToken: fToken,
                 },
                 expires: null,
               });
-              await axios
-                .patch(`${ADRESS}/users`, {
-                  lastLogin: Date.now.toString,
-                })
-                .then(resp => {
-                  console.log('resp', resp);
-                })
-                .catch(errors => {
-                  console.log('error', errors);
-                });
               setloggedIn(true);
               navigation.navigate('Home' as never);
             })
@@ -122,6 +133,7 @@ const App = () => {
                     messageCoin: 0,
                     packageName: '',
                     lastLogin: Date.now.toString,
+                    notificationToken: fToken,
                   })
                   .then(resp => {
                     console.log('resp', resp);

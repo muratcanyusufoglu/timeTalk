@@ -26,7 +26,6 @@ class ChatService {
     chatHistory = await axios
       .get(urlPersonal)
       .then(resp => {
-        console.log('resppp', resp);
         return resp;
       })
       .catch(error => console.log(error));
