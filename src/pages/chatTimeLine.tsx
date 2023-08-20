@@ -15,6 +15,7 @@ import ChatService from '../services/chatService';
 import {GlobalColors} from '../constants/colors/globalColors';
 import storage from '../storage/storage';
 import SearchBar from '../components/searchBar';
+import {useIsFocused} from '@react-navigation/native';
 
 const window = Dimensions.get('window');
 
@@ -33,6 +34,7 @@ export default function TimeLine() {
   const [searchText, setSearchText] = useState<String>();
 
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
 
   const chatServices = new ChatService();
 
@@ -66,7 +68,7 @@ export default function TimeLine() {
     };
     fetch();
     setLoading(false);
-  }, [loading]);
+  }, [loading, isFocused]);
 
   const onChangeText = (key: String) => {
     // if (key.length >= 1) {

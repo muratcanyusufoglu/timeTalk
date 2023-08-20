@@ -20,7 +20,7 @@ const HomeRoute = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarStyle: {position: 'absolute', height:80},
+        tabBarStyle: {position: 'absolute', height: 80},
       }}
       initialRouteName="ChatRoute">
       <Tab.Screen

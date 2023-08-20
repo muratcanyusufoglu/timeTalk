@@ -18,7 +18,7 @@ export default function LoadingBar() {
 
 const styles = StyleSheet.create({
   animationLoading: {
-    width: GlobalSizes.loadingBarSizes,
-    height: GlobalSizes.loadingBarSizes,
+    width: 50,
+    height: 50,
   },
 });

@@ -61,17 +61,15 @@ const App = () => {
 
   const [loggedIn, setloggedIn] = useState(false);
   const navigation = useNavigation();
-  2;
   useEffect(() => {
     storage
       .load({
         key: 'userInfo',
       })
       .then(async resp => {
+        console.log(resp);
         if (resp) {
-          console.log(resp);
           const timeElapsed = Date.now().toString();
-          console.log('firstdateTime', timeElapsed);
           await axios
             .patch(`${ADRESS}/users/${resp.idToken}`, {
               lastLogin: timeElapsed,
@@ -82,10 +80,13 @@ const App = () => {
             })
             .catch(errors => {
               console.log('errordate', errors);
+              navigation.navigate('Home' as never);
             });
-          navigation.navigate('Home' as never);
         }
+        console.log('sadadss');
       });
+    navigation.navigate('Home' as never);
+
     GoogleSignin.configure({
       webClientId:
         '515496165016-cl5voj2dcqnv0g9ucqhmur7dck0bioho.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
@@ -161,7 +162,7 @@ const App = () => {
             text1: 'Hello',
             text2: 'Your login process succesfull 👋',
           });
-          //RNRestart.Restart();
+          RNRestart.Restart();
         }
         navigateHome();
       }

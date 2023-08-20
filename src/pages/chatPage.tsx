@@ -13,9 +13,6 @@ import {
   Platform,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import axios from 'axios';
-import Config from 'react-native-config';
-import Lottie from 'lottie-react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import storage from '../storage/storage';
 import ChatService from '../services/chatService';
@@ -24,11 +21,12 @@ import {useNavigation} from '@react-navigation/native';
 import LoadingBar from '../components/loadingBar';
 import CustomImageComponent from '../components/customImageComponent';
 import {GlobalColors} from '../constants/colors/globalColors';
+import {ErrorMessages} from '../constants/serviceMessages/errorMessages';
 const window = Dimensions.get('window');
 
 export default function ChatPage(prop) {
   const [data, setData] = useState([]);
-  const [input, setInput] = useState<String>();
+  const [input, setInput] = useState<string>();
   const [bool, setBool] = useState<boolean>();
   const [loading, setLoading] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<UserInfoProp>();
@@ -37,8 +35,8 @@ export default function ChatPage(prop) {
   const messageData: [] = [];
 
   useEffect(() => {
-    setLoading(true);
     const fetch = async () => {
+      setLoading(true);
       storage
         .load({
           key: 'userInfo',
@@ -49,16 +47,13 @@ export default function ChatPage(prop) {
             .getChatHistory(resp.user.id, prop.route.params.whom)
             .then(respChat => {
               console.log('respChatttt', respChat);
-              respChat.map(
-                mes => messageData.push(mes),
-                console.log('xxx', messageData),
-              );
+              respChat.map(mes => messageData.push(mes));
               setData(messageData.reverse());
             })
             .catch(error => console.log('error', error));
         });
+      setLoading(false);
     };
-    setLoading(false);
 
     fetch();
   }, [bool]);
@@ -66,43 +61,20 @@ export default function ChatPage(prop) {
   const addArray = async () => {
     setBool(true);
     var items;
-    //if (userInfo.freeToken > 0 || userInfo.gptToken > 0) {
     await chatServices
       .getGptAnswer(input, userInfo, prop.route.params.whom)
-      .then(resp => {
-        console.log('then getGptAnswer : ', resp);
-        items = resp;
-      })
+      .then(response => {})
       .catch(error => {
         console.log('error getGptAnswer : ', error);
       });
 
     await chatServices
-      .sendMessage(
-        userInfo?.user.id,
-        'photo',
-        input,
-        items,
-        prop.route.params.whom,
-        'date',
-      )
-      .then(resp => {
-        console.log('resp post', resp);
-      })
-      .catch(error => {
-        console.log('error post', error);
-      });
-
-    await chatServices
-      .getChatHistory(userInfo?.user.id, prop.route.params.whom)
-      .then(resp => {
-        console.log('newservice', resp);
-        messageData.push(resp);
+      .getChatHistory(userInfo?.idToken, prop.route.params.whom)
+      .then(respChat => {
+        respChat.map(mes => messageData.push(mes));
+        setData(messageData.reverse());
       })
       .catch(error => console.log('error', error));
-    //} else {
-    //  Alert.alert('Your GPT token run out.', 'Please buy coin.');
-    //}
     setInput('');
     setBool(false);
   };
