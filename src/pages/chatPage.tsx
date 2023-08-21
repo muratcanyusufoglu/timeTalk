@@ -20,15 +20,14 @@ import CustomMessageBlock from '../components/customMessageBlock';
 import CustomWriteMessageComponent from '../components/customWriteMessageComponent';
 const window = Dimensions.get('window');
 
-export default function ChatPage(prop) {
+export default function ChatPage(prop: any) {
   const [data, setData] = useState([]);
-  const [bool, setBool] = useState<boolean>();
   const [loading, setLoading] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<UserInfoProp>();
 
   const chatServices = new ChatService();
 
-  const messageData: [] = [];
+  const messageData: any = [];
 
   useEffect(() => {
     const fetch = async () => {
@@ -41,9 +40,9 @@ export default function ChatPage(prop) {
           setUserInfo(resp);
           await chatServices
             .getChatHistory(resp.user.id, prop.route.params.whom)
-            .then(respChat => {
+            .then((respChat: any) => {
               console.log('respChatttt', respChat);
-              respChat.map(mes => messageData.push(mes));
+              respChat.map((mes: any) => messageData.push(mes));
               setData(messageData.reverse());
             })
             .catch(error => console.log('error', error));
@@ -54,7 +53,7 @@ export default function ChatPage(prop) {
     fetch();
   }, [loading]);
 
-  const addArray = async (question: string) => {
+  const pushMessage = async (question: string) => {
     setLoading(true);
     await chatServices
       .getGptAnswer(question, userInfo, prop.route.params.whom)
@@ -65,8 +64,8 @@ export default function ChatPage(prop) {
 
     await chatServices
       .getChatHistory(userInfo?.idToken, prop.route.params.whom)
-      .then(respChat => {
-        respChat.map(mes => messageData.push(mes));
+      .then((respChat : any) => {
+        respChat.map((mes : any) => messageData.push(mes));
         setData(messageData.reverse());
       })
       .catch(error => console.log('error', error));
@@ -86,7 +85,7 @@ export default function ChatPage(prop) {
       <View style={{alignItems: 'center'}}>
         {loading ? <LoadingBar /> : null}
       </View>
-      <CustomWriteMessageComponent addMessage={addArray} />
+      <CustomWriteMessageComponent addMessage={pushMessage} />
     </KeyboardAvoidingView>
   );
 }

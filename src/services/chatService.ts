@@ -1,9 +1,7 @@
 import axios, {AxiosResponse} from 'axios';
 import Config from 'react-native-config';
-import storage from '../storage/storage';
 import {messageInterface} from '../props/generalProp';
 import {ErrorMessages} from '../constants/serviceMessages/errorMessages';
-import {Alert} from 'react-native';
 import snackBar from '../components/snackBar';
 
 class ChatService {

@@ -16,6 +16,7 @@ import {GlobalColors} from '../constants/colors/globalColors';
 import storage from '../storage/storage';
 import SearchBar from '../components/searchBar';
 import {useIsFocused} from '@react-navigation/native';
+import localusers from '../assets/localusers';
 
 const window = Dimensions.get('window');
 
@@ -85,16 +86,21 @@ export default function TimeLine() {
     // }
   };
 
+  let imageAdress: string;
   function insideFlatlist(item: any) {
+    localusers.nameList.map(localUsers => {
+      if (localUsers.username == item.whom) {
+        imageAdress = localUsers.photoUrl;
+      }
+    });
+    console.log(imageAdress);
+
     return (
       <View>
         <TouchableOpacity
           onPress={() => navigation.navigate('ChatPage', {whom: item.whom})}>
           <View style={styles.viewMessages}>
-            <Image
-              source={require('../assets/photos/mariecurie.png')}
-              style={styles.photoStyle}
-            />
+            <Image source={{uri: imageAdress}} style={styles.photoStyle} />
             <View style={styles.messageSlot}>
               <View style={styles.textSection}>
                 <Text numberOfLines={1} style={styles.userNameText}>

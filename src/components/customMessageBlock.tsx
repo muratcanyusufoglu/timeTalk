@@ -1,9 +1,29 @@
-import {View, Text, Dimensions, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  Dimensions,
+  StyleSheet,
+  TouchableOpacity,
+  Pressable,
+} from 'react-native';
 import React from 'react';
 import CustomImageComponent from './customImageComponent';
 import {GlobalColors} from '../constants/colors/globalColors';
+import Share from 'react-native-share';
 
 const window = Dimensions.get('window');
+
+const shareContent = async (item: any) => {
+  try {
+    const shareOptions = {
+      message: item.response,
+      url: 'https://apps.apple.com/',
+    };
+    await Share.open(shareOptions);
+  } catch (error) {
+    console.error('Error sharing:', error);
+  }
+};
 
 export default function CustomMessageBlock(item: any) {
   return (
@@ -24,9 +44,11 @@ export default function CustomMessageBlock(item: any) {
             imageUri={'https://reactnative.dev/img/tiny_logo.png'}
           />
         </View>
-        <View style={styles.responsSection}>
+        <Pressable
+          style={styles.responsSection}
+          onLongPress={() => shareContent(item)}>
           <Text style={styles.messageTextStyle}>{item.response}</Text>
-        </View>
+        </Pressable>
       </View>
     </View>
   );

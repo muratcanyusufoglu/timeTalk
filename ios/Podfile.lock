@@ -527,6 +527,8 @@ PODS:
   - RNScreens (3.18.2):
     - React-Core
     - React-RCTImage
+  - RNShare (9.2.3):
+    - React-Core
   - RNVectorIcons (9.2.0):
     - React-Core
   - SocketRocket (0.6.1)
@@ -614,6 +616,7 @@ DEPENDENCIES:
   - RNIap (from `../node_modules/react-native-iap`)
   - RNPurchases (from `../node_modules/react-native-purchases`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNShare (from `../node_modules/react-native-share`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -756,6 +759,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-purchases"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNShare:
+    :path: "../node_modules/react-native-share"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   Yoga:
@@ -846,6 +851,7 @@ SPEC CHECKSUMS:
   RNIap: c397f49db45af3b10dca64b2325f21bb8078ad21
   RNPurchases: cb62deb7d618987e9e8022ed6f705da236da0e6f
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
+  RNShare: da6d90b6dc332f51f86498041d6e34211f96b630
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: 99caf8d5ab45e9d637ee6e0174ec16fbbb01bcfc
