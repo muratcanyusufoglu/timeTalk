@@ -13,10 +13,10 @@ import Share from 'react-native-share';
 
 const window = Dimensions.get('window');
 
-const shareContent = async (item: any) => {
+const shareContent = async (item: any, person: string) => {
   try {
     const shareOptions = {
-      message: item.response,
+      message: `${person} : ${item.response}`,
       url: 'https://apps.apple.com/',
     };
     await Share.open(shareOptions);
@@ -25,7 +25,7 @@ const shareContent = async (item: any) => {
   }
 };
 
-export default function CustomMessageBlock(item: any) {
+export default function CustomMessageBlock(item: any, person: string) {
   return (
     <View style={styles.messageSection}>
       <View style={styles.sendingMessageStyle}>
@@ -46,7 +46,7 @@ export default function CustomMessageBlock(item: any) {
         </View>
         <Pressable
           style={styles.responsSection}
-          onLongPress={() => shareContent(item)}>
+          onLongPress={() => shareContent(item, person)}>
           <Text style={styles.messageTextStyle}>{item.response}</Text>
         </Pressable>
       </View>

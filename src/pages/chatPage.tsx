@@ -80,7 +80,7 @@ export default function ChatPage(prop: any) {
         inverted
         extraData={data}
         data={data}
-        renderItem={({item}) => CustomMessageBlock(item)}
+        renderItem={({item}) => CustomMessageBlock(item, prop.route.params.whom)}
       />
       <View style={{alignItems: 'center'}}>
         {loading ? <LoadingBar /> : null}
