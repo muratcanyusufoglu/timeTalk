@@ -9,6 +9,7 @@ class ChatService {
 
   async getChatHistory(user: string, whom: string) {
     let urlPersonal = `${this.ADRESS}/messagesWhom/getPersonalChat/${user}/${whom}`;
+    console.log('urlPersonal', urlPersonal);
     let response;
     response = await axios
       .get<messageInterface>(urlPersonal)
@@ -34,7 +35,9 @@ class ChatService {
           return snackBar(
             ErrorMessages.gptUnlimitedMessage,
             ErrorMessages.getPurchase,
-            () => {},
+            () => {
+              return false;
+            },
           );
         }
         return true;

@@ -48,6 +48,7 @@ const App = () => {
       );
     });
   }, []);
+
   const showNotification = (
     notification: FirebaseMessagingTypes.Notification,
   ) => {
@@ -67,7 +68,7 @@ const App = () => {
         key: 'userInfo',
       })
       .then(async resp => {
-        console.log(resp);
+        console.log('userInfoStorage', resp);
         if (resp) {
           const timeElapsed = Date.now().toString();
           await axios
@@ -83,9 +84,7 @@ const App = () => {
               navigation.navigate('Home' as never);
             });
         }
-        console.log('sadadss');
       });
-    navigation.navigate('Home' as never);
 
     GoogleSignin.configure({
       webClientId:
@@ -98,21 +97,26 @@ const App = () => {
       await GoogleSignin.hasPlayServices();
       const {accessToken, idToken, user} = await GoogleSignin.signIn();
       setloggedIn(true);
-      // const credential = auth.GoogleAuthProvider.credential(
-      //   idToken,
-      //   accessToken,
-      // );
-      if (idToken) {
+      const lastLogin = Date.now().toString();
+
+      if (user.id) {
         async function navigateHome() {
           await axios
             .get(`${ADRESS}/users/${user.id}`)
             .then(async item => {
+              //await storage.remove({key: 'userInfo'});
+              await axios
+                .patch(`${ADRESS}/users/${user.id}`, {
+                  lastLogin: lastLogin,
+                })
+                .then(async item => {});
               await storage.save({
                 key: 'userInfo',
                 data: {
                   accessToken: accessToken,
                   idToken: user.id,
                   user: user,
+                  userPhoto: `${user.photo}`,
                   freeCoin: item.data.freeCoin,
                   messageCoin: item.data.messageCoin,
                   packageName: item.data.packageName,
@@ -121,7 +125,6 @@ const App = () => {
                 expires: null,
               });
               setloggedIn(true);
-              navigation.navigate('Home' as never);
             })
             .catch(error => {
               async function postUser() {
@@ -133,7 +136,8 @@ const App = () => {
                     freeCoin: 5,
                     messageCoin: 0,
                     packageName: '',
-                    lastLogin: Date.now.toString,
+                    lastLogin: Date.now.toString(),
+                    finishDate: '',
                     notificationToken: fToken,
                   })
                   .then(resp => {
@@ -142,15 +146,17 @@ const App = () => {
                   .catch(errors => {
                     console.log('error', errors);
                   });
-                storage.save({
+                await storage.save({
                   key: 'userInfo',
                   data: {
                     accessToken: accessToken,
                     idToken: user.id,
                     user: user,
-                    freeCoin: 5,
+                    userPhoto: `${user.photo}`,
+                    freeCoin: 10,
                     messageCoin: 0,
                     packageName: '',
+                    notificationToken: fToken,
                   },
                   expires: null,
                 });
@@ -162,7 +168,7 @@ const App = () => {
             text1: 'Hello',
             text2: 'Your login process succesfull 👋',
           });
-          RNRestart.Restart();
+          navigation.navigate('Home' as never);
         }
         navigateHome();
       }
@@ -184,16 +190,6 @@ const App = () => {
       } else {
         Alert.alert('An error accurated');
       }
-    }
-  };
-
-  const signOut = async () => {
-    try {
-      await GoogleSignin.revokeAccess();
-      await GoogleSignin.signOut();
-      setloggedIn(false);
-    } catch (error) {
-      console.error(error);
     }
   };
 

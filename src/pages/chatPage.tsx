@@ -18,12 +18,14 @@ import LoadingBar from '../components/loadingBar';
 import {GlobalColors} from '../constants/colors/globalColors';
 import CustomMessageBlock from '../components/customMessageBlock';
 import CustomWriteMessageComponent from '../components/customWriteMessageComponent';
+import PackageModal from '../components/customSubscriptionModal';
 const window = Dimensions.get('window');
 
 export default function ChatPage(prop: any) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<UserInfoProp>();
+  const [visible, setVisible] = useState(false);
 
   const chatServices = new ChatService();
 
@@ -37,9 +39,10 @@ export default function ChatPage(prop: any) {
           key: 'userInfo',
         })
         .then(async resp => {
+          console.log('respppppppppppp', resp.idToken);
           setUserInfo(resp);
           await chatServices
-            .getChatHistory(resp.user.id, prop.route.params.whom)
+            .getChatHistory(resp.idToken, prop.route.params.whom)
             .then((respChat: any) => {
               console.log('respChatttt', respChat);
               respChat.map((mes: any) => messageData.push(mes));
@@ -57,18 +60,10 @@ export default function ChatPage(prop: any) {
     setLoading(true);
     await chatServices
       .getGptAnswer(question, userInfo, prop.route.params.whom)
-      .then(response => {})
+      .then(response => console.log('xxxxxxx: ', response))
       .catch(error => {
         console.log('error getGptAnswer : ', error);
       });
-
-    await chatServices
-      .getChatHistory(userInfo?.idToken, prop.route.params.whom)
-      .then((respChat : any) => {
-        respChat.map((mes : any) => messageData.push(mes));
-        setData(messageData.reverse());
-      })
-      .catch(error => console.log('error', error));
     setLoading(false);
   };
 
@@ -80,12 +75,19 @@ export default function ChatPage(prop: any) {
         inverted
         extraData={data}
         data={data}
-        renderItem={({item}) => CustomMessageBlock(item, prop.route.params.whom)}
+        renderItem={({item}) =>
+          CustomMessageBlock(item, prop.route.params.whom)
+        }
       />
       <View style={{alignItems: 'center'}}>
         {loading ? <LoadingBar /> : null}
       </View>
       <CustomWriteMessageComponent addMessage={pushMessage} />
+      {/* <PackageModal
+        isVisible={visible}
+        onClose={() => setVisible(!visible)}
+        onPurchase={() => {}}
+      /> */}
     </KeyboardAvoidingView>
   );
 }

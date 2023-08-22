@@ -5,13 +5,15 @@ import {
   StyleSheet,
   TouchableOpacity,
   Button,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 import React, {useLayoutEffect} from 'react';
 import {useRevenueCat} from '../providers/reveneuCatProvider';
 import {useNavigation} from '@react-navigation/native';
 import {PurchasesPackage} from 'react-native-purchases';
 import User from './user';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import storage from '../storage/storage';
 
 const Profile = () => {
   const navigation = useNavigation();
@@ -27,11 +29,28 @@ const Profile = () => {
           color={'#EA3C4A'}></Button>
       ),
     });
+
+    GoogleSignin.configure({
+      webClientId:
+        '515496165016-cl5voj2dcqnv0g9ucqhmur7dck0bioho.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+    });
   }, []);
 
   const onPurchase = (pack: PurchasesPackage) => {
     // Purchase the package
     purchasePackage!(pack);
+  };
+
+  const signOut = async () => {
+    try {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+      await storage
+        .remove({key: 'userInfo'})
+        .then(() => navigation.navigate('Login' as never));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -57,6 +76,9 @@ const Profile = () => {
 
         {/* Display the user state */}
         <User user={user} />
+        <TouchableOpacity
+          onPress={() => signOut()}
+          style={styles.button}></TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
