@@ -163,11 +163,6 @@ const App = () => {
               }
               postUser();
             });
-          Toast.show({
-            type: 'success',
-            text1: 'Hello',
-            text2: 'Your login process succesfull 👋',
-          });
           navigation.navigate('Home' as never);
         }
         navigateHome();
@@ -195,12 +190,15 @@ const App = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Toast position="bottom" bottomOffset={0} type="success" />
-      <StatusBar barStyle="light-content" />
       <View style={styles.container}>
         <View style={styles.topContent}>
-          <Text style={styles.mainText}>Login</Text>
-          <Text style={styles.altText}>Login or sign up</Text>
+          <Toast position="top" bottomOffset={0} type="success" />
+          <Image
+            source={require('../assets/photos/appIcon.png')}
+            style={styles.appIcon}
+          />
+          <Text style={styles.mainText}>WISDOM TALKS</Text>
+          <Text style={styles.altText}>CHAT WITH ICONS</Text>
         </View>
         <View style={styles.bottomContent}>
           <TouchableOpacity style={styles.googleButton} onPress={signIn}>
@@ -210,6 +208,13 @@ const App = () => {
             />
             <Text style={styles.googleButtonText}>Sign in with Google</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.googleButton} onPress={signIn}>
+            <Image
+              style={styles.appleIcon}
+              source={require('../assets/photos/appleIcon.png')}
+            />
+            <Text style={styles.googleButtonText}>Sign in with Apple     </Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
@@ -217,11 +222,16 @@ const App = () => {
 };
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: '#f2f2f2',
+    backgroundColor: 'black',
+    flex: 1,
   },
   container: {
+    flex: 1,
     height: Dimensions.get('window').height,
-    backgroundColor: '#ffffff',
+  },
+  appIcon: {
+    width: 90,
+    height: 90,
   },
   topContent: {
     flex: 1,
@@ -234,24 +244,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   mainText: {
-    fontSize: 54,
-    color: 'black',
+    fontSize: 34,
+    color: 'white',
+    fontFamily: 'ShareTechMono-Regular',
   },
   altText: {
-    fontSize: 20,
-    color: 'black',
+    fontSize: 15,
+    color: 'white',
+    fontFamily: 'ShareTechMono-Regular',
   },
   googleButton: {
     marginTop: 10,
-    backgroundColor: 'white',
-    borderRadius: 4,
+    backgroundColor: '#BB86FC',
+    borderRadius: 28,
     width: window.width / 1.4,
     height: window.height / 15,
-    justifyContent: 'space-around',
+    justifyContent: 'space-evenly',
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#E5E5E5',
   },
   googleButtonText: {
     marginLeft: 0,
@@ -261,6 +271,11 @@ const styles = StyleSheet.create({
   googleIcon: {
     height: 24,
     width: 24,
+    marginRight: 0,
+  },
+  appleIcon: {
+    height: 50,
+    width: 50,
     marginRight: 0,
   },
   animation: {

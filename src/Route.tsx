@@ -20,7 +20,11 @@ const HomeRoute = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarStyle: {position: 'absolute', height: 80},
+        tabBarStyle: {
+          position: 'absolute',
+          height: 80,
+          backgroundColor: 'black',
+        },
       }}
       initialRouteName="ChatRoute">
       <Tab.Screen
@@ -104,7 +108,11 @@ function App() {
     <RevenueCatProvider>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{headerShown: false}}
+          />
           <Stack.Screen
             name="Home"
             component={HomeRoute}

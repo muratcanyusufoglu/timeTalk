@@ -27,7 +27,7 @@
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>	
+			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.googleusercontent.apps.515496165016-cl5voj2dcqnv0g9ucqhmur7dck0bioho</string>
 			</array>
@@ -52,7 +52,7 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>LSApplicationCategoryType</key>
-	<string></string>
+	<string/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -67,7 +67,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>MaterialCommunityIcons.ttf</string>
@@ -77,6 +77,7 @@
 		<string>FontAwesome5_Solid.ttf</string>
 		<string>MaterialIcons.ttf</string>
 		<string>FontAwesome.ttf</string>
+		<string>ShareTechMono-Regular.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

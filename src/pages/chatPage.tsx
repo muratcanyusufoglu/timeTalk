@@ -64,6 +64,14 @@ export default function ChatPage(prop: any) {
       .catch(error => {
         console.log('error getGptAnswer : ', error);
       });
+    await chatServices
+      .getChatHistory(userInfo?.idToken, prop.route.params.whom)
+      .then((respChat: any) => {
+        respChat.map((mes: any) => messageData.push(mes));
+        setData(messageData.reverse());
+      })
+      .catch(error => console.log('error', error));
+
     setLoading(false);
   };
 

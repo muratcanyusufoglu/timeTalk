@@ -11,6 +11,7 @@ class PurchaseService {
     messageCoin?: number,
     finishDate?: string,
   ) {
+    console.log('::::: : :', packageName, messageCoin, finishDate);
     await storage
       .load({
         key: 'userInfo',
