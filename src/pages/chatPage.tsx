@@ -19,6 +19,7 @@ import {GlobalColors} from '../constants/colors/globalColors';
 import CustomMessageBlock from '../components/customMessageBlock';
 import CustomWriteMessageComponent from '../components/customWriteMessageComponent';
 import PackageModal from '../components/customSubscriptionModal';
+import localusers from '../assets/localusers';
 const window = Dimensions.get('window');
 
 export default function ChatPage(prop: any) {
@@ -26,6 +27,7 @@ export default function ChatPage(prop: any) {
   const [loading, setLoading] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<UserInfoProp>();
   const [visible, setVisible] = useState(false);
+  const [imageAdress, setImageAdress] = useState<string>('');
 
   const chatServices = new ChatService();
 
@@ -47,6 +49,14 @@ export default function ChatPage(prop: any) {
               setData(messageData.reverse());
             })
             .catch(error => console.log('error', error));
+          function findWisdomPhoto() {
+            localusers.nameList.map(localUsers => {
+              if (localUsers.username == prop.route.params.whom) {
+                setImageAdress(localUsers.photoUrl);
+              }
+            });
+          }
+          findWisdomPhoto();
         });
       setLoading(false);
     };
@@ -82,7 +92,12 @@ export default function ChatPage(prop: any) {
         extraData={data}
         data={data}
         renderItem={({item}) =>
-          CustomMessageBlock(item, prop.route.params.whom)
+          CustomMessageBlock(
+            item,
+            prop.route.params.whom,
+            userInfo?.userPhoto,
+            imageAdress,
+          )
         }
       />
       <View style={{alignItems: 'center'}}>

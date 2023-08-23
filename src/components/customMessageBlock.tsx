@@ -6,10 +6,11 @@ import {
   TouchableOpacity,
   Pressable,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import CustomImageComponent from './customImageComponent';
 import {GlobalColors} from '../constants/colors/globalColors';
 import Share from 'react-native-share';
+import localusers from '../assets/localusers';
 
 const window = Dimensions.get('window');
 
@@ -25,7 +26,13 @@ const shareContent = async (item: any, person: string) => {
   }
 };
 
-export default function CustomMessageBlock(item: any, person: string) {
+export default function CustomMessageBlock(
+  item: any,
+  person: string,
+  userPhoto: string,
+  wisdomPhoto: string,
+) {
+  console.log('imaaaaaggeeeeuuurrrll', wisdomPhoto);
   return (
     <View style={styles.messageSection}>
       <View style={styles.sendingMessageStyle}>
@@ -33,16 +40,12 @@ export default function CustomMessageBlock(item: any, person: string) {
           <Text style={styles.messageTextStyle}>{item.message}</Text>
         </View>
         <View style={{justifyContent: 'flex-end'}}>
-          <CustomImageComponent
-            imageUri={'https://reactnative.dev/img/tiny_logo.png'}
-          />
+          <CustomImageComponent imageUri={userPhoto} />
         </View>
       </View>
       <View style={styles.incomingMessageStyle}>
         <View style={{justifyContent: 'flex-start'}}>
-          <CustomImageComponent
-            imageUri={'https://reactnative.dev/img/tiny_logo.png'}
-          />
+          <CustomImageComponent imageUri={wisdomPhoto} />
         </View>
         <Pressable
           style={styles.responsSection}

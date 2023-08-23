@@ -2,9 +2,11 @@ export interface UserInfoProp {
   accessToken: string;
   idToken: string;
   user: any;
-  gptToken: number;
-  freeToken: number;
-  dalleToken: number;
+  userPhoto: string;
+  freeCoin: number;
+  messageCoin: number;
+  packageName: string;
+  notificationToken: string;
 }
 
 export interface messageInterface {
