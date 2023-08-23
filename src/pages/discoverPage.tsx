@@ -10,14 +10,12 @@ import {
 import React, {useEffect, useState} from 'react';
 import nameList from '../assets/localusers';
 import {categories} from '../assets/categories';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {MasonryFlashList} from '@shopify/flash-list/dist/MasonryFlashList';
 import {FlatList} from 'react-native-gesture-handler';
-import {TextInput} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
-import CustomIcon from '../assets/icons/customIcons';
 import SearchBar from '../components/searchBar';
 import GlobalSizes from '../constants/sizes/globalSizes';
+import CustomDiscoverPageAvatarComponent from '../components/customDiscoverPageAvatarComponent';
 
 const window = Dimensions.get('window');
 
@@ -127,28 +125,7 @@ export default function DiscoverPage() {
           </View>
         }
         renderItem={({item}) => (
-          <>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('ChatPage', {whom: item.username})
-              }>
-              <View style={styles.photoSection}>
-                <ImageBackground
-                  source={require('../assets/photos/mariecurie.png')}
-                  imageStyle={{borderRadius: 6}}
-                  style={
-                    item.userId % 4 == 1 || item.userId % 4 == 0
-                      ? styles.flatlistImages
-                      : styles.flatlistImagesOne
-                  }>
-                  <View style={styles.textSection}>
-                    <Text style={styles.userNameText}>{item.username}</Text>
-                    <Text style={styles.userInfoText}>{item.userInfo}</Text>
-                  </View>
-                </ImageBackground>
-              </View>
-            </TouchableOpacity>
-          </>
+          <CustomDiscoverPageAvatarComponent item={item} />
         )}
       />
     </SafeAreaView>

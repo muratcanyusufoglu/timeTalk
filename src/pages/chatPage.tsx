@@ -39,12 +39,10 @@ export default function ChatPage(prop: any) {
           key: 'userInfo',
         })
         .then(async resp => {
-          console.log('respppppppppppp', resp.idToken);
           setUserInfo(resp);
           await chatServices
             .getChatHistory(resp.idToken, prop.route.params.whom)
             .then((respChat: any) => {
-              console.log('respChatttt', respChat);
               respChat.map((mes: any) => messageData.push(mes));
               setData(messageData.reverse());
             })
