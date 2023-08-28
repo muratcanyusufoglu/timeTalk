@@ -23,7 +23,8 @@ export default function CustomWriteMessageComponent({
         style={styles.input}
         onChangeText={(text: string) => setMessage(text)}
         value={message}
-        placeholder="Message..."
+        placeholder="Write a message..."
+        placeholderTextColor={'white'}
         multiline
       />
       <TouchableOpacity
@@ -31,7 +32,7 @@ export default function CustomWriteMessageComponent({
         onPress={() => {
           addMessage(message), setMessage('');
         }}>
-        <Icon name="send-o" size={20} />
+        <Icon name="send-o" size={20} color={'white'} />
       </TouchableOpacity>
     </View>
   );
@@ -41,25 +42,26 @@ const styles = StyleSheet.create({
   sendMessageSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 90,
+    marginBottom: 50,
   },
   input: {
     height: 48,
     width: window.width / 1.25,
     marginHorizontal: 12,
-    borderWidth: 1,
     padding: 10,
     borderColor: '#D6DAE2',
-    borderRadius: 4,
     color: 'white',
+    backgroundColor: '#343a40',
+    borderRadius: 10,
+    paddingVertical: 0, // Remove vertical padding to align text better
+    textAlignVertical: 'center', // Vertical alignment
   },
   sendMessageButton: {
     alignItems: 'center',
     justifyContent: 'center',
     width: window.width / 8,
     height: 48,
-    borderWidth: 1,
-    borderColor: '#D6DAE2',
-    borderRadius: 4,
+    borderRadius: 10,
+    backgroundColor: '#343a40',
   },
 });

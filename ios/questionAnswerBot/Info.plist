@@ -30,6 +30,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.googleusercontent.apps.515496165016-cl5voj2dcqnv0g9ucqhmur7dck0bioho</string>
+				<string>com.brownbear.chattycanvas</string>
 			</array>
 		</dict>
 		<dict>
@@ -37,6 +38,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>com.brownbear.chattycanvas</string>
 				<string>101181523513-rpsm3jsin9n62nm76njg7aldcbcs6gn1.apps.googleusercontent.com</string>
 			</array>
 		</dict>
@@ -45,6 +47,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>com.brownbear.chattycanvas</string>
 				<string>101181523513-n6d7u04qiu1e8hv68iq9cf0icidtdpfo.apps.googleusercontent.com</string>
 			</array>
 		</dict>

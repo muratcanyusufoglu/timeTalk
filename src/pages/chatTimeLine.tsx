@@ -18,6 +18,8 @@ import SearchBar from '../components/searchBar';
 import {useIsFocused} from '@react-navigation/native';
 import localusers from '../assets/localusers';
 import Toast from 'react-native-toast-message';
+import CustomImageComponent from '../components/customImageComponent';
+import CustomHeaderComponent from '../components/customHeaderComponent';
 
 const window = Dimensions.get('window');
 
@@ -72,23 +74,10 @@ export default function TimeLine() {
     setLoading(false);
   }, [loading, isFocused]);
 
-  const onChangeText = (key: String) => {
-    // if (key.length >= 1) {
-    //   const filterUsers = messageData.filter(item => {
-    //     if (item.username.toLowerCase().indexOf(key.toLowerCase()) > -1) {
-    //       return item;
-    //     }
-    //   });
-    //   setUserData(filterUsers);
-    //   setText(key);
-    // } else {
-    //   setText('');
-    //   setUserData(nameList.nameList);
-    // }
-  };
-
   let imageAdress: string;
   function insideFlatlist(item: any) {
+    const dateFormat = new Date(parseInt(item.date));
+
     localusers.nameList.map(localUsers => {
       if (localUsers.username == item.whom) {
         imageAdress = localUsers.photoUrl;
@@ -108,7 +97,7 @@ export default function TimeLine() {
                   {item.whom}
                 </Text>
                 <Text numberOfLines={1} style={styles.dateInfoText}>
-                  {item.date}
+                  {dateFormat.toDateString()}
                 </Text>
               </View>
               <View style={styles.textSection}>
@@ -119,7 +108,6 @@ export default function TimeLine() {
             </View>
           </View>
         </TouchableOpacity>
-        <View style={{}} />
         <View
           style={{
             borderWidth: 0.8,
@@ -140,13 +128,7 @@ export default function TimeLine() {
         data={messageData}
         refreshing={bool}
         style={{flex: 1}}
-        ListHeaderComponent={
-          <SearchBar
-            onChangeTextFunc={onChangeText}
-            value={searchText}
-            placeHolder={'Search'}
-          />
-        }
+        ListHeaderComponent={<CustomHeaderComponent />}
         renderItem={({item}) => insideFlatlist(item)}
       />
     </SafeAreaView>

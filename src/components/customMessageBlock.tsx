@@ -32,7 +32,6 @@ export default function CustomMessageBlock(
   userPhoto: string,
   wisdomPhoto: string,
 ) {
-  console.log('imaaaaaggeeeeuuurrrll', wisdomPhoto);
   return (
     <View style={styles.messageSection}>
       <View style={styles.sendingMessageStyle}>

@@ -18,10 +18,10 @@
 		4A415ED029BD18EE0061840D /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4A415EC529BD18EE0061840D /* EvilIcons.ttf */; };
 		4A415ED129BD18EE0061840D /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4A415EC629BD18EE0061840D /* SimpleLineIcons.ttf */; };
 		4B98482678BA1DBF632A441C /* libPods-questionAnswerBot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-questionAnswerBot.a */; };
+		56E7DD2BA8B04260952E0266 /* ShareTechMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8B49E21785C94830BC10CFB1 /* ShareTechMono-Regular.ttf */; };
 		7699B88040F8A987B510C191 /* libPods-questionAnswerBot-questionAnswerBotTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-questionAnswerBot-questionAnswerBotTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A313BCE12A81649D004C6043 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A313BCE02A81649D004C6043 /* GoogleService-Info.plist */; };
-		56E7DD2BA8B04260952E0266 /* ShareTechMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8B49E21785C94830BC10CFB1 /* ShareTechMono-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,9 +61,9 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-questionAnswerBot.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-questionAnswerBot.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = questionAnswerBot/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-questionAnswerBot-questionAnswerBotTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-questionAnswerBot-questionAnswerBotTests.release.xcconfig"; path = "Target Support Files/Pods-questionAnswerBot-questionAnswerBotTests/Pods-questionAnswerBot-questionAnswerBotTests.release.xcconfig"; sourceTree = "<group>"; };
+		8B49E21785C94830BC10CFB1 /* ShareTechMono-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ShareTechMono-Regular.ttf"; path = "../src/assets/fonts/ShareTechMono-Regular.ttf"; sourceTree = "<group>"; };
 		A313BCE02A81649D004C6043 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		8B49E21785C94830BC10CFB1 /* ShareTechMono-Regular.ttf */ = {isa = PBXFileReference; name = "ShareTechMono-Regular.ttf"; path = "../src/assets/fonts/ShareTechMono-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +130,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		2ED6AE66975146A3AF4ADD60 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8B49E21785C94830BC10CFB1 /* ShareTechMono-Regular.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		4A415EBB29BD18EE0061840D /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
@@ -188,15 +196,6 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
-		};
-		2ED6AE66975146A3AF4ADD60 /* Resources */ = {
-			isa = "PBXGroup";
-			children = (
-				8B49E21785C94830BC10CFB1 /* ShareTechMono-Regular.ttf */,
-			);
-			name = Resources;
-			sourceTree = "<group>";
-			path = "";
 		};
 /* End PBXGroup section */
 

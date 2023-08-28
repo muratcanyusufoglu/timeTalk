@@ -27,6 +27,7 @@ import {firebase} from '@react-native-firebase/messaging';
 import storage from '../storage/storage';
 import axios from 'axios';
 import Config from 'react-native-config';
+import {appleAuth} from '@invertase/react-native-apple-authentication';
 
 const window = Dimensions.get('window');
 const App = () => {
@@ -187,6 +188,22 @@ const App = () => {
       }
     }
   };
+  const appleSignIn = async () => {
+    try {
+      const appleAuthRequestResponse = await appleAuth.performRequest({
+        requestedOperation: appleAuth.Operation.LOGIN,
+        requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+      });
+      // Use appleAuthRequestResponse to get user information
+      console.log('appleAuth', appleAuthRequestResponse);
+    } catch (error: any) {
+      if (error.code === appleAuth.Error.CANCELED) {
+        console.log('User canceled Apple Sign-In');
+      } else {
+        console.log('Apple Sign-In Error:', error);
+      }
+    }
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -208,12 +225,12 @@ const App = () => {
             />
             <Text style={styles.googleButtonText}>Sign in with Google</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.googleButton} onPress={signIn}>
+          <TouchableOpacity style={styles.googleButton} onPress={appleSignIn}>
             <Image
               style={styles.appleIcon}
               source={require('../assets/photos/appleIcon.png')}
             />
-            <Text style={styles.googleButtonText}>Sign in with Apple     </Text>
+            <Text style={styles.googleButtonText}>Sign in with Apple </Text>
           </TouchableOpacity>
         </View>
       </View>

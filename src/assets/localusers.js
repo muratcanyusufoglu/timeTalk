@@ -421,7 +421,7 @@ const nameList = [
   {
     userId: 60,
     username: 'Robert Oppenheimer',
-    photoUrl: `${IMAGE_ADRESS}robertoppenheimer.png`,
+    photoUrl: `${IMAGE_ADRESS}robertopenheimer.png`,
     userInfo: 'Theoretical physicist,father of the atomic bomb',
     category: 'Science',
   },

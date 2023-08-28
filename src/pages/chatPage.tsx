@@ -8,6 +8,8 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Platform,
+  SafeAreaView,
+  StatusBar,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -84,32 +86,35 @@ export default function ChatPage(prop: any) {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}>
-      <FlatList
-        inverted
-        extraData={data}
-        data={data}
-        renderItem={({item}) =>
-          CustomMessageBlock(
-            item,
-            prop.route.params.whom,
-            userInfo?.userPhoto,
-            imageAdress,
-          )
-        }
-      />
-      <View style={{alignItems: 'center'}}>
-        {loading ? <LoadingBar /> : null}
-      </View>
-      <CustomWriteMessageComponent addMessage={pushMessage} />
-      {/* <PackageModal
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="light-content" />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{backgroundColor: 'black', flex:1}}>
+        <FlatList
+          inverted
+          extraData={data}
+          data={data}
+          renderItem={({item}) =>
+            CustomMessageBlock(
+              item,
+              prop.route.params.whom,
+              userInfo?.userPhoto,
+              imageAdress,
+            )
+          }
+        />
+        <View style={{alignItems: 'center'}}>
+          {loading ? <LoadingBar /> : null}
+        </View>
+        <CustomWriteMessageComponent addMessage={pushMessage} />
+        {/* <PackageModal
         isVisible={visible}
         onClose={() => setVisible(!visible)}
         onPurchase={() => {}}
       /> */}
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
