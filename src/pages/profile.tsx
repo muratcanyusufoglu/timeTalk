@@ -6,19 +6,22 @@ import {
   TouchableOpacity,
   Button,
   SafeAreaView,
+  Dimensions,
 } from 'react-native';
-import React, {useLayoutEffect} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {useRevenueCat} from '../providers/reveneuCatProvider';
 import {useNavigation} from '@react-navigation/native';
 import {PurchasesPackage} from 'react-native-purchases';
 import User from './user';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import storage from '../storage/storage';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
+const window = Dimensions.get('window');
 const Profile = () => {
   const navigation = useNavigation();
   const {user, packages, purchasePackage, restorePermissions} = useRevenueCat();
-
+  const [selectedPack, setSelectedPack] = useState<PurchasesPackage>();
   // Add a restore button to the top bar
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -38,7 +41,11 @@ const Profile = () => {
 
   const onPurchase = (pack: PurchasesPackage) => {
     // Purchase the package
-    purchasePackage!(pack);
+    purchasePackage!(pack).then(resp => {
+      if (resp == true) {
+        navigation.navigate('Home' as never);
+      }
+    });
   };
 
   const signOut = async () => {
@@ -54,31 +61,52 @@ const Profile = () => {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: 'black', flex: 1}}>
       <ScrollView>
         {/* Display the packages */}
+        <View style={{padding: 12}}>
+          <Text style={styles.mainText}>Choose a plan</Text>
+          <Text style={styles.altText}>
+            Select the offer best suits your need
+          </Text>
+        </View>
         <View style={styles.container}>
           {packages.map(pack => (
             <TouchableOpacity
               key={pack.identifier}
-              onPress={() => onPurchase(pack)}
-              style={styles.button}>
+              onPress={() => {
+                setSelectedPack(pack);
+              }}
+              style={
+                pack.identifier == selectedPack?.identifier
+                  ? styles.buttonSelected
+                  : styles.button
+              }>
+              <View>
+                <Icon name="Home" size={20} color={'white'} />
+              </View>
               <View style={styles.text}>
-                <Text>{pack.product.title}</Text>
+                <Text style={styles.header}>{pack.product.title}</Text>
                 <Text style={styles.desc}>{pack.product.description}</Text>
               </View>
               <View style={styles.price}>
-                <Text>{pack.product.priceString}</Text>
+                <Text style={styles.priceText}>{pack.product.priceString}</Text>
               </View>
             </TouchableOpacity>
           ))}
         </View>
-
-        {/* Display the user state */}
-        <User user={user} />
-        <TouchableOpacity
+        <View style={{alignItems: 'center'}}>
+          <TouchableOpacity
+            style={styles.contunieButton}
+            onPress={() => {
+              onPurchase(selectedPack);
+            }}>
+            <Text style={styles.googleButtonText}>Continue </Text>
+          </TouchableOpacity>
+        </View>
+        {/* <TouchableOpacity
           onPress={() => signOut()}
-          style={styles.button}></TouchableOpacity>
+          style={styles.button}></TouchableOpacity> */}
       </ScrollView>
     </SafeAreaView>
   );
@@ -86,30 +114,80 @@ const Profile = () => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
-    alignItems: 'flex-start',
-    marginVertical: 6,
+    alignItems: 'center',
+    padding: 12,
   },
   button: {
     padding: 12,
-    borderRadius: 4,
-    margin: 4,
+    borderRadius: 16,
+    borderWidth: 3,
+    borderColor: 'gray',
+    margin: 10,
     flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
     width: '100%',
-    backgroundColor: '#fff',
+    backgroundColor: 'transparent',
+  },
+  buttonSelected: {
+    padding: 15,
+    borderRadius: 20,
+    borderWidth: 5,
+    borderColor: '#BB86FC',
+    margin: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    width: '100%',
+    backgroundColor: 'transparent',
   },
   text: {
     flexGrow: 1,
   },
-  desc: {
-    color: '#B6B7C0',
+  header: {
+    color: 'white',
     paddingVertical: 4,
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  priceText: {
+    color: 'white',
+    paddingVertical: 4,
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  desc: {
+    color: 'white',
+    paddingVertical: 4,
+    fontSize: 14,
   },
   price: {
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderRadius: 4,
     paddingHorizontal: 8,
-    borderColor: '#EA3C4A',
+  },
+  mainText: {
+    fontSize: 34,
+    color: 'white',
+    fontFamily: 'ShareTechMono-Regular',
+  },
+  altText: {
+    fontSize: 15,
+    color: 'white',
+    fontFamily: 'ShareTechMono-Regular',
+  },
+  contunieButton: {
+    marginTop: 10,
+    backgroundColor: '#BB86FC',
+    borderRadius: 28,
+    width: window.width / 1.5,
+    height: window.height / 15,
+    justifyContent: 'space-evenly',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  googleButtonText: {
+    marginLeft: 0,
+    fontSize: 18,
+    fontWeight: '600',
   },
 });
 

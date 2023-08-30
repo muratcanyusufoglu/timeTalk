@@ -90,7 +90,7 @@ export default function ChatPage(prop: any) {
       <StatusBar barStyle="light-content" />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{backgroundColor: 'black', flex:1}}>
+        style={{backgroundColor: 'black', flex: 1}}>
         <FlatList
           inverted
           extraData={data}
@@ -121,7 +121,7 @@ export default function ChatPage(prop: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: GlobalColors.backGroundColor,
+    backgroundColor:GlobalColors.black
   },
   loadingView: {
     alignItems: 'center',

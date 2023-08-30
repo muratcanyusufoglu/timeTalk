@@ -4,8 +4,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  SafeAreaView,
   Image,
+  StatusBar,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {FlatList} from 'react-native-gesture-handler';
@@ -20,6 +20,7 @@ import localusers from '../assets/localusers';
 import Toast from 'react-native-toast-message';
 import CustomImageComponent from '../components/customImageComponent';
 import CustomHeaderComponent from '../components/customHeaderComponent';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const window = Dimensions.get('window');
 
@@ -122,15 +123,19 @@ export default function TimeLine() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        extraData={messageData}
-        data={messageData}
-        refreshing={bool}
-        style={{flex: 1}}
-        ListHeaderComponent={<CustomHeaderComponent />}
-        renderItem={({item}) => insideFlatlist(item)}
-      />
+    <SafeAreaView style={styles.container} edges={['right', 'top', 'left']}>
+      <StatusBar barStyle="light-content" />
+
+      <View style={{flex: 1, marginTop:-20}}>
+        <FlatList
+          extraData={messageData}
+          data={messageData}
+          refreshing={bool}
+          style={{flex: 1}}
+          ListHeaderComponent={<CustomHeaderComponent />}
+          renderItem={({item}) => insideFlatlist(item)}
+        />
+      </View>
     </SafeAreaView>
   );
 }
@@ -138,9 +143,7 @@ export default function TimeLine() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: GlobalColors.backGroundColor,
-    width: window.width,
-    height: window.height,
+    backgroundColor:GlobalColors.black
   },
   photoStyle: {
     height: window.width / 6.5,

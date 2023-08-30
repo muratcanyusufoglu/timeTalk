@@ -4,7 +4,7 @@ import Purchases, {LOG_LEVEL, PurchasesPackage} from 'react-native-purchases';
 import {CustomerInfo, PurchasesEntitlementInfo} from 'react-native-purchases';
 import storage from '../storage/storage';
 import PurchaseService from '../services/purchaseService';
-
+import {useNavigation} from '@react-navigation/native';
 // Use your RevenueCat API keys
 const APIKeys = {
   apple: 'appl_FhNofUrKTZfKeJGLEmJTsgBPojr',
@@ -12,7 +12,7 @@ const APIKeys = {
 };
 
 interface RevenueCatProps {
-  purchasePackage?: (pack: PurchasesPackage) => Promise<void>;
+  purchasePackage?: (pack: PurchasesPackage) => Promise<boolean>;
   restorePermissions?: () => Promise<CustomerInfo>;
   user: UserState;
   packages: PurchasesPackage[];
@@ -96,7 +96,6 @@ export const RevenueCatProvider = ({children}: any) => {
         exprationDate,
       );
     } else if (activeSubscription == undefined) {
-      console.log('firsttt3');
       await purchaseService.getUserInfo(activeSubscription, 0, exprationDate);
     }
   };
@@ -105,14 +104,11 @@ export const RevenueCatProvider = ({children}: any) => {
   const purchasePackage = async (pack: PurchasesPackage) => {
     try {
       await Purchases.purchasePackage(pack);
-
-      // Directly add our consumable product
-      if (pack.product.identifier === 'rc_monthly_1000') {
-        setUser({...user, cookies: (user.cookies += 5)});
-      }
+      return true;
     } catch (e: any) {
       if (!e.userCancelled) {
         Alert.alert(e);
+        return false;
       }
     }
   };

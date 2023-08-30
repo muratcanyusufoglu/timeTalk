@@ -4,16 +4,17 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 const window = Dimensions.get('window');
 export default function CustomHeaderComponent() {
   return (
-    <View style={{
+    <View
+      style={{
         padding: 10,
       }}>
       <View
         style={{
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: 10,
-            flexDirection: 'row',
-          }}>
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: 10,
+          flexDirection: 'row',
+        }}>
         <Icon
           name="search"
           color={'white'}
@@ -27,11 +28,11 @@ export default function CustomHeaderComponent() {
         <Icon name="bars" color={'white'} style={{marginLeft: 10}} size={18} />
       </View>
       <View
-          style={{
-            borderWidth: 0.9,
-            borderColor: '#4B4B4B',
-          }}
-        />
+        style={{
+          borderWidth: 0.9,
+          borderColor: '#4B4B4B',
+        }}
+      />
     </View>
   );
 }

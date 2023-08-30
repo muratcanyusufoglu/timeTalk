@@ -10,11 +10,9 @@ import {RevenueCatProvider} from './providers/reveneuCatProvider';
 import Profile from './pages/profile';
 import Login from './pages/loginPage';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {createDrawerNavigator} from '@react-navigation/drawer';
 
 const ChatStack = createNativeStackNavigator();
 const DiscoverStack = createNativeStackNavigator();
-const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 
 const HomeRoute = () => {
@@ -103,7 +101,6 @@ const DiscoverRoute = () => {
   );
 };
 
-
 const Stack = createNativeStackNavigator();
 function App() {
   return (
@@ -113,6 +110,11 @@ function App() {
           <Stack.Screen
             name="Login"
             component={Login}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Purchase"
+            component={Profile}
             options={{headerShown: false}}
           />
           <Stack.Screen
