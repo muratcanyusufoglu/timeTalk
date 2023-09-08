@@ -16,6 +16,7 @@ interface RevenueCatProps {
   restorePermissions?: () => Promise<CustomerInfo>;
   user: UserState;
   packages: PurchasesPackage[];
+  getCustomerInfo?: () => Promise<CustomerInfo>;
 }
 
 export interface UserState {
@@ -113,6 +114,17 @@ export const RevenueCatProvider = ({children}: any) => {
     }
   };
 
+  const getCustomerInfo = async () => {
+    try {
+      const customerInfo = await Purchases.getCustomerInfo()
+      console.log('............', customerInfo);
+      return customerInfo;
+      // access latest customerInfo
+    } catch (e) {
+      // Error fetching customer info
+    }
+  };
+
   // // Restore previous purchases
   const restorePermissions = async () => {
     const customer = await Purchases.restorePurchases();
@@ -120,6 +132,7 @@ export const RevenueCatProvider = ({children}: any) => {
   };
 
   const value = {
+    getCustomerInfo,
     restorePermissions,
     user,
     packages,

@@ -8,20 +8,28 @@ import {
   SafeAreaView,
   Dimensions,
 } from 'react-native';
-import React, {useLayoutEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {useRevenueCat} from '../providers/reveneuCatProvider';
 import {useNavigation} from '@react-navigation/native';
 import {PurchasesPackage} from 'react-native-purchases';
 import User from './user';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import storage from '../storage/storage';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const window = Dimensions.get('window');
+
 const Profile = () => {
   const navigation = useNavigation();
-  const {user, packages, purchasePackage, restorePermissions} = useRevenueCat();
+  const {getCustomerInfo, user, packages, purchasePackage, restorePermissions} =
+    useRevenueCat();
   const [selectedPack, setSelectedPack] = useState<PurchasesPackage>();
+
+  useEffect(() => {
+    const customerInfo = restorePermissions;
+    console.log('customer', customerInfo);
+  }),
+    [];
   // Add a restore button to the top bar
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -82,15 +90,28 @@ const Profile = () => {
                   ? styles.buttonSelected
                   : styles.button
               }>
-              <View>
-                <Icon name="Home" size={20} color={'white'} />
-              </View>
-              <View style={styles.text}>
-                <Text style={styles.header}>{pack.product.title}</Text>
-                <Text style={styles.desc}>{pack.product.description}</Text>
-              </View>
-              <View style={styles.price}>
-                <Text style={styles.priceText}>{pack.product.priceString}</Text>
+              <View
+                style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+                <View style={{flex: 1}}>
+                  <Icon
+                    name="check-circle-o"
+                    size={20}
+                    color={
+                      pack.identifier == selectedPack?.identifier
+                        ? '#BB86FC'
+                        : 'white'
+                    }
+                  />
+                </View>
+                <View style={styles.text}>
+                  <Text style={styles.header}>{pack.product.title}</Text>
+                  <Text style={styles.desc}>{pack.product.description}</Text>
+                </View>
+                <View style={styles.price}>
+                  <Text style={styles.priceText}>
+                    {pack.product.priceString}
+                  </Text>
+                </View>
               </View>
             </TouchableOpacity>
           ))}
@@ -142,7 +163,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   text: {
-    flexGrow: 1,
+    flex: 8,
   },
   header: {
     color: 'white',
@@ -163,6 +184,7 @@ const styles = StyleSheet.create({
   },
   price: {
     paddingHorizontal: 8,
+    flex: 2,
   },
   mainText: {
     fontSize: 34,

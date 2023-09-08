@@ -82,7 +82,7 @@ const App = () => {
             })
             .catch(errors => {
               console.log('errordate', errors);
-              navigation.navigate('Home' as never);
+              navigation.navigate('Purchase' as never);
             });
         }
       });
@@ -164,7 +164,7 @@ const App = () => {
               }
               postUser();
             });
-          navigation.navigate('Home' as never);
+          navigation.navigate('Purchase' as never);
         }
         navigateHome();
       }
